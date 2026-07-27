@@ -17,359 +17,296 @@
 
 <!-- iOS Safari PWA專屬強制配置 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- 改為 default：取消頂部狀態列的玻璃覆蓋效果 -->
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="計算器V3">
-<!-- iOS全機型圖標適配 -->
 <link rel="apple-touch-icon" sizes="180x180" href="./IMG_4289.png">
 <link rel="apple-touch-icon" sizes="167x167" href="./IMG_4289.png">
 <link rel="apple-touch-icon" sizes="152x152" href="./IMG_4289.png">
 <link rel="apple-touch-icon" sizes="120x120" href="./IMG_4289.png">
 
-<!-- 兜底圖標（瀏覽器標籤、舊設備兼容） -->
+<!-- 兜底圖標 -->
 <link rel="shortcut icon" href="./IMG_4289.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./IMG_4289.png">
 
 <style>
+/* ===== 毛玻璃與全局變數設定 ===== */
+:root {
+  --primary-color: #2c7be5;
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-bg-solid: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --glass-blur: blur(16px);
+  --glass-item-bg: rgba(255, 255, 255, 0.35);
+  --glass-item-hover: rgba(255, 255, 255, 0.6);
+  --text-dark: #2c3e50;
+  --text-muted: #5c6b79;
+}
+
 * { box-sizing: border-box; }
-/* 加入 safe-area-inset-top 雙重保證不會被頂部玻璃狀態列遮擋 */
-body { font-family: Arial, sans-serif; margin: 0; padding: max(6px, env(safe-area-inset-top)) 6px 6px 6px; background-color: #f5f5f5; font-size: 13px; }
-.container { max-width: 100%; margin: 0 auto; background-color: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 1.3rem; }
+
+/* 動態漸層背景，突顯毛玻璃透視感 */
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+  margin: 0; 
+  padding: max(6px, env(safe-area-inset-top)) 6px 6px 6px; 
+  font-size: 13px; 
+  color: var(--text-dark);
+  background: linear-gradient(-45deg, #e0c3fc, #8ec5fc, #f3e7e9, #e3eeff);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  min-height: 100vh;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 主容器：毛玻璃核心 */
+.container { 
+  max-width: 100%; 
+  margin: 0 auto; 
+  padding: 12px; 
+  border-radius: 16px; 
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+h1 { color: #1a3b5c; text-align: center; margin-bottom: 12px; font-size: 1.4rem; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
 input, select { font-size: 16px !important; }
+
 .controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-.tier-select, .actions { padding: 8px; background-color: #f9f9f9; border-radius: 5px; width: 100%; }
+.tier-select, .actions { 
+  padding: 10px; 
+  border-radius: 12px; 
+  width: 100%; 
+  background: var(--glass-item-bg);
+  border: 1px solid var(--glass-border);
+}
 .price-controls { display: flex; flex-direction: column; gap: 8px; }
 .price-control { width: 100%; }
-.price-control label { display: block; margin-bottom: 3px; font-weight: bold; font-size: 0.9rem; }
+.price-control label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9rem; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
 
 /* ===== 字體大小控制列 ===== */
 .font-ctrl-bar {
   display: flex; align-items: center; justify-content: flex-end;
-  gap: 8px; margin-bottom: 8px; padding: 6px 10px;
-  background: #f8faff; border-radius: 8px; border: 1px solid #e0e8ff;
+  gap: 8px; margin-bottom: 10px; padding: 8px 12px;
+  border-radius: 12px; 
+  background: var(--glass-item-bg);
+  border: 1px solid var(--glass-border);
 }
-.font-ctrl-label {
-  color: #555; font-size: 0.85rem; white-space: nowrap;
-  margin-right: 2px; flex: 1;
-}
+.font-ctrl-label { color: var(--text-dark); font-size: 0.85rem; white-space: nowrap; margin-right: 2px; flex: 1; font-weight: bold; }
 .font-ctrl-btns { display: flex; align-items: center; gap: 6px; }
 .font-ctrl-btn {
-  padding: 5px 13px; margin: 0; border-radius: 6px;
-  font-weight: bold; font-size: 0.9rem; min-width: 42px;
-  background: #e6f0ff; border: 1px solid #b0c8f0; color: #2c7be5;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer;
+  padding: 5px 13px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; min-width: 42px;
+  background: var(--glass-bg-solid); border: 1px solid var(--glass-border); color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
-.font-ctrl-btn:hover  { background: #cce0ff; }
-.font-ctrl-btn:active { background: #a8c4f0; }
-.font-ctrl-btn:disabled { opacity: 0.32; cursor: default; background: #e6f0ff; }
+.font-ctrl-btn:hover  { background: rgba(255,255,255,0.9); }
+.font-ctrl-btn:active { background: rgba(255,255,255,1); }
+.font-ctrl-btn:disabled { opacity: 0.4; cursor: default; }
+
 #font-size-display {
-  min-width: 38px; text-align: center; font-size: 0.85rem;
-  color: #2c7be5; font-weight: bold;
-  background: white; border: 1px solid #c8d8f5;
-  border-radius: 5px; padding: 3px 7px;
+  min-width: 38px; text-align: center; font-size: 0.85rem; color: var(--primary-color); font-weight: bold;
+  background: var(--glass-bg-solid); border: 1px solid var(--glass-border); border-radius: 6px; padding: 4px 8px;
 }
 
+/* 基礎元件毛玻璃化 */
 button {
-  padding: 8px; border-radius: 4px; border: 1px solid #ddd;
-  font-size: 0.9rem; touch-action: manipulation; cursor: pointer;
-  background-color: #f0f0f0; transition: background-color 0.15s;
-  margin: 3px 0; -webkit-tap-highlight-color: transparent;
-  -webkit-appearance: none; outline: none;
-  user-select: none; -webkit-user-select: none;
+  padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border);
+  font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease;
+  background: var(--glass-bg-solid); color: var(--text-dark);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  backdrop-filter: blur(4px);
+  outline: none; -webkit-tap-highlight-color: transparent;
 }
-button:hover { background-color: #e4e4e4; }
-button:active { background-color: #d8d8d8; }
+button:hover { background: rgba(255,255,255,0.9); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+button:active { background: rgba(255,255,255,1); transform: scale(0.98); }
+
+select, input {
+  padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border);
+  width: 100%; background: var(--glass-bg-solid);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  backdrop-filter: blur(4px);
+  color: var(--text-dark); outline: none;
+}
+select:focus, input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(44,123,229,0.2); }
 select {
-  padding: 8px; border-radius: 4px; border: 1px solid #ddd;
-  touch-action: manipulation; width: 100%; -webkit-appearance: none;
+  -webkit-appearance: none;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center;
-  background-size: 14px; padding-right: 28px;
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; padding-right: 32px;
 }
-.actions { display: flex; flex-wrap: wrap; gap: 4px; justify-content: space-between; }
-.actions button { flex: 1; min-width: 80px; padding: 10px 5px; text-align: center; }
-.btn-primary { background-color: #2c7be5; color: white; border: none; }
-.btn-primary:hover { background-color: #2472d4; }
-.btn-primary:active { background-color: #1a5fb5; }
-.btn-danger { background-color: #e63757; color: white; border: none; }
-.btn-danger:hover { background-color: #d12a49; }
-.btn-danger:active { background-color: #b8223e; }
-.btn-copy { background-color: #0d9488; color: white; border: none; }
-.btn-copy:hover { background-color: #0c8077; }
-.btn-copy:active { background-color: #0a6b65; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
+.actions button { flex: 1; min-width: 80px; padding: 10px 5px; font-weight: bold; }
+
+/* 顏色按鈕調整為半透明 */
+.btn-primary { background: rgba(44, 123, 229, 0.85); color: white; border: 1px solid rgba(44, 123, 229, 0.3); }
+.btn-primary:hover { background: rgba(44, 123, 229, 1); }
+.btn-danger { background: rgba(230, 55, 87, 0.85); color: white; border: 1px solid rgba(230, 55, 87, 0.3); }
+.btn-danger:hover { background: rgba(230, 55, 87, 1); }
+.btn-copy { background: rgba(13, 148, 136, 0.85); color: white; border: 1px solid rgba(13, 148, 136, 0.3); }
+.btn-copy:hover { background: rgba(13, 148, 136, 1); }
 
 .btn-add-product {
-  width: 100%; padding: 13px 16px;
-  font-size: 1rem; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 8px; border: none;
-  background: linear-gradient(135deg, #2c7be5, #1a5fb5);
-  color: white; font-weight: bold;
-  box-shadow: 0 3px 10px rgba(44,123,229,0.3);
+  width: 100%; padding: 14px; font-size: 1rem; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; border: none;
+  background: linear-gradient(135deg, rgba(44,123,229,0.9), rgba(26,95,181,0.9));
+  color: white; font-weight: bold; box-shadow: 0 4px 15px rgba(44,123,229,0.3);
+  backdrop-filter: blur(4px);
 }
-.btn-add-product:hover  { background: linear-gradient(135deg, #2472d4, #1654a8); }
-.btn-add-product:active { background: linear-gradient(135deg, #1a5fb5, #124090); }
+.btn-add-product:hover { background: linear-gradient(135deg, rgba(36,114,212,1), rgba(22,84,168,1)); }
 
-/* ===== 搜尋 Modal ===== */
+/* ===== 搜尋 Modal 毛玻璃 ===== */
 .search-modal-overlay {
-  display: none; position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.55); z-index: 800;
-  align-items: flex-end; justify-content: center; padding: 0;
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3); backdrop-filter: blur(6px); z-index: 800;
+  align-items: flex-end; justify-content: center;
 }
 .search-modal-content {
-  width: 100%; max-width: 600px; background: white;
-  border-radius: 18px 18px 0 0;
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.22);
-  overflow: hidden; display: flex; flex-direction: column; height: 86vh;
-  animation: slideUpFromBottom 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%; max-width: 600px; height: 86vh;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column;
+  animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes slideUpFromBottom {
   from { transform: translateY(100%); opacity: 0.7; }
   to   { transform: translateY(0);    opacity: 1; }
 }
-.search-modal-handle {
-  width: 40px; height: 4px; background: #d1d5db;
-  border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
-}
+.search-modal-handle { width: 44px; height: 5px; background: rgba(0,0,0,0.15); border-radius: 3px; margin: 12px auto 6px; }
 .search-modal-bar {
-  display: flex; gap: 8px;
-  padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(135deg, #e8f0ff, #ddeeff);
-  flex-shrink: 0; align-items: center; border-top: 1px solid #c8d8f5;
+  display: flex; gap: 8px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.5); border-top: 1px solid var(--glass-border); align-items: center;
 }
 .search-modal-input-wrap { position: relative; flex: 1; }
 .search-modal-input-wrap input {
-  width: 100%; padding: 11px 38px 11px 12px;
-  border: 2px solid #2c7be5; border-radius: 10px;
-  font-size: 16px !important; outline: none; background: white;
-  transition: box-shadow 0.2s;
+  padding: 12px 38px 12px 14px; border: 1px solid rgba(44,123,229,0.4); border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85); font-size: 16px !important;
 }
-.search-modal-input-wrap input:focus { box-shadow: 0 0 0 3px rgba(44,123,229,0.22); }
 #search-clear-btn {
-  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,0.18); border: none; color: #333;
-  width: 20px; height: 20px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: bold; cursor: pointer;
-  padding: 0; margin: 0; opacity: 0; pointer-events: none; transition: opacity 0.15s;
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.1); width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; border: none; font-size: 11px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
 }
 #search-clear-btn.visible { opacity: 1; pointer-events: auto; }
-#search-clear-btn:hover { background: rgba(0,0,0,0.3); }
-.btn-search-close {
-  padding: 9px 14px; background: #e5e7eb; border: none; border-radius: 8px;
-  font-size: 0.88rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; color: #374151;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent; margin: 0;
-}
-.btn-search-close:hover  { background: #d1d5db; }
-.btn-search-close:active { background: #9ca3af; }
+.btn-search-close { background: rgba(255, 255, 255, 0.7); border-radius: 10px; font-weight: bold; }
 
 .search-modal-cats {
-  display: flex; flex-wrap: nowrap; overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 8px 10px 7px; gap: 5px;
-  border-top: 1px solid #eee; flex-shrink: 0; background: white;
+  display: flex; overflow-x: auto; padding: 10px 12px; gap: 6px;
+  border-top: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.3);
   scrollbar-width: none;
 }
 .search-modal-cats::-webkit-scrollbar { display: none; }
 
-.product-list-modal {
-  overflow-y: auto; -webkit-overflow-scrolling: touch;
-  flex: 1; min-height: 0; display: flex; flex-direction: column;
-}
-.product-list-modal::before { content: ''; flex: 1 1 0; }
-
+.product-list-modal { overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
 .product-item {
-  padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #f0f0f0;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background 0.1s;
+  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.4);
+  background: transparent; transition: background 0.15s;
 }
-.product-item:hover  { background-color: #f5f5f5; }
-.product-item:active { background-color: #e8e8e8; }
-.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
-.product-item-left  { flex: 1; min-width: 0; }
-.product-item-price { font-size: 0.8em; color: #2c7be5; white-space: nowrap; font-weight: bold; background: #e6f0ff; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; }
-.selected-badge { display: inline-block; background: #16a34a; color: white; font-size: 0.68em; padding: 1px 5px; border-radius: 8px; margin-right: 3px; vertical-align: middle; white-space: nowrap; }
-.product-item-package { background-color: #f8f0ff; border-left: 3px solid #7c3aed; }
-.product-item-package:hover  { background-color: #f0e5ff; }
-.product-item-package:active { background-color: #e8d8ff; }
+.product-item:hover  { background: rgba(255,255,255,0.5); }
+.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.product-item-price { font-size: 0.85em; color: var(--primary-color); font-weight: bold; background: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(44,123,229,0.2); }
+.selected-badge { background: rgba(22, 163, 74, 0.9); color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 8px; margin-right: 4px; }
+.product-item-package { border-left: 4px solid rgba(124,58,237,0.6); background: rgba(124,58,237,0.05); }
 
-@keyframes slideInDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeOut {
-  from { opacity: 1; transform: scale(1); }
-  to   { opacity: 0; transform: scale(0.95); }
-}
-.animate-in { animation: slideInDown 0.22s ease-out; }
-.removing   { animation: fadeOut 0.2s ease-out forwards; pointer-events: none; }
-
+/* 套裝計畫區塊 */
 .package-plans-section {
-  margin-bottom: 12px; padding: 8px 10px;
-  background: linear-gradient(135deg, #f5f0ff 0%, #ede5ff 100%);
-  border-radius: 10px; border: 1px solid #c4b5fd;
+  margin-bottom: 12px; padding: 12px; border-radius: 12px;
+  background: rgba(245, 240, 255, 0.5); border: 1px solid rgba(196, 181, 253, 0.6);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
 }
-.package-plans-title { font-size: 0.85rem; font-weight: bold; color: #6d28d9; margin-bottom: 6px; }
-.package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.package-plans-title { font-size: 0.9rem; font-weight: bold; color: #5b21b6; margin-bottom: 8px; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
+.package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .package-plan-btn {
-  padding: 7px 8px; background-color: #7c3aed; color: white; border: none;
-  border-radius: 8px; cursor: pointer;
-  text-align: left; display: flex; flex-direction: column; gap: 2px;
-  margin: 0; transition: background-color 0.15s;
+  padding: 8px 10px; background: rgba(124, 58, 237, 0.75); color: white; border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px; text-align: left; display: flex; flex-direction: column; gap: 4px; backdrop-filter: blur(4px);
 }
-.package-plan-btn:hover  { background-color: #6d28d9; }
-.package-plan-btn:active { background-color: #5b21b6; }
-.plan-row1 { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
-.plan-name  { font-size: 0.78rem; font-weight: bold; white-space: nowrap; }
-.plan-price { font-size: 0.88rem; font-weight: bold; color: #fde68a; white-space: nowrap; }
-.plan-row2  { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
-.plan-vp    { font-size: 0.65rem; opacity: 0.85; white-space: nowrap; }
-.plan-profit{ font-size: 0.68rem; color: #bbf7d0; font-weight: bold; white-space: nowrap; }
+.package-plan-btn:hover { background: rgba(124, 58, 237, 0.9); }
+.plan-row1 { display: flex; justify-content: space-between; align-items: baseline; }
+.plan-name  { font-size: 0.8rem; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.plan-price { font-size: 0.9rem; font-weight: bold; color: #fef08a; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.plan-row2  { display: flex; justify-content: space-between; align-items: center; }
+.plan-vp    { font-size: 0.68rem; opacity: 0.9; }
+.plan-profit{ font-size: 0.7rem; color: #bbf7d0; font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.3); }
 
 .category-tab {
-  padding: 5px 10px; cursor: pointer; border: 1px solid transparent; border-radius: 15px;
-  white-space: nowrap; transition: background-color 0.15s;
-  font-size: 0.82rem; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+  padding: 6px 12px; border-radius: 16px; font-size: 0.85rem; border: 1px solid transparent;
+  background: rgba(255,255,255,0.5); color: var(--text-dark); transition: all 0.2s;
 }
-.category-tab.active { background-color: #e6f0ff; border-color: #2c7be5; color: #2c7be5; font-weight: bold; }
+.category-tab.active { background: rgba(255,255,255,0.9); border-color: var(--primary-color); color: var(--primary-color); font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-.package-items       { background-color: #f5f0ff; border-radius: 6px; padding: 7px 9px; margin: 6px 0; border-left: 3px solid #7c3aed; }
-.package-items-title { font-size: 0.73rem; font-weight: bold; color: #6d28d9; margin-bottom: 5px; }
-.package-items-tags  { display: flex; flex-wrap: wrap; gap: 3px; }
-.package-item-tag    { display: inline-block; background-color: #ede9fe; color: #5b21b6; font-size: 0.68rem; padding: 2px 7px; border-radius: 10px; border: 1px solid #c4b5fd; white-space: nowrap; }
-.package-badge       { display: inline-block; background-color: #7c3aed; color: white; font-size: 0.52rem; padding: 1px 4px; border-radius: 8px; vertical-align: middle; margin-left: 3px; white-space: nowrap; }
-.card-fixed-price    { font-size: 0.7rem; color: #7c3aed; font-style: italic; margin-bottom: 3px; }
-.product-card.package-card { border-left: 4px solid #7c3aed; background-color: #fdfbff; }
-tr.package-row { background-color: #fdfbff !important; }
-tr.package-row:hover, tr.package-row:active { background-color: #f0ebff !important; }
-tr.package-row td.product-name { font-size: 0.58rem !important; min-width: 52px !important; max-width: 80px !important; line-height: 1.3; word-break: break-all; }
-tr.package-row td.product-name .package-badge { font-size: 0.48rem; padding: 1px 3px; }
-tr.package-row td:not(.product-name) { font-size: 0.62rem; padding: 6px 3px; color: #5b21b6; font-weight: 600; }
-tr.package-row td:last-child { color: inherit; font-weight: normal; }
-tr.package-row td.pkg-profit-cell { color: #16a34a !important; font-weight: 700 !important; }
-td.no-profit { color: #bbb; text-align: center; }
+/* 表格區塊毛玻璃化 */
+.table-container { overflow-x: auto; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--glass-border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: transparent; }
+th, td { border: 1px solid rgba(255,255,255,0.4); padding: 10px 6px; text-align: left; }
+th { background: rgba(255,255,255,0.7); backdrop-filter: blur(4px); position: sticky; top: 0; z-index: 10; font-weight: bold; color: #1a3b5c; }
+tr:nth-child(even) { background: rgba(255,255,255,0.25); }
+tr:hover { background: rgba(255,255,255,0.5); }
+td.product-name { min-width: 80px; max-width: 140px; font-size: 0.8rem; font-weight: bold; }
+tr.package-row td:not(.product-name) { color: #5b21b6; }
 
-.table-container { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 10px; padding-bottom: 4px; }
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-th, td { border: 1px solid #ddd; padding: 8px 4px; text-align: left; }
-th { background-color: #f8f9fa; position: sticky; top: 0; z-index: 10; font-size: 0.8rem; }
-tr:nth-child(even) { background-color: #f9f9f9; }
-tr:hover, tr:active { background-color: #f0f7ff; }
-td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-wrap: break-word; white-space: normal; overflow-wrap: anywhere; font-size: 0.75rem; }
-
-.qty-control { display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.qty-control { display: flex; align-items: center; justify-content: center; }
 .qty-btn {
-  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-  background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 3px;
-  font-weight: bold; font-size: 13px; cursor: pointer;
-  user-select: none; -webkit-user-select: none;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
-  margin: 0; flex-shrink: 0;
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 6px;
+  font-weight: bold; font-size: 14px; cursor: pointer; color: var(--text-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.qty-btn:hover  { background-color: #e4e4e4; }
-.qty-btn:active { background-color: #d0d0d0; }
-.qty-input {
-  width: 28px; height: 22px; padding: 0 1px; margin: 0 2px;
-  text-align: center; border: 1px solid #ddd; border-radius: 3px; flex-shrink: 0;
-}
+.qty-btn:active { background: #e0e0e0; transform: scale(0.9); }
+.qty-input { width: 32px; height: 24px; text-align: center; border: 1px solid var(--glass-border); border-radius: 6px; background: rgba(255,255,255,0.7); margin: 0 4px; padding: 0;}
 
-.summary { background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.summary-flex { display: flex; flex-wrap: wrap; gap: 10px; }
-.summary-item { flex: 1; min-width: 150px; margin-bottom: 8px; }
-.summary-item h3 { margin-top: 0; margin-bottom: 8px; color: #333; font-size: 0.95rem; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
-.summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; }
-.summary-row.total { font-weight: bold; font-size: 0.95rem; margin-top: 8px; padding-top: 4px; border-top: 1px dashed #ddd; }
-.profit { color: #28a745; font-weight: bold; }
-.summary-item.profit-section { background-color: #f0fff4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px; }
-.summary-item.profit-section h3 { color: #166534; border-bottom-color: #bbf7d0; }
+/* 總計區塊 */
+.summary { background: var(--glass-item-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); box-shadow: inset 0 2px 5px rgba(255,255,255,0.5); }
+.summary-item { flex: 1; min-width: 150px; margin-bottom: 8px; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4); }
+.summary-item h3 { margin-top: 0; color: #1a3b5c; font-size: 1rem; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 6px; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.88rem; }
+.summary-row.total { font-weight: bold; font-size: 1rem; margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.15); color: #1a3b5c; }
+.profit { color: #15803d; font-weight: bold; }
+.summary-item.profit-section { background: rgba(220,252,231,0.5); border-color: rgba(134,239,172,0.6); }
 
-.product-cards { display: none; }
-.product-card { background-color: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); padding: 10px; margin-bottom: 8px; position: relative; }
-.card-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; font-size: 0.85rem; }
-.card-stock  { color: #666; font-size: 0.8rem; }
-.card-body   { margin-bottom: 6px; }
-.card-detail { color: #666; font-size: 0.75rem; margin-bottom: 4px; }
-.card-price-row  { display: flex; justify-content: space-between; margin-bottom: 3px; padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 0.8rem; }
-.card-profit-row { display: flex; justify-content: space-between; margin-bottom: 3px; padding: 4px 6px; border-bottom: 1px dashed #d1fae5; font-size: 0.8rem; background-color: #f0fff4; border-radius: 4px; }
-.card-footer  { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-.card-actions { display: flex; gap: 4px; }
+/* 卡片視圖 */
+.product-card { background: rgba(255,255,255,0.6); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+.card-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; color: #1a3b5c; }
+.card-price-row { display: flex; justify-content: space-between; margin-bottom: 4px; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.1); font-size: 0.85rem; }
 
-.view-toggle { display: flex; justify-content: center; margin: 8px 0; }
-.view-toggle button { padding: 6px 10px; margin: 0 3px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; }
-.view-toggle button.active { background: #e6f0ff; border-color: #2c7be5; color: #2c7be5; font-weight: bold; }
+.view-toggle { display: flex; justify-content: center; margin: 10px 0; }
+.view-toggle button { margin: 0 4px; border-radius: 8px; background: rgba(255,255,255,0.5); }
+.view-toggle button.active { background: rgba(255,255,255,0.9); border-color: var(--primary-color); color: var(--primary-color); font-weight: bold; }
 
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-.modal { background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-width: 90%; width: 320px; padding: 20px; }
-.modal-title   { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: #333; }
-.modal-content { margin-bottom: 20px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+/* Modal 彈窗毛玻璃 */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
+.modal { background: rgba(255,255,255,0.85); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 90%; width: 340px; padding: 24px; backdrop-filter: var(--glass-blur); }
+.modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; color: #1a3b5c; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 10px 20px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1100; opacity: 0; transition: opacity 0.3s; max-width: 80%; text-align: center; pointer-events: none; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(30,41,59,0.85); backdrop-filter: blur(6px); color: white; padding: 12px 24px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1100; opacity: 0; transition: opacity 0.3s; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); font-weight: bold; }
 .toast.show { opacity: 1; }
-.empty-table-message { text-align: center; padding: 20px; color: #666; font-style: italic; }
 
-/* ===== PWA 安裝按鈕 ===== */
-.pwa-install-wrap { text-align: center; margin-bottom: 10px; }
-.pwa-install-btn {
-  background: linear-gradient(135deg, #16a34a, #15803d);
-  color: white; border: none; padding: 10px 24px; border-radius: 20px;
-  font-size: 0.88rem; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: 0 2px 8px rgba(22,163,74,0.35); margin: 0;
-  animation: pulse-green 2s infinite;
-}
-.pwa-install-btn:hover  { background: linear-gradient(135deg, #15803d, #166534); }
-.pwa-install-btn:active { background: linear-gradient(135deg, #166534, #14532d); }
-@keyframes pulse-green {
-  0%, 100% { box-shadow: 0 2px 8px rgba(22,163,74,0.35); }
-  50%       { box-shadow: 0 2px 16px rgba(22,163,74,0.6); }
-}
+.pwa-install-btn { background: linear-gradient(135deg, rgba(22,163,74,0.9), rgba(21,128,61,0.9)); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 24px; border-radius: 24px; font-weight: bold; box-shadow: 0 4px 15px rgba(22,163,74,0.3); backdrop-filter: blur(4px); margin-bottom:12px; }
 
 @media screen and (max-width: 480px) {
   body { padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; }
-  .container { padding: 8px; }
-  h1 { font-size: 1.1rem; margin-bottom: 8px; }
-  button { font-size: 0.8rem; padding: 6px; }
-  input, select { font-size: 16px !important; padding: 6px; }
-  .actions button { padding: 8px 4px; font-size: 0.8rem; }
-  th, td { padding: 5px 3px; font-size: 0.72rem; }
-  .qty-btn { width: 20px; height: 20px; font-size: 12px; }
-  .qty-input { width: 24px; height: 20px; margin: 0 1px; }
-  .summary { padding: 8px; }
-  .summary-item h3 { font-size: 0.85rem; }
-  .summary-row { font-size: 0.75rem; }
-  td.product-name { min-width: 60px; max-width: 100px; font-size: 0.7rem; }
-  .plan-name  { font-size: 0.72rem; }
-  .plan-price { font-size: 0.8rem; }
-  .plan-vp    { font-size: 0.6rem; }
-  .plan-profit{ font-size: 0.62rem; }
-  tr.package-row td.product-name { font-size: 0.52rem !important; min-width: 44px !important; max-width: 68px !important; }
-  tr.package-row td:not(.product-name) { font-size: 0.56rem; padding: 5px 2px; }
+  .container { padding: 10px; border-radius: 12px; }
+  th, td { padding: 6px 4px; font-size: 0.75rem; }
+  .qty-btn { width: 22px; height: 22px; font-size: 12px; }
+  .qty-input { width: 28px; height: 22px; }
   .search-modal-content { height: 90vh; }
 }
 @media (min-width: 768px) {
-  .container { max-width: 1200px; padding: 20px; }
-  body { padding: 20px; }
-  h1 { font-size: 2rem; }
+  .container { max-width: 1200px; padding: 24px; }
   .controls { flex-direction: row; }
   .price-controls { flex-direction: row; }
-  .product-cards { display: none !important; }
-  .table-container { display: block !important; }
-  .view-toggle { display: none; }
-  select, button, input { font-size: 16px; }
-  th, td { font-size: 14px; padding: 8px 5px; }
-  .qty-btn { width: 26px; height: 26px; font-size: 14px; }
-  .qty-input { width: 34px; height: 26px; margin: 0 2px; }
-  td.product-name { min-width: 120px; max-width: 250px; font-size: 0.8rem; }
-  tr.package-row td.product-name { font-size: 0.78rem !important; min-width: 100px !important; max-width: 200px !important; }
-  tr.package-row td:not(.product-name) { font-size: 14px; padding: 8px 5px; }
   .package-plans-grid { grid-template-columns: repeat(4, 1fr); }
-  .plan-name  { font-size: 0.88rem; }
-  .plan-price { font-size: 1rem; }
-  .plan-vp    { font-size: 0.72rem; }
-  .plan-profit{ font-size: 0.75rem; }
-  .search-modal-content { height: 78vh; max-width: 580px; }
+  .search-modal-content { height: 78vh; max-width: 580px; border-radius: 24px; }
+  .search-modal-overlay { align-items: center; }
 }
 </style>
 </head>
@@ -378,13 +315,13 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
 <h1>產品計算器</h1>
 
 <!-- PWA 安裝按鈕 -->
-<div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none;">
+<div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
 
 <!-- ===== 字體大小控制列 ===== -->
 <div class="font-ctrl-bar">
-  <span class="font-ctrl-label">🔠 字體大小</span>
+  <span class="font-ctrl-label">🔠 字體</span>
   <div class="font-ctrl-btns">
     <button class="font-ctrl-btn" id="font-decrease-btn" onclick="changeFontSize(-1)">A－</button>
     <span id="font-size-display">標準</span>
@@ -423,7 +360,7 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
     </div>
   </div>
   <div class="actions">
-    <button style="background-color: white; color: #e63757; font-weight: bold;" onclick="confirmClearSelection()">清空選擇</button>
+    <button style="background: rgba(255,255,255,0.8); color: #e63757; font-weight: bold;" onclick="confirmClearSelection()">清空選擇</button>
     <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製</button>
   </div>
 </div>
@@ -451,8 +388,8 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
 </div>
 
  <!-- 大餐四寶快捷鍵 -->
-<div class="shortcut-section" style="margin-bottom: 8px;">
-  <button class="btn-add-product" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 3px 10px rgba(16,185,129,0.3); font-size: 0.85rem;" onclick="addBigMealCombo()">
+<div class="shortcut-section" style="margin-bottom: 10px;">
+  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9)); box-shadow: 0 4px 15px rgba(16,185,129,0.3); font-size: 0.9rem;" onclick="addBigMealCombo()">
     🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
   </button>
 </div>
@@ -471,7 +408,7 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
     <tbody id="product-table-body"></tbody>
   </table>
 </div>
-<div id="product-cards" class="product-cards"></div>
+<div id="product-cards" class="product-cards" style="display:none;"></div>
 <div class="summary" id="summary"></div>
 </div>
 
@@ -510,7 +447,7 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
 <div class="modal-overlay" id="pwa-info-modal">
   <div class="modal">
     <div class="modal-title">📲 安裝到主畫面</div>
-    <div class="modal-content" id="pwa-info-content" style="white-space:pre-line;line-height:1.8;font-size:0.92rem;"></div>
+    <div class="modal-content" id="pwa-info-content" style="white-space:pre-line;line-height:1.8;font-size:0.95rem;"></div>
     <div class="modal-actions">
       <button class="btn-primary" onclick="document.getElementById('pwa-info-modal').style.display='none'">好的</button>
     </div>
@@ -519,12 +456,12 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
 <!-- 新產品上架通知 Modal -->
 <div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
   <div class="modal" style="text-align: center;">
-    <div class="modal-title" style="color: #2c7be5; font-size: 1.3rem; margin-bottom: 15px;">🎉 最新消息</div>
-    <div class="modal-content" style="font-size: 1.1rem; color: #333;">
+    <div class="modal-title" style="color: var(--primary-color); font-size: 1.3rem; margin-bottom: 15px;">🎉 最新消息</div>
+    <div class="modal-content" style="font-size: 1.1rem; color: #1a3b5c; font-weight: bold;">
       21day健肝新產品已經上架啦！
     </div>
     <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
-      <button class="btn-primary" onclick="closeNewProductModal()" style="width: 100%; padding: 12px; font-size: 1rem;">我知道了</button>
+      <button class="btn-primary" onclick="closeNewProductModal()" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">我知道了</button>
     </div>
   </div>
 </div>
@@ -748,7 +685,6 @@ function copyToClipboard() {
 }
 
 function executeCopy() {
-  // 五個獨立選項
   const includeUnitPrice  = document.getElementById('copy-opt-unitprice')  ? document.getElementById('copy-opt-unitprice').checked  : false;
   const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false;
   const includeVP         = document.getElementById('copy-opt-vp')         ? document.getElementById('copy-opt-vp').checked         : false;
@@ -776,13 +712,11 @@ function executeCopy() {
       if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; }
       else { up = Math.abs(price2 - price1); tp = up * p.quantity; }
 
-      // 等級1
       let parts1 = [];
       if (includeUnitPrice)  parts1.push('單價：' + formatPrice(price1, isPkg));
       if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg));
       if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  '));
 
-      // 等級2
       let parts2 = [];
       if (includeUnitPrice)  parts2.push('單價：' + formatPrice(price2, isPkg));
       if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg));
@@ -802,7 +736,6 @@ function executeCopy() {
       }
     }
 
-    // VP / 總VP
     let vpParts = [];
     if (includeVP)      vpParts.push('VP：' + p.vp.toFixed(2));
     if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2));
@@ -934,35 +867,23 @@ function addProduct(product) {
   updateProductDisplay(); filterProducts();
   setTimeout(() => newlyAddedStockNos.clear(), 400);
 }
-  // ============================================================
-// ===== 快捷組合：大餐四寶 (含防誤觸二次確認) =====
-// ============================================================
+
 function addBigMealCombo() {
-  // 使用網頁內建的確認對話框
   showConfirmDialog('確定要快捷添加「大餐四寶」到購物車嗎？', () => {
-    // 點擊「確定」後才會執行以下添加邏輯
     const stockNos = ["0079", "0210", "0111", "0130"];
     let added = false;
-
     stockNos.forEach(stockNo => {
       const product = productsData.find(p => p.stock_no === stockNo);
       if (product) {
         const existing = selectedProducts.find(p => p.stock_no === stockNo);
-        if (existing) {
-          existing.quantity += 1; // 如果已經在購物車，數量 +1
-        } else {
-          selectedProducts.push({ ...product, quantity: 1 }); // 如果沒有，新增一筆
-          newlyAddedStockNos.add(stockNo); // 加入動畫效果標記
-        }
+        if (existing) { existing.quantity += 1; } 
+        else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(stockNo); }
         added = true;
       }
     });
-
     if (added) {
-      updateProductDisplay(); // 更新畫面表格/卡片與總計
+      updateProductDisplay(); 
       showToast('🍽️ 已成功添加：大餐四寶 (4件獨立產品)');
-      
-      // 延遲清除動畫標記
       setTimeout(() => newlyAddedStockNos.clear(), 400);
     }
   });
@@ -1016,7 +937,7 @@ function updateProductTable() {
   const cmp = t2 && t1 !== t2;
   tbody.innerHTML = '';
   if (selectedProducts.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="${cmp ? 12 : 10}" class="empty-table-message">尚未選擇任何產品</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="${cmp ? 12 : 10}" style="text-align:center; padding:20px; color:var(--text-muted);">尚未選擇任何產品</td></tr>`;
     return;
   }
   selectedProducts.forEach(product => {
@@ -1026,7 +947,7 @@ function updateProductTable() {
     row.setAttribute('data-stockno', product.stock_no);
     const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
     let html = `<td>${product.stock_no}</td>
-      <td class="product-name">${product.prod_name}${isPkg ? '<span class="package-badge">套裝</span>' : ''}</td>
+      <td class="product-name">${product.prod_name}${isPkg ? '<span class="package-badge" style="background:#7c3aed;color:white;font-size:0.6rem;padding:2px 4px;border-radius:4px;margin-left:4px;">套裝</span>' : ''}</td>
       <td style="white-space:nowrap;"><div class="qty-control">
         ${qtyBtnHTML('dec', product.stock_no, '−')}
         <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
@@ -1038,19 +959,19 @@ function updateProductTable() {
       if (isPkg && product.fixedProfit !== undefined) { up = product.fixedProfit; tpr = up * product.quantity; }
       else { up = Math.abs(p2 - p1); tpr = up * product.quantity; }
       html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td><td>${formatPrice(p2,isPkg)}</td><td>${formatPrice(tp2,isPkg)}</td>
-        <td class="profit${isPkg?' pkg-profit-cell':''}">${formatProfit(up)}</td>
-        <td class="profit${isPkg?' pkg-profit-cell':''}">${formatProfit(tpr)}</td>`;
+        <td class="profit">${formatProfit(up)}</td>
+        <td class="profit">${formatProfit(tpr)}</td>`;
     } else {
       if (isPkg && product.fixedProfit !== undefined) {
         html += `<td>${formatPrice(p1,true)}</td><td>${formatPrice(tp1,true)}</td>
-          <td class="profit pkg-profit-cell">${formatProfit(product.fixedProfit)}</td>
-          <td class="profit pkg-profit-cell">${formatProfit(product.fixedProfit*product.quantity)}</td>`;
+          <td class="profit">${formatProfit(product.fixedProfit)}</td>
+          <td class="profit">${formatProfit(product.fixedProfit*product.quantity)}</td>`;
       } else {
-        html += `<td>${formatPrice(p1,false)}</td><td>${formatPrice(tp1,false)}</td><td class="no-profit">-</td><td class="no-profit">-</td>`;
+        html += `<td>${formatPrice(p1,false)}</td><td>${formatPrice(tp1,false)}</td><td style="color:#aaa;text-align:center;">-</td><td style="color:#aaa;text-align:center;">-</td>`;
       }
     }
     html += `<td>${product.vp.toFixed(2)}</td><td>${tvp.toFixed(2)}</td>
-      <td><button class="btn-danger" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></td>`;
+      <td><button class="btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></td>`;
     row.innerHTML = html; tbody.appendChild(row);
   });
 }
@@ -1062,30 +983,27 @@ function updateProductCards() {
   const cmp = t2 && t1 !== t2;
   cc.innerHTML = '';
   if (selectedProducts.length === 0) {
-    cc.innerHTML = '<div style="text-align:center;padding:20px;color:#666;font-style:italic;">尚未選擇任何產品</div>';
+    cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">尚未選擇任何產品</div>';
     return;
   }
   selectedProducts.forEach(product => {
     const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
     const isPkg = product.type === 'package';
     const card = document.createElement('div');
-    card.className = ['product-card', isPkg ? 'package-card' : '', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
+    card.className = ['product-card', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
     card.setAttribute('data-stockno', product.stock_no);
     let html = `<div class="card-header">
-      <div>${product.prod_name}${isPkg ? '<span class="package-badge">套裝</span>' : ''}</div>
-      <div class="card-stock">${product.stock_no}</div>
-    </div><div class="card-body"><div class="card-detail">${product.prod_name_en}</div>`;
-    if (isPkg && product.packageItems && product.packageItems.length > 0) {
-      html += `<div class="package-items"><div class="package-items-title">📦 套裝包含：</div>
-        <div class="package-items-tags">${product.packageItems.map(i => `<span class="package-item-tag">${i}</span>`).join('')}</div></div>`;
-    }
+      <div>${product.prod_name}${isPkg ? '<span style="background:#7c3aed;color:white;font-size:0.7rem;padding:2px 6px;border-radius:6px;margin-left:6px;">套裝</span>' : ''}</div>
+      <div style="color:var(--text-muted);">${product.stock_no}</div>
+    </div><div style="margin-bottom:8px;"><div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">${product.prod_name_en}</div>`;
+    
     if (isPkg) {
-      html += `<div class="card-fixed-price">⚠ 此套裝價格固定，不受等級影響</div>
+      html += `<div style="font-size:0.75rem;color:#7c3aed;margin-bottom:6px;">⚠ 此套裝價格固定，不受等級影響</div>
         <div class="card-price-row"><div>套裝價：</div><div style="color:#7c3aed;font-weight:bold;">${formatPrice(p1,true)}</div></div>
         <div class="card-price-row"><div>套裝總價 (×${product.quantity})：</div><div style="color:#7c3aed;font-weight:bold;">${formatPrice(tp1,true)}</div></div>`;
       if (product.fixedProfit !== undefined) {
-        html += `<div class="card-profit-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div>
-          <div class="card-profit-row"><div>💰 固定利潤 (×${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
+        html += `<div class="card-price-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div>
+          <div class="card-price-row"><div>💰 固定利潤 (×${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
       }
     } else if (cmp) {
       const p2 = product[t2], tp2 = p2 * product.quantity;
@@ -1102,13 +1020,13 @@ function updateProductCards() {
     }
     html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
       <div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div>
-      <div class="card-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
         <div class="qty-control">
           ${qtyBtnHTML('dec', product.stock_no, '−')}
           <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
           ${qtyBtnHTML('inc', product.stock_no, '+')}
         </div>
-        <div class="card-actions"><button class="btn-danger" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></div>
+        <button class="btn-danger" style="padding:6px 12px;font-size:0.85rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button>
       </div>`;
     card.innerHTML = html; cc.appendChild(card);
   });
@@ -1126,7 +1044,7 @@ function updateSummary() {
   const totalVP    = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0);
   const pkgProds   = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined);
   const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0);
-  let html = '<div class="summary-flex">';
+  let html = '<div style="display:flex;flex-wrap:wrap;gap:12px;">';
   if (cmp) {
     const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0);
     const totalPr = selectedProducts.reduce((s, p) => {
@@ -1186,57 +1104,21 @@ function clearSelection() { selectedProducts = []; updateProductDisplay(); showT
 // ============================================================
 // ===== PWA START =====
 // ============================================================
-function pwaGenerateIcon(size) {
-  try {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '">'
-      + '<rect width="' + size + '" height="' + size + '" rx="' + Math.round(size*0.22) + '" fill="#2c7be5"/>'
-      + '<text x="50%" y="53%" text-anchor="middle" dominant-baseline="middle" fill="white" '
-      + 'font-family="Arial,sans-serif" font-weight="bold" font-size="' + Math.round(size*0.42) + '">産</text>'
-      + '</svg>';
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  } catch(e) { return ''; }
-}
-
 let deferredInstallPrompt = null;
-
 function initPWA() {
-  // Service Worker 註冊（雙端離線功能保留，不影響圖標）
   if ('serviceWorker' in navigator) {
     const swCode = 'self.addEventListener("install",function(){self.skipWaiting();});self.addEventListener("activate",function(){self.clients.claim();});self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).catch(function(){return new Response("",{status:503});});}));});';
     try {
       navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' })))
-        .then(() => console.log('✅ PWA ServiceWorker 已啟用'))
-        .catch(() => console.log('ℹ️ ServiceWorker 跳過'));
-    } catch (e) { console.warn('ServiceWorker 註冊失敗', e); }
+        .then(() => console.log('✅ PWA ServiceWorker 已啟用')).catch(() => console.log('ℹ️ ServiceWorker 跳過'));
+    } catch (e) {}
   }
-
-  // PWA安裝彈窗事件（安卓Chrome專用，iOS不影響）
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredInstallPrompt = e;
-    showPwaInstallBtn();
+    e.preventDefault(); deferredInstallPrompt = e; showPwaInstallBtn();
   });
-
-  // 安裝成功回調（雙端通用）
   window.addEventListener('appinstalled', () => {
-    hidePwaInstallBtn();
-    showToast('✅ App 已成功安裝到主畫面！');
+    hidePwaInstallBtn(); showToast('✅ App 已成功安裝到主畫面！');
   });
-
-  // 關閉新產品通知，並記錄到瀏覽器
-function closeNewProductModal() {
-  document.getElementById('new-product-modal').style.display = 'none';
-  localStorage.setItem('seen_new_product_liver', 'true');
-}
-
-// 檢查是否需要顯示通知
-function checkNewProductNotification() {
-  if (!localStorage.getItem('seen_new_product_liver')) {
-    document.getElementById('new-product-modal').style.display = 'flex';
-  }
-}
-  
-  // 已安裝狀態隱藏安裝按鈕
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   if (!isStandalone) setTimeout(showPwaInstallBtn, 600);
 }
@@ -1262,17 +1144,12 @@ function handlePwaInstall() {
   document.getElementById('pwa-info-content').textContent = msg;
   document.getElementById('pwa-info-modal').style.display = 'flex';
 }
-// ============================================================
-// ===== PWA END =====
-// ============================================================
 
-// 1. 關閉新產品通知，並記錄到瀏覽器 (放在這裡)
 function closeNewProductModal() {
   document.getElementById('new-product-modal').style.display = 'none';
   localStorage.setItem('seen_new_product_liver', 'true');
 }
 
-// 2. 檢查是否需要顯示通知 (放在這裡)
 function checkNewProductNotification() {
   if (!localStorage.getItem('seen_new_product_liver')) {
     document.getElementById('new-product-modal').style.display = 'flex';
@@ -1281,12 +1158,10 @@ function checkNewProductNotification() {
 
 window.onload = function () {
   initPWA();
-  initFontSize();   // ← 字體大小初始化（讀取上次設定）
+  initFontSize();
   initCategories();
-  switchView('table'); // ← 永遠默認表格視圖，用戶仍可手動切換
+  switchView('table');
   updateProductDisplay();
-  
-  // 3. 觸發卡片檢查
   checkNewProductNotification();
   
   document.addEventListener('touchend', function (e) {
