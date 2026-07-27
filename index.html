@@ -17,7 +17,7 @@
 
 <!-- iOS Safari PWA專屬強制配置 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- 修改處：將 black-translucent 改為 default，取消 iOS 頂部玻璃覆蓋效果 -->
+<!-- 改為 default：取消頂部狀態列的玻璃覆蓋效果 -->
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="計算器V3">
 <!-- iOS全機型圖標適配 -->
@@ -32,7 +32,8 @@
 
 <style>
 * { box-sizing: border-box; }
-body { font-family: Arial, sans-serif; margin: 0; padding: 6px; background-color: #f5f5f5; font-size: 13px; }
+/* 加入 safe-area-inset-top 雙重保證不會被頂部玻璃狀態列遮擋 */
+body { font-family: Arial, sans-serif; margin: 0; padding: max(6px, env(safe-area-inset-top)) 6px 6px 6px; background-color: #f5f5f5; font-size: 13px; }
 .container { max-width: 100%; margin: 0 auto; background-color: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 1.3rem; }
 input, select { font-size: 16px !important; }
@@ -326,7 +327,7 @@ td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-
 }
 
 @media screen and (max-width: 480px) {
-  body { padding: 4px; }
+  body { padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; }
   .container { padding: 8px; }
   h1 { font-size: 1.1rem; margin-bottom: 8px; }
   button { font-size: 0.8rem; padding: 6px; }
