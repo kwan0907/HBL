@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+  <link rel="preload" as="image" href="./IMG_4289.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>產品計算器V3</title>
+
+<!-- 核心：靜態Manifest檔案（安卓/Chrome主識別，iOS兜底） -->
+<link rel="manifest" href="./manifest.json" crossorigin="use-credentials">
+
+<!-- 全局主題色（雙端通用） -->
+<meta name="theme-color" content="#2c7be5">
+
+<!-- 安卓/Chrome PWA兼容配置 -->
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- iOS Safari PWA專屬強制配置 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- 修改處：將 black-translucent 改為 default，取消 iOS 頂部玻璃覆蓋效果 -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="計算器V3">
+<!-- iOS全機型圖標適配 -->
+<link rel="apple-touch-icon" sizes="180x180" href="./IMG_4289.png">
+<link rel="apple-touch-icon" sizes="167x167" href="./IMG_4289.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./IMG_4289.png">
+<link rel="apple-touch-icon" sizes="120x120" href="./IMG_4289.png">
+
+<!-- 兜底圖標（瀏覽器標籤、舊設備兼容） -->
+<link rel="shortcut icon" href="./IMG_4289.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./IMG_4289.png">
+
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; margin: 0; padding: 6px; background-color: #f5f5f5; font-size: 13px; }
+.container { max-width: 100%; margin: 0 auto; background-color: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 1.3rem; }
+input, select { font-size: 16px !important; }
+.controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.tier-select, .actions { padding: 8px; background-color: #f9f9f9; border-radius: 5px; width: 100%; }
+.price-controls { display: flex; flex-direction: column; gap: 8px; }
+.price-control { width: 100%; }
+.price-control label { display: block; margin-bottom: 3px; font-weight: bold; font-size: 0.9rem; }
+
+/* ===== 字體大小控制列 ===== */
+.font-ctrl-bar {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 8px; margin-bottom: 8px; padding: 6px 10px;
+  background: #f8faff; border-radius: 8px; border: 1px solid #e0e8ff;
+}
+.font-ctrl-label {
+  color: #555; font-size: 0.85rem; white-space: nowrap;
+  margin-right: 2px; flex: 1;
+}
+.font-ctrl-btns { display: flex; align-items: center; gap: 6px; }
+.font-ctrl-btn {
+  padding: 5px 13px; margin: 0; border-radius: 6px;
+  font-weight: bold; font-size: 0.9rem; min-width: 42px;
+  background: #e6f0ff; border: 1px solid #b0c8f0; color: #2c7be5;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; cursor: pointer;
+}
+.font-ctrl-btn:hover  { background: #cce0ff; }
+.font-ctrl-btn:active { background: #a8c4f0; }
+.font-ctrl-btn:disabled { opacity: 0.32; cursor: default; background: #e6f0ff; }
+#font-size-display {
+  min-width: 38px; text-align: center; font-size: 0.85rem;
+  color: #2c7be5; font-weight: bold;
+  background: white; border: 1px solid #c8d8f5;
+  border-radius: 5px; padding: 3px 7px;
+}
+
+button {
+  padding: 8px; border-radius: 4px; border: 1px solid #ddd;
+  font-size: 0.9rem; touch-action: manipulation; cursor: pointer;
+  background-color: #f0f0f0; transition: background-color 0.15s;
+  margin: 3px 0; -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none; outline: none;
+  user-select: none; -webkit-user-select: none;
+}
+button:hover { background-color: #e4e4e4; }
+button:active { background-color: #d8d8d8; }
+select {
+  padding: 8px; border-radius: 4px; border: 1px solid #ddd;
+  touch-action: manipulation; width: 100%; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+  background-size: 14px; padding-right: 28px;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 4px; justify-content: space-between; }
+.actions button { flex: 1; min-width: 80px; padding: 10px 5px; text-align: center; }
+.btn-primary { background-color: #2c7be5; color: white; border: none; }
+.btn-primary:hover { background-color: #2472d4; }
+.btn-primary:active { background-color: #1a5fb5; }
+.btn-danger { background-color: #e63757; color: white; border: none; }
+.btn-danger:hover { background-color: #d12a49; }
+.btn-danger:active { background-color: #b8223e; }
+.btn-copy { background-color: #0d9488; color: white; border: none; }
+.btn-copy:hover { background-color: #0c8077; }
+.btn-copy:active { background-color: #0a6b65; }
+
+.btn-add-product {
+  width: 100%; padding: 13px 16px;
+  font-size: 1rem; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 8px; border: none;
+  background: linear-gradient(135deg, #2c7be5, #1a5fb5);
+  color: white; font-weight: bold;
+  box-shadow: 0 3px 10px rgba(44,123,229,0.3);
+}
+.btn-add-product:hover  { background: linear-gradient(135deg, #2472d4, #1654a8); }
+.btn-add-product:active { background: linear-gradient(135deg, #1a5fb5, #124090); }
+
+/* ===== 搜尋 Modal ===== */
+.search-modal-overlay {
+  display: none; position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.55); z-index: 800;
+  align-items: flex-end; justify-content: center; padding: 0;
+}
+.search-modal-content {
+  width: 100%; max-width: 600px; background: white;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.22);
+  overflow: hidden; display: flex; flex-direction: column; height: 86vh;
+  animation: slideUpFromBottom 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes slideUpFromBottom {
+  from { transform: translateY(100%); opacity: 0.7; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.search-modal-handle {
+  width: 40px; height: 4px; background: #d1d5db;
+  border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0;
+}
+.search-modal-bar {
+  display: flex; gap: 8px;
+  padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(135deg, #e8f0ff, #ddeeff);
+  flex-shrink: 0; align-items: center; border-top: 1px solid #c8d8f5;
+}
+.search-modal-input-wrap { position: relative; flex: 1; }
+.search-modal-input-wrap input {
+  width: 100%; padding: 11px 38px 11px 12px;
+  border: 2px solid #2c7be5; border-radius: 10px;
+  font-size: 16px !important; outline: none; background: white;
+  transition: box-shadow 0.2s;
+}
+.search-modal-input-wrap input:focus { box-shadow: 0 0 0 3px rgba(44,123,229,0.22); }
+#search-clear-btn {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.18); border: none; color: #333;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: bold; cursor: pointer;
+  padding: 0; margin: 0; opacity: 0; pointer-events: none; transition: opacity 0.15s;
+}
+#search-clear-btn.visible { opacity: 1; pointer-events: auto; }
+#search-clear-btn:hover { background: rgba(0,0,0,0.3); }
+.btn-search-close {
+  padding: 9px 14px; background: #e5e7eb; border: none; border-radius: 8px;
+  font-size: 0.88rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; color: #374151;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; margin: 0;
+}
+.btn-search-close:hover  { background: #d1d5db; }
+.btn-search-close:active { background: #9ca3af; }
+
+.search-modal-cats {
+  display: flex; flex-wrap: nowrap; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 10px 7px; gap: 5px;
+  border-top: 1px solid #eee; flex-shrink: 0; background: white;
+  scrollbar-width: none;
+}
+.search-modal-cats::-webkit-scrollbar { display: none; }
+
+.product-list-modal {
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+}
+.product-list-modal::before { content: ''; flex: 1 1 0; }
+
+.product-item {
+  padding: 10px 14px; cursor: pointer; border-bottom: 1px solid #f0f0f0;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background 0.1s;
+}
+.product-item:hover  { background-color: #f5f5f5; }
+.product-item:active { background-color: #e8e8e8; }
+.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.product-item-left  { flex: 1; min-width: 0; }
+.product-item-price { font-size: 0.8em; color: #2c7be5; white-space: nowrap; font-weight: bold; background: #e6f0ff; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; }
+.selected-badge { display: inline-block; background: #16a34a; color: white; font-size: 0.68em; padding: 1px 5px; border-radius: 8px; margin-right: 3px; vertical-align: middle; white-space: nowrap; }
+.product-item-package { background-color: #f8f0ff; border-left: 3px solid #7c3aed; }
+.product-item-package:hover  { background-color: #f0e5ff; }
+.product-item-package:active { background-color: #e8d8ff; }
+
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+.animate-in { animation: slideInDown 0.22s ease-out; }
+.removing   { animation: fadeOut 0.2s ease-out forwards; pointer-events: none; }
+
+.package-plans-section {
+  margin-bottom: 12px; padding: 8px 10px;
+  background: linear-gradient(135deg, #f5f0ff 0%, #ede5ff 100%);
+  border-radius: 10px; border: 1px solid #c4b5fd;
+}
+.package-plans-title { font-size: 0.85rem; font-weight: bold; color: #6d28d9; margin-bottom: 6px; }
+.package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.package-plan-btn {
+  padding: 7px 8px; background-color: #7c3aed; color: white; border: none;
+  border-radius: 8px; cursor: pointer;
+  text-align: left; display: flex; flex-direction: column; gap: 2px;
+  margin: 0; transition: background-color 0.15s;
+}
+.package-plan-btn:hover  { background-color: #6d28d9; }
+.package-plan-btn:active { background-color: #5b21b6; }
+.plan-row1 { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
+.plan-name  { font-size: 0.78rem; font-weight: bold; white-space: nowrap; }
+.plan-price { font-size: 0.88rem; font-weight: bold; color: #fde68a; white-space: nowrap; }
+.plan-row2  { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
+.plan-vp    { font-size: 0.65rem; opacity: 0.85; white-space: nowrap; }
+.plan-profit{ font-size: 0.68rem; color: #bbf7d0; font-weight: bold; white-space: nowrap; }
+
+.category-tab {
+  padding: 5px 10px; cursor: pointer; border: 1px solid transparent; border-radius: 15px;
+  white-space: nowrap; transition: background-color 0.15s;
+  font-size: 0.82rem; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+}
+.category-tab.active { background-color: #e6f0ff; border-color: #2c7be5; color: #2c7be5; font-weight: bold; }
+
+.package-items       { background-color: #f5f0ff; border-radius: 6px; padding: 7px 9px; margin: 6px 0; border-left: 3px solid #7c3aed; }
+.package-items-title { font-size: 0.73rem; font-weight: bold; color: #6d28d9; margin-bottom: 5px; }
+.package-items-tags  { display: flex; flex-wrap: wrap; gap: 3px; }
+.package-item-tag    { display: inline-block; background-color: #ede9fe; color: #5b21b6; font-size: 0.68rem; padding: 2px 7px; border-radius: 10px; border: 1px solid #c4b5fd; white-space: nowrap; }
+.package-badge       { display: inline-block; background-color: #7c3aed; color: white; font-size: 0.52rem; padding: 1px 4px; border-radius: 8px; vertical-align: middle; margin-left: 3px; white-space: nowrap; }
+.card-fixed-price    { font-size: 0.7rem; color: #7c3aed; font-style: italic; margin-bottom: 3px; }
+.product-card.package-card { border-left: 4px solid #7c3aed; background-color: #fdfbff; }
+tr.package-row { background-color: #fdfbff !important; }
+tr.package-row:hover, tr.package-row:active { background-color: #f0ebff !important; }
+tr.package-row td.product-name { font-size: 0.58rem !important; min-width: 52px !important; max-width: 80px !important; line-height: 1.3; word-break: break-all; }
+tr.package-row td.product-name .package-badge { font-size: 0.48rem; padding: 1px 3px; }
+tr.package-row td:not(.product-name) { font-size: 0.62rem; padding: 6px 3px; color: #5b21b6; font-weight: 600; }
+tr.package-row td:last-child { color: inherit; font-weight: normal; }
+tr.package-row td.pkg-profit-cell { color: #16a34a !important; font-weight: 700 !important; }
+td.no-profit { color: #bbb; text-align: center; }
+
+.table-container { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 10px; padding-bottom: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th, td { border: 1px solid #ddd; padding: 8px 4px; text-align: left; }
+th { background-color: #f8f9fa; position: sticky; top: 0; z-index: 10; font-size: 0.8rem; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+tr:hover, tr:active { background-color: #f0f7ff; }
+td.product-name { min-width: 80px; max-width: 140px; word-break: keep-all; word-wrap: break-word; white-space: normal; overflow-wrap: anywhere; font-size: 0.75rem; }
+
+.qty-control { display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.qty-btn {
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 3px;
+  font-weight: bold; font-size: 13px; cursor: pointer;
+  user-select: none; -webkit-user-select: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none;
+  margin: 0; flex-shrink: 0;
+}
+.qty-btn:hover  { background-color: #e4e4e4; }
+.qty-btn:active { background-color: #d0d0d0; }
+.qty-input {
+  width: 28px; height: 22px; padding: 0 1px; margin: 0 2px;
+  text-align: center; border: 1px solid #ddd; border-radius: 3px; flex-shrink: 0;
+}
+
+.summary { background-color: #f8f9fa; padding: 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.summary-flex { display: flex; flex-wrap: wrap; gap: 10px; }
+.summary-item { flex: 1; min-width: 150px; margin-bottom: 8px; }
+.summary-item h3 { margin-top: 0; margin-bottom: 8px; color: #333; font-size: 0.95rem; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; }
+.summary-row.total { font-weight: bold; font-size: 0.95rem; margin-top: 8px; padding-top: 4px; border-top: 1px dashed #ddd; }
+.profit { color: #28a745; font-weight: bold; }
+.summary-item.profit-section { background-color: #f0fff4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px; }
+.summary-item.profit-section h3 { color: #166534; border-bottom-color: #bbf7d0; }
+
+.product-cards { display: none; }
+.product-card { background-color: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); padding: 10px; margin-bottom: 8px; position: relative; }
+.card-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; font-size: 0.85rem; }
+.card-stock  { color: #666; font-size: 0.8rem; }
+.card-body   { margin-bottom: 6px; }
+.card-detail { color: #666; font-size: 0.75rem; margin-bottom: 4px; }
+.card-price-row  { display: flex; justify-content: space-between; margin-bottom: 3px; padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 0.8rem; }
+.card-profit-row { display: flex; justify-content: space-between; margin-bottom: 3px; padding: 4px 6px; border-bottom: 1px dashed #d1fae5; font-size: 0.8rem; background-color: #f0fff4; border-radius: 4px; }
+.card-footer  { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.card-actions { display: flex; gap: 4px; }
+
+.view-toggle { display: flex; justify-content: center; margin: 8px 0; }
+.view-toggle button { padding: 6px 10px; margin: 0 3px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; }
+.view-toggle button.active { background: #e6f0ff; border-color: #2c7be5; color: #2c7be5; font-weight: bold; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+.modal { background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-width: 90%; width: 320px; padding: 20px; }
+.modal-title   { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: #333; }
+.modal-content { margin-bottom: 20px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 10px 20px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1100; opacity: 0; transition: opacity 0.3s; max-width: 80%; text-align: center; pointer-events: none; }
+.toast.show { opacity: 1; }
+.empty-table-message { text-align: center; padding: 20px; color: #666; font-style: italic; }
+
+/* ===== PWA 安裝按鈕 ===== */
+.pwa-install-wrap { text-align: center; margin-bottom: 10px; }
+.pwa-install-btn {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: white; border: none; padding: 10px 24px; border-radius: 20px;
+  font-size: 0.88rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.35); margin: 0;
+  animation: pulse-green 2s infinite;
+}
+.pwa-install-btn:hover  { background: linear-gradient(135deg, #15803d, #166534); }
+.pwa-install-btn:active { background: linear-gradient(135deg, #166534, #14532d); }
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 2px 8px rgba(22,163,74,0.35); }
+  50%       { box-shadow: 0 2px 16px rgba(22,163,74,0.6); }
+}
+
+@media screen and (max-width: 480px) {
+  body { padding: 4px; }
+  .container { padding: 8px; }
+  h1 { font-size: 1.1rem; margin-bottom: 8px; }
+  button { font-size: 0.8rem; padding: 6px; }
+  input, select { font-size: 16px !important; padding: 6px; }
+  .actions button { padding: 8px 4px; font-size: 0.8rem; }
+  th, td { padding: 5px 3px; font-size: 0.72rem; }
+  .qty-btn { width: 20px; height: 20px; font-size: 12px; }
+  .qty-input { width: 24px; height: 20px; margin: 0 1px; }
+  .summary { padding: 8px; }
+  .summary-item h3 { font-size: 0.85rem; }
+  .summary-row { font-size: 0.75rem; }
+  td.product-name { min-width: 60px; max-width: 100px; font-size: 0.7rem; }
+  .plan-name  { font-size: 0.72rem; }
+  .plan-price { font-size: 0.8rem; }
+  .plan-vp    { font-size: 0.6rem; }
+  .plan-profit{ font-size: 0.62rem; }
+  tr.package-row td.product-name { font-size: 0.52rem !important; min-width: 44px !important; max-width: 68px !important; }
+  tr.package-row td:not(.product-name) { font-size: 0.56rem; padding: 5px 2px; }
+  .search-modal-content { height: 90vh; }
+}
+@media (min-width: 768px) {
+  .container { max-width: 1200px; padding: 20px; }
+  body { padding: 20px; }
+  h1 { font-size: 2rem; }
+  .controls { flex-direction: row; }
+  .price-controls { flex-direction: row; }
+  .product-cards { display: none !important; }
+  .table-container { display: block !important; }
+  .view-toggle { display: none; }
+  select, button, input { font-size: 16px; }
+  th, td { font-size: 14px; padding: 8px 5px; }
+  .qty-btn { width: 26px; height: 26px; font-size: 14px; }
+  .qty-input { width: 34px; height: 26px; margin: 0 2px; }
+  td.product-name { min-width: 120px; max-width: 250px; font-size: 0.8rem; }
+  tr.package-row td.product-name { font-size: 0.78rem !important; min-width: 100px !important; max-width: 200px !important; }
+  tr.package-row td:not(.product-name) { font-size: 14px; padding: 8px 5px; }
+  .package-plans-grid { grid-template-columns: repeat(4, 1fr); }
+  .plan-name  { font-size: 0.88rem; }
+  .plan-price { font-size: 1rem; }
+  .plan-vp    { font-size: 0.72rem; }
+  .plan-profit{ font-size: 0.75rem; }
+  .search-modal-content { height: 78vh; max-width: 580px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>產品計算器</h1>
+
+<!-- PWA 安裝按鈕 -->
+<div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none;">
+  <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
+</div>
+
+<!-- ===== 字體大小控制列 ===== -->
+<div class="font-ctrl-bar">
+  <span class="font-ctrl-label">🔠 字體大小</span>
+  <div class="font-ctrl-btns">
+    <button class="font-ctrl-btn" id="font-decrease-btn" onclick="changeFontSize(-1)">A－</button>
+    <span id="font-size-display">標準</span>
+    <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)">A＋</button>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="tier-select">
+    <div class="price-controls">
+      <div class="price-control">
+        <label for="pricing-tier1">價格等級 1:</label>
+        <select id="pricing-tier1" onchange="updatePricing()">
+          <option value="標準價">標準價</option>
+          <option value="銅級">銅級</option>
+          <option value="銀級">銀級</option>
+          <option value="金級">金級</option>
+          <option value="58%">58%</option>
+          <option value="50%">50%</option>
+          <option value="cost">成本價</option>
+        </select>
+      </div>
+      <div class="price-control">
+        <label for="pricing-tier2">價格等級 2 (可選):</label>
+        <select id="pricing-tier2" onchange="updatePricing()">
+          <option value="">不使用</option>
+          <option value="標準價">標準價</option>
+          <option value="銅級">銅級</option>
+          <option value="銀級">銀級</option>
+          <option value="金級">金級</option>
+          <option value="58%">58%</option>
+          <option value="50%">50%</option>
+          <option value="cost">成本價</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button style="background-color: white; color: #e63757; font-weight: bold;" onclick="confirmClearSelection()">清空選擇</button>
+    <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製</button>
+  </div>
+</div>
+
+<div class="package-plans-section">
+  <div class="package-plans-title">🏃 套裝計畫（價格不受等級影響）</div>
+  <div class="package-plans-grid">
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG1')">
+      <div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">$1,369</span></div>
+      <div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 $553.5</span></div>
+    </button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG2')">
+      <div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">$2,177</span></div>
+      <div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 $929</span></div>
+    </button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG3')">
+      <div class="plan-row1"><span class="plan-name">運動VIP計畫</span><span class="plan-price">$6,996</span></div>
+      <div class="plan-row2"><span class="plan-vp">347.9 VP</span><span class="plan-profit">💰 利潤 $2,338</span></div>
+    </button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG4')">
+      <div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">$9,998</span></div>
+      <div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 $3,188</span></div>
+    </button>
+  </div>
+</div>
+
+ <!-- 大餐四寶快捷鍵 -->
+<div class="shortcut-section" style="margin-bottom: 8px;">
+  <button class="btn-add-product" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 3px 10px rgba(16,185,129,0.3); font-size: 0.85rem;" onclick="addBigMealCombo()">
+    🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
+  </button>
+</div>
+<div class="product-selection">
+  <button class="btn-add-product" onclick="openSearchModal()">🔍 搜尋添加產品</button>
+</div>
+
+<div class="view-toggle">
+  <button id="table-view-btn" class="active" onclick="switchView('table')">表格視圖</button>
+  <button id="card-view-btn" onclick="switchView('card')">卡片視圖</button>
+</div>
+
+<div id="table-container" class="table-container">
+  <table id="selected-products">
+    <thead id="product-table-head"></thead>
+    <tbody id="product-table-body"></tbody>
+  </table>
+</div>
+<div id="product-cards" class="product-cards"></div>
+<div class="summary" id="summary"></div>
+</div>
+
+<!-- 搜尋 Modal -->
+<div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="search-modal-content">
+    <div class="search-modal-handle"></div>
+    <div id="product-list" class="product-list-modal"></div>
+    <div class="search-modal-cats" id="category-tabs"></div>
+    <div class="search-modal-bar">
+      <div class="search-modal-input-wrap">
+        <input type="text" id="product-search"
+          placeholder="搜尋產品編號或名稱..."
+          oninput="filterProducts(); updateClearBtn()"
+          autocomplete="off">
+        <button id="search-clear-btn" onclick="clearSearch()" tabindex="-1">✕</button>
+      </div>
+      <button class="btn-search-close" onclick="closeSearchModal()">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 確認 Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-title">確認操作</div>
+    <div class="modal-content" id="confirm-message"></div>
+    <div class="modal-actions">
+      <button onclick="hideConfirmDialog()">取消</button>
+      <button class="btn-danger" id="confirm-action-btn">確定</button>
+    </div>
+  </div>
+</div>
+
+<!-- PWA 安裝說明 Modal -->
+<div class="modal-overlay" id="pwa-info-modal">
+  <div class="modal">
+    <div class="modal-title">📲 安裝到主畫面</div>
+    <div class="modal-content" id="pwa-info-content" style="white-space:pre-line;line-height:1.8;font-size:0.92rem;"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="document.getElementById('pwa-info-modal').style.display='none'">好的</button>
+    </div>
+  </div>
+</div>
+<!-- 新產品上架通知 Modal -->
+<div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
+  <div class="modal" style="text-align: center;">
+    <div class="modal-title" style="color: #2c7be5; font-size: 1.3rem; margin-bottom: 15px;">🎉 最新消息</div>
+    <div class="modal-content" style="font-size: 1.1rem; color: #333;">
+      21day健肝新產品已經上架啦！
+    </div>
+    <div class="modal-actions" style="justify-content: center; margin-top: 20px;">
+      <button class="btn-primary" onclick="closeNewProductModal()" style="width: 100%; padding: 12px; font-size: 1rem;">我知道了</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast-message"></div>
+
+<script>
+const productsData = [
+  { stock_no: "PKG1", prod_name: "慢跑計畫", prod_name_en: "Jogging Plan", category: "套裝", type: "package", vp: 61.85, retail_price: 1369, 標準價: 1369, 銅級: 1369, 銀級: 1369, 金級: 1369, "58%": 1369, "50%": 1369, cost: 1369, fixedProfit: 553.5, fav: 1, prod_seq: 1, packageItems: ["1 營養蛋白素", "1 佳能蛋白質粉", "1 即溶草本飲品50克"] },
+  { stock_no: "PKG2", prod_name: "快跑計畫", prod_name_en: "Running Plan", category: "套裝", type: "package", vp: 107.25, retail_price: 2177, 標準價: 2177, 銅級: 2177, 銀級: 2177, 金級: 2177, "58%": 2177, "50%": 2177, cost: 2177, fixedProfit: 929, fav: 2, prod_seq: 2, packageItems: ["1 營養蛋白素", "1 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克"] },
+  { stock_no: "PKG3", prod_name: "運動VIP計畫", prod_name_en: "Sport VIP Plan", category: "套裝", type: "package", vp: 347.9, retail_price: 6996, 標準價: 6996, 銅級: 6996, 銀級: 6996, 金級: 6996, "58%": 6996, "50%": 6996, cost: 6996, fixedProfit: 2338, fav: 3, prod_seq: 3, packageItems: ["5 營養蛋白素", "5 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克", "1 消脂片", "1 抗脂片"] },
+  { stock_no: "PKG4", prod_name: "運動VVIP計畫", prod_name_en: "Sport VVIP Plan", category: "套裝", type: "package", vp: 501.45, retail_price: 9998, 標準價: 9998, 銅級: 9998, 銀級: 9998, 金級: 9998, "58%": 9998, "50%": 9998, cost: 9998, fixedProfit: 3188, fav: 4, prod_seq: 4, packageItems: ["5 營養蛋白素", "5 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克", "1 消脂片", "1 抗脂片", "1 夜寧新", "1 莓之寶", "1 纖維粉", "1 膠原蛋白美肌飲料", "1 深海魚油"] },
+  { stock_no: "1154", prod_name: "21 日健肝計劃", prod_name_en: "21 Days Liver Plan", category: "内", type: "", vp: 21.45, retail_price: 394, 標準價: 394, 銅級: 344.58, 銀級: 312.81, 金級: 281.04, "58%": 245.74, "50%": 217.5, cost: 217.5, fav: 770, prod_seq: 5 },
+  { stock_no: "0141", prod_name: "營養蛋白素-雲呢拿", prod_name_en: "F1 Shake - Vanilla", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 10, prod_seq: 10 },
+  { stock_no: "0143", prod_name: "營養蛋白素-野草莓", prod_name_en: "F1 Shake - Wild Berry", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 20, prod_seq: 20 },
+  { stock_no: "0142", prod_name: "營養蛋白素-朱古力", prod_name_en: "F1 Shake - Dutch Chocolate", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 30, prod_seq: 30 },
+  { stock_no: "0146", prod_name: "營養蛋白素-曲奇妙趣", prod_name_en: "F1 Shake - Cookiesn Cream", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 40, prod_seq: 40 },
+  { stock_no: "2789", prod_name: "營養蛋白素-薄荷朱古力", prod_name_en: "F1 Shake - Mint Chocolate", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 50, prod_seq: 50 },
+  { stock_no: "2774", prod_name: "營養蛋白素-鮮奶咖啡", prod_name_en: "F1 Shake - Café Latte", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 60, prod_seq: 60 },
+  { stock_no: "1927", prod_name: "營養蛋白素-紅豆薏仁", prod_name_en: "F1 Shake - Red Bean & Coix Seed", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 70, prod_seq: 80 },
+  { stock_no: "0006", prod_name: "濃縮蘆薈汁-原味", prod_name_en: "Aloe Concentrate - Original", category: "内", type: "", vp: 24.95, retail_price: 439, 標準價: 446, 銅級: 384.8, 銀級: 344, 金級: 303.2, "58%": 274.64, "50%": 242, cost: 242, fav: 80, prod_seq: 90 },
+  { stock_no: "2631", prod_name: "濃縮蘆薈汁-柑橘味", prod_name_en: "Aloe Concentrate - Mandarin", category: "内", type: "", vp: 24.95, retail_price: 439, 標準價: 446, 銅級: 384.8, 銀級: 344, 金級: 303.2, "58%": 274.64, "50%": 242, cost: 242, fav: 90, prod_seq: 100 },
+  { stock_no: "1610", prod_name: "濃縮蘆薈汁-葡萄味", prod_name_en: "Aloe Concentrate - Grape", category: "内", type: "", vp: 24.95, retail_price: 439, 標準價: 446, 銅級: 384.8, 銀級: 344, 金級: 303.2, "58%": 274.64, "50%": 242, cost: 242, fav: 100, prod_seq: 120 },
+  { stock_no: "0102", prod_name: "天然瓜拿拿茶", prod_name_en: "N-R-G Tea", category: "内", type: "", vp: 14.75, retail_price: 318, 標準價: 323, 銅級: 278.75, 銀級: 249.25, 金級: 219.75, "58%": 199.1, "50%": 175.5, cost: 175.5, fav: 110, prod_seq: 130 },
+  { stock_no: "0257", prod_name: "即溶草本飲品50克-桃味", prod_name_en: "Herbal Tea 50g - Peach", category: "内", type: "", vp: 19.95, retail_price: 373, 標準價: 379, 銅級: 327.1, 銀級: 292.5, 金級: 257.9, "58%": 233.68, "50%": 206, cost: 206, fav: 120, prod_seq: 140 },
+  { stock_no: "0106", prod_name: "即溶草本飲品102克", prod_name_en: "Herbal Tea 102g - Original", category: "内", type: "", vp: 34.95, retail_price: 660, 標準價: 670, 銅級: 578.2, 銀級: 517, 金級: 455.8, "58%": 412.96, "50%": 364, cost: 364, fav: 130, prod_seq: 160 },
+  { stock_no: "0759", prod_name: "即溶草本飲品102克-蘋果甘菊味", prod_name_en: "Herbal Tea 102g - Apple Chamomile", category: "内", type: "", vp: 34.95, retail_price: 660, 標準價: 670, 銅級: 578.2, 銀級: 517, 金級: 455.8, "58%": 412.96, "50%": 364, cost: 364, fav: 140, prod_seq: 170 },
+  { stock_no: "0242", prod_name: "佳能蛋白質粉", prod_name_en: "Performance Protein Powder", category: "内", type: "", vp: 17.95, retail_price: 364, 標準價: 369, 銅級: 318.45, 銀級: 284.75, 金級: 251.05, "58%": 227.46, "50%": 200.5, cost: 200.5, fav: 150, prod_seq: 190 },
+  { stock_no: "2864", prod_name: "營養纖維粉(蘋果味)", prod_name_en: "Active Fiber Complex (Apple Flavor)", category: "内", type: "", vp: 22.95, retail_price: 413, 標準價: 419, 銅級: 361.55, 銀級: 323.25, 金級: 284.95, "58%": 258.14, "50%": 227.5, cost: 227.5, fav: 160, prod_seq: 200 },
+  { stock_no: "2865", prod_name: "營養纖維粉(原味)", prod_name_en: "Active Fiber Complex (Original Flavor)", category: "内", type: "", vp: 22.95, retail_price: 413, 標準價: 419, 銅級: 361.55, 銀級: 323.25, 金級: 284.95, "58%": 258.14, "50%": 227.5, cost: 227.5, fav: 170, prod_seq: 210 },
+  { stock_no: "0036", prod_name: "夜寧新營養飲品", prod_name_en: "Niteworks", category: "内", type: "", vp: 89.95, retail_price: 1630, 標準價: 1654, 銅級: 1427.2, 銀級: 1276, 金級: 1124.8, "58%": 1018.96, "50%": 898, cost: 898, fav: 180, prod_seq: 220 },
+  { stock_no: "0056", prod_name: "膠原蛋白美肌飲料", prod_name_en: "Beauty Powder Drink", category: "内", type: "", vp: 43.55, retail_price: 946, 標準價: 960, 銅級: 828.45, 銀級: 740.75, 金級: 653.05, "58%": 591.66, "50%": 521.5, cost: 521.5, fav: 190, prod_seq: 230 },
+  { stock_no: "1829", prod_name: "BC30 益生菌", prod_name_en: "BC30 Simply Probiotic", category: "内", type: "", vp: 20.45, retail_price: 369, 標準價: 375, 銅級: 323.55, 銀級: 289.25, 金級: 254.95, "58%": 230.94, "50%": 203.5, cost: 203.5, fav: 200, prod_seq: 240 },
+  { stock_no: "2871", prod_name: "Liftoff能量飲品-檸檬青檸味", prod_name_en: "Liftoff - Lemon-Lime Blast", category: "内", type: "", vp: 15.95, retail_price: 296, 標準價: 300, 銅級: 258.9, 銀級: 231.5, 金級: 204.1, "58%": 184.92, "50%": 163, cost: 163, fav: 210, prod_seq: 250 },
+  { stock_no: "2872", prod_name: "Liftoff能量飲品-香橙味", prod_name_en: "Liftoff - Ignite-Me Orange", category: "内", type: "", vp: 15.95, retail_price: 296, 標準價: 300, 銅級: 258.9, 銀級: 231.5, 金級: 204.1, "58%": 184.92, "50%": 163, cost: 163, fav: 220, prod_seq: 260 },
+  { stock_no: "0111", prod_name: "消脂片", prod_name_en: "Cell-U-Loss", category: "内", type: "", vp: 15.75, retail_price: 274, 標準價: 278, 銅級: 239.9, 銀級: 214.5, 金級: 189.1, "58%": 171.32, "50%": 151, cost: 151, fav: 230, prod_seq: 270 },
+  { stock_no: "0130", prod_name: "抗脂片", prod_name_en: "Lipobond", category: "内", type: "", vp: 15.4, retail_price: 361, 標準價: 366, 銅級: 315.75, 銀級: 282.25, 金級: 248.75, "58%": 225.3, "50%": 198.5, cost: 198.5, fav: 240, prod_seq: 280 },
+  { stock_no: "0210", prod_name: "甲殼纖維素", prod_name_en: "Chitosan Fibre Complex", category: "内", type: "", vp: 24.05, retail_price: 547, 標準價: 555, 銅級: 478.95, 銀級: 428.25, 金級: 377.55, "58%": 342.06, "50%": 301.5, cost: 301.5, fav: 250, prod_seq: 290 },
+  { stock_no: "0079", prod_name: "美纖片", prod_name_en: "Snack Defense", category: "内", type: "", vp: 23.5, retail_price: 535, 標準價: 543, 銅級: 468.6, 銀級: 419, 金級: 369.4, "58%": 334.68, "50%": 295, cost: 295, fav: 260, prod_seq: 300 },
+  { stock_no: "1579", prod_name: "莓之寶", prod_name_en: "Triple Berry Complex", category: "内", type: "", vp: 13.25, retail_price: 274, 標準價: 278, 銅級: 239.9, 銀級: 214.5, 金級: 189.1, "58%": 171.32, "50%": 151, cost: 151, fav: 270, prod_seq: 310 },
+  { stock_no: "0212", prod_name: "香蒜片", prod_name_en: "Mega Garlic Plus", category: "内", type: "", vp: 18.95, retail_price: 273, 標準價: 277, 銅級: 239.05, 銀級: 213.75, 金級: 188.45, "58%": 170.74, "50%": 150.5, cost: 150.5, fav: 280, prod_seq: 320 },
+  { stock_no: "0139", prod_name: "露思抗氧化精華", prod_name_en: "RoseGuard", category: "内", type: "", vp: 23.75, retail_price: 419, 標準價: 425, 銅級: 366.8, 銀級: 328, 金級: 289.2, "58%": 262.04, "50%": 231, cost: 231, fav: 290, prod_seq: 330 },
+  { stock_no: "0065", prod_name: "深海魚油", prod_name_en: "Herbalifeline", category: "内", type: "", vp: 25.75, retail_price: 458, 標準價: 465, 銅級: 401.25, 銀級: 358.75, 金級: 316.25, "58%": 286.5, "50%": 252.5, cost: 252.5, fav: 300, prod_seq: 340 },
+  { stock_no: "0100", prod_name: "南極磷蝦油", prod_name_en: "Krill Shield", category: "内", type: "", vp: 35.5, retail_price: 624, 標準價: 633, 銅級: 546.15, 銀級: 488.25, 金級: 430.35, "58%": 389.82, "50%": 343.5, cost: 343.5, fav: 310, prod_seq: 350 },
+  { stock_no: "3115", prod_name: "多種維他命", prod_name_en: "F2 Multivitamin Complex", category: "内", type: "", vp: 19.95, retail_price: 363, 標準價: 368, 銅級: 317.6, 銀級: 284, 金級: 250.4, "58%": 226.88, "50%": 200, cost: 200, fav: 320, prod_seq: 360 },
+  { stock_no: "1061", prod_name: "女士之選", prod_name_en: "Woman's Choice", category: "内", type: "", vp: 37, retail_price: 560, 標準價: 568, 銅級: 490.15, 銀級: 438.25, 金級: 386.35, "58%": 350.02, "50%": 308.5, cost: 308.5, fav: 330, prod_seq: 370 },
+  { stock_no: "1000", prod_name: "關捷寶", prod_name_en: "Joint Support", category: "内", type: "", vp: 44, retail_price: 819, 標準價: 831, 銅級: 717, 銀級: 641, 金級: 565, "58%": 511.8, "50%": 451, cost: 451, fav: 340, prod_seq: 380 },
+  { stock_no: "0565", prod_name: "複合鈣片", prod_name_en: "Xtra-Cal", category: "内", type: "", vp: 10.7, retail_price: 213, 標準價: 216, 銅級: 186.45, 銀級: 166.75, 金級: 147.05, "58%": 133.26, "50%": 117.5, cost: 117.5, fav: 350, prod_seq: 390 },
+  { stock_no: "1457", prod_name: "營養蛋白素 24-雲尼拿味", prod_name_en: "Herbalife24 Formula 1 Sports - Vanilla", category: "内", type: "", vp: 41.6, retail_price: 764, 標準價: 775, 銅級: 668.8, 銀級: 598, 金級: 527.2, "58%": 477.64, "50%": 421, cost: 421, fav: 360, prod_seq: 400 },
+  { stock_no: "1405", prod_name: "補水24", prod_name_en: "Herbalife 24 Hydrate", category: "内", type: "", vp: 23.6, retail_price: 368, 標準價: 374, 銅級: 330.05, 銀級: 300.75, 金級: 271.45, "58%": 250.94, "50%": 227.5, cost: 227.5, fav: 370, prod_seq: 410 },
+  { stock_no: "1417", prod_name: "健體 24-朱古力味", prod_name_en: "Herbalife24 Rebuild Strength - Chocolate", category: "内", type: "", vp: 68.45, retail_price: 1167, 標準價: 1185, 銅級: 1028.55, 銀級: 924.25, 金級: 819.95, "58%": 746.94, "50%": 663.5, cost: 663.5, fav: 380, prod_seq: 420 },
+  { stock_no: "1463", prod_name: "CR7 水健力", prod_name_en: "CR7 Drive", category: "内", type: "", vp: 24.9, retail_price: 462, 標準價: 469, 銅級: 408.1, 銀級: 367.5, 金級: 326.9, "58%": 298.48, "50%": 266, cost: 266, fav: 390, prod_seq: 430 },
+  { stock_no: "1462", prod_name: "速備24", prod_name_en: "Herbalife 24 Prepare", category: "内", type: "", vp: 73.1, retail_price: 1342, 標準價: 1362, 銅級: 1175.25, 銀級: 1050.75, 金級: 926.25, "58%": 839.1, "50%": 739.5, cost: 739.5, fav: 400, prod_seq: 440 },
+  { stock_no: "0258", prod_name: "雲尼拿杏仁味蛋白棒", prod_name_en: "Protein Bar - VANILLA ALMOND", category: "内", type: "", vp: 7.7, retail_price: 211, 標準價: 214, 銅級: 196.3, 銀級: 184.5, 金級: 172.7, "58%": 164.44, "50%": 155, cost: 155, fav: 410, prod_seq: 450 },
+  { stock_no: "006K", prod_name: "一口蛋白棒", prod_name_en: "Protein Bite", category: "内", type: "", vp: 9.24, retail_price: 252, 標準價: 256, 銅級: 234.55, 銀級: 220.25, 金級: 205.95, "58%": 195.94, "50%": 184.5, cost: 184.5, fav: 420, prod_seq: 470 },
+  { stock_no: "072K", prod_name: "營養蛋白素-精選配方雲呢拿", prod_name_en: "F1 Select - Natural Vanilla", category: "内", type: "", vp: 21.65, retail_price: 460, 標準價: 467, 銅級: 402.95, 銀級: 360.25, 金級: 317.55, "58%": 287.66, "50%": 253.5, cost: 253.5, fav: 430, prod_seq: 480 },
+  { stock_no: "291K", prod_name: "醒腦靈", prod_name_en: "CogniProtect", category: "内", type: "", vp: 30.35, retail_price: 572, 標準價: 581, 銅級: 501.35, 銀級: 448.25, 金級: 395.15, "58%": 357.98, "50%": 315.5, cost: 315.5, fav: 440, prod_seq: 490 },
+  { stock_no: "0022", prod_name: "五味子精華", prod_name_en: "Schizandra Plus", category: "内", type: "", vp: 15.5, retail_price: 325, 標準價: 330, 銅級: 284.7, 銀級: 254.5, 金級: 224.3, "58%": 203.16, "50%": 179, cost: 179, fav: 450, prod_seq: 500 },
+  { stock_no: "202K", prod_name: "鋅維思", prod_name_en: "Best Defense", category: "内", type: "", vp: 9.95, retail_price: 188, 標準價: 191, 銅級: 164.75, 銀級: 147.25, 金級: 129.75, "58%": 117.5, "50%": 103.5, cost: 103.5, fav: 460, prod_seq: 510 },
+  { stock_no: "145K", prod_name: "禦之寶-黑加侖子味", prod_name_en: "ImmuLift", category: "内", type: "", vp: 10, retail_price: 191, 標準價: 194, 銅級: 167.45, 銀級: 149.75, 金級: 132.05, "58%": 119.66, "50%": 105.5, cost: 105.5, fav: 470, prod_seq: 520 },
+  { stock_no: "011K", prod_name: "朱古力咖啡", prod_name_en: "Mocha", category: "内", type: "", vp: 25.95, retail_price: 478, 標準價: 485, 銅級: 418.55, 銀級: 374.25, 金級: 329.95, "58%": 298.94, "50%": 263.5, cost: 263.5, fav: 480, prod_seq: 530 },
+  { stock_no: "0765", prod_name: "蘆薈舒緩潔面乳", prod_name_en: "Soothing Aloe Cleanser", category: "外", type: "", vp: 16.75, retail_price: 308, 標準價: 313, 銅級: 270.1, 銀級: 241.5, 金級: 212.9, "58%": 192.88, "50%": 170, cost: 170, fav: 490, prod_seq: 550 },
+  { stock_no: "0891", prod_name: "活養草本爽膚水-150ML", prod_name_en: "Energizing Herbal Toner - 150ML", category: "外", type: "", vp: 32.3, retail_price: 591, 標準價: 600, 銅級: 517.8, 銀級: 463, 金級: 408.2, "58%": 369.84, "50%": 326, cost: 326, fav: 510, prod_seq: 580 },
+  { stock_no: "0768", prod_name: "抗皺精華霜", prod_name_en: "Line Minimizing Serum", category: "外", type: "", vp: 37.7, retail_price: 688, 標準價: 698, 銅級: 602.3, 銀級: 538.5, 金級: 474.7, "58%": 430.04, "50%": 379, cost: 379, fav: 520, prod_seq: 590 },
+  { stock_no: "0769", prod_name: "注顏修護日霜", prod_name_en: "Daily Glow Moisturizer", category: "外", type: "", vp: 28.4, retail_price: 519, 標準價: 527, 銅級: 454.7, 銀級: 406.5, 金級: 358.3, "58%": 324.56, "50%": 286, cost: 286, fav: 530, prod_seq: 600 },
+  { stock_no: "0770", prod_name: "盈亮緊緻眼部啫喱", prod_name_en: "Firming Eye Gel", category: "外", type: "", vp: 26.35, retail_price: 482, 標準價: 489, 銅級: 421.95, 銀級: 377.25, 金級: 332.55, "58%": 301.26, "50%": 265.5, cost: 265.5, fav: 540, prod_seq: 610 },
+  { stock_no: "0771", prod_name: "深層滋潤眼霜", prod_name_en: "Hydrating Eye Cream", category: "外", type: "", vp: 26.35, retail_price: 482, 標準價: 489, 銅級: 421.95, 銀級: 377.25, 金級: 332.55, "58%": 301.26, "50%": 265.5, cost: 265.5, fav: 550, prod_seq: 620 },
+  { stock_no: "0774", prod_name: "修護晚霜", prod_name_en: "Replenishing Night Cream", category: "外", type: "", vp: 28.4, retail_price: 519, 標準價: 527, 銅級: 454.7, 銀級: 406.5, 金級: 358.3, "58%": 324.56, "50%": 286, cost: 286, fav: 560, prod_seq: 650 },
+  { stock_no: "0899", prod_name: "防曬日霜 SPF30/PA+++", prod_name_en: "PROTECTIVE Moisturizer SPF30", category: "外", type: "", vp: 28.4, retail_price: 519, 標準價: 527, 銅級: 454.7, 銀級: 406.5, 金級: 358.3, "58%": 324.56, "50%": 286, cost: 286, fav: 570, prod_seq: 660 },
+  { stock_no: "111K", prod_name: "維他命面膜-保濕", prod_name_en: "Vitamin Mask - Moisturizing", category: "外", type: "", vp: 8.4, retail_price: 168, 標準價: 171, 銅級: 149.1, 銀級: 134.5, 金級: 119.9, "58%": 109.68, "50%": 98, cost: 98, fav: 580, prod_seq: 670 },
+  { stock_no: "2561", prod_name: "蘆薈滋潤沐浴露 250ml", prod_name_en: "Herbal Aloe Hand & Body Wash", category: "外", type: "", vp: 8.3, retail_price: 143, 標準價: 145, 銅級: 125.05, 銀級: 111.75, 金級: 98.45, "58%": 89.14, "50%": 78.5, cost: 78.5, fav: 590, prod_seq: 730 },
+  { stock_no: "2562", prod_name: "蘆薈潤膚啫喱 200ml", prod_name_en: "Herbal Aloe Soothing Gel", category: "外", type: "", vp: 8.3, retail_price: 143, 標準價: 145, 銅級: 125.05, 銀級: 111.75, 金級: 98.45, "58%": 89.14, "50%": 78.5, cost: 78.5, fav: 600, prod_seq: 740 },
+  { stock_no: "2563", prod_name: "蘆薈滋潤乳霜 200ml", prod_name_en: "Herbal Aloe Hand & Body Cream", category: "外", type: "", vp: 8.3, retail_price: 143, 標準價: 145, 銅級: 125.05, 銀級: 111.75, 金級: 98.45, "58%": 89.14, "50%": 78.5, cost: 78.5, fav: 610, prod_seq: 750 },
+  { stock_no: "2565", prod_name: "日日強韌蘆薈護髮乳", prod_name_en: "HERBAL ALOE CONDITIONER", category: "外", type: "", vp: 8.3, retail_price: 143, 標準價: 145, 銅級: 125.05, 銀級: 111.75, 金級: 98.45, "58%": 89.14, "50%": 78.5, cost: 78.5, fav: 620, prod_seq: 760 },
+  { stock_no: "2564", prod_name: "日日強韌蘆薈洗髮露", prod_name_en: "HERBAL ALOE SHAMPOO", category: "外", type: "", vp: 8.3, retail_price: 143, 標準價: 145, 銅級: 125.05, 銀級: 111.75, 金級: 98.45, "58%": 89.14, "50%": 78.5, cost: 78.5, fav: 630, prod_seq: 770 },
+  { stock_no: "H258", prod_name: "康寶萊事業套裝", prod_name_en: "Herbalife Business Pack", category: "其他", type: "", vp: 0, retail_price: 422, 標準價: 428, 銅級: 428, 銀級: 428, 金級: 428, "58%": 428, "50%": 428, cost: 428, fav: 660, prod_seq: 810 },
+  { stock_no: "H260", prod_name: "優惠客戶尊尚套裝", prod_name_en: "Preferred Customer Premium Pack", category: "其他", type: "", vp: 0, retail_price: 175, 標準價: 178, 銅級: 178, 銀級: 178, 金級: 178, "58%": 178, "50%": 178, cost: 178, fav: 670, prod_seq: 820 },
+  { stock_no: "H262", prod_name: "康寶萊事業套裝(優惠客戶轉會員)", prod_name_en: "Herbalife Business Pack (PC conversion)", category: "其他", type: "", vp: 0, retail_price: 422, 標準價: 428, 銅級: 428, 銀級: 428, 金級: 428, "58%": 428, "50%": 428, cost: 428, fav: 680, prod_seq: 830 },
+  { stock_no: "DC30", prod_name: "運費$30 ($1-$4,000)", prod_name_en: "Delivery Charge $30", category: "其他", type: "", vp: 0, retail_price: 30, 標準價: 30, 銅級: 30, 銀級: 30, 金級: 30, "58%": 30, "50%": 30, cost: 30, fav: 730, prod_seq: 880 },
+  { stock_no: "DC40", prod_name: "運費$40 ($5,000-$10,000)", prod_name_en: "Delivery Charge $40", category: "其他", type: "", vp: 0, retail_price: 40, 標準價: 40, 銅級: 40, 銀級: 40, 金級: 40, "58%": 40, "50%": 40, cost: 40, fav: 740, prod_seq: 890 },
+  { stock_no: "DC60", prod_name: "運費$60 ($10,000-$20,000)", prod_name_en: "Delivery Charge $60", category: "其他", type: "", vp: 0, retail_price: 60, 標準價: 60, 銅級: 60, 銀級: 60, 金級: 60, "58%": 60, "50%": 60, cost: 60, fav: 750, prod_seq: 900 },
+  { stock_no: "9909", prod_name: "會藉服務年費", prod_name_en: "Annual Membership Services Fee", category: "其他", type: "", vp: 0, retail_price: 92, 標準價: 93, 銅級: 93, 銀級: 93, 金級: 93, "58%": 93, "50%": 93, cost: 93, fav: 760, prod_seq: 910 }
+];
+
+let selectedProducts = [];
+let currentCategory = "all";
+let currentView = "table";
+let newlyAddedStockNos = new Set();
+
+// ============================================================
+// ===== 字體大小控制 START =====
+// ============================================================
+const FONT_SIZES  = [11, 13, 16, 20];
+const FONT_LABELS = ['小', '標準', '大', '特大'];
+let currentFontLevel = 1; // 默認「標準」= index 1 = 13px
+
+function initFontSize() {
+  try {
+    const saved = localStorage.getItem('calcFontLevel');
+    if (saved !== null) {
+      const v = parseInt(saved);
+      if (!isNaN(v) && v >= 0 && v < FONT_SIZES.length) currentFontLevel = v;
+    }
+  } catch(e) {}
+  applyFontSize();
+}
+
+function changeFontSize(delta) {
+  const next = currentFontLevel + delta;
+  if (next < 0 || next >= FONT_SIZES.length) return;
+  currentFontLevel = next;
+  try { localStorage.setItem('calcFontLevel', currentFontLevel); } catch(e) {}
+  applyFontSize();
+  showToast('字體大小：' + FONT_LABELS[currentFontLevel]);
+}
+
+function applyFontSize() {
+  document.body.style.fontSize = FONT_SIZES[currentFontLevel] + 'px';
+  const disp = document.getElementById('font-size-display');
+  if (disp) disp.textContent = FONT_LABELS[currentFontLevel];
+  const decBtn = document.getElementById('font-decrease-btn');
+  const incBtn = document.getElementById('font-increase-btn');
+  if (decBtn) decBtn.disabled = (currentFontLevel === 0);
+  if (incBtn) incBtn.disabled = (currentFontLevel === FONT_SIZES.length - 1);
+}
+// ============================================================
+// ===== 字體大小控制 END =====
+// ============================================================
+
+let longPressTimer = null;
+let longPressInterval = null;
+function startIncrease(stockNo) { endLongPress(); increaseQuantity(stockNo); longPressTimer = setTimeout(() => { longPressInterval = setInterval(() => increaseQuantity(stockNo), 90); }, 480); }
+function startDecrease(stockNo) { endLongPress(); decreaseQuantity(stockNo); longPressTimer = setTimeout(() => { longPressInterval = setInterval(() => decreaseQuantity(stockNo), 90); }, 480); }
+function endLongPress() {
+  if (longPressTimer)    { clearTimeout(longPressTimer);    longPressTimer = null; }
+  if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
+}
+
+function scrollListToTop() { document.getElementById('product-list').scrollTop = 0; }
+
+function openSearchModal() {
+  const overlay = document.getElementById('search-modal-overlay');
+  overlay.style.display = 'flex';
+  const content = overlay.querySelector('.search-modal-content');
+  content.style.animation = 'none'; content.offsetHeight; content.style.animation = '';
+  filterProducts(); scrollListToTop();
+  setTimeout(() => { document.getElementById('product-search').focus(); }, 80);
+}
+function closeSearchModal() {
+  document.getElementById('search-modal-overlay').style.display = 'none';
+  document.getElementById('product-search').value = ''; updateClearBtn();
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('search-modal-overlay')) closeSearchModal();
+}
+function updateClearBtn() {
+  const val = document.getElementById('product-search').value;
+  document.getElementById('search-clear-btn').classList.toggle('visible', !!val);
+}
+function clearSearch() {
+  document.getElementById('product-search').value = ''; updateClearBtn();
+  filterProducts(); scrollListToTop(); document.getElementById('product-search').focus();
+}
+
+function formatPrice(price, isPackage) { return isPackage ? '$' + Math.round(price) : '$' + price.toFixed(2); }
+function formatProfit(profit) {
+  const rounded = Math.round(profit * 10) / 10;
+  const intPart = Math.floor(rounded), decPart = Math.round((rounded - intPart) * 10);
+  const intStr  = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return decPart > 0 ? '$' + intStr + '.' + decPart : '$' + intStr;
+}
+
+function copyToClipboard() {
+  if (selectedProducts.length === 0) { showToast('沒有可複製的產品'); return; }
+
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  const cmp = t2 && t1 !== t2;
+  const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
+  const hasProfit = cmp || hasPkgProfit;
+
+  let modalHtml = `
+    <div class="modal-overlay" id="copy-modal" style="display:flex; z-index: 2000;">
+      <div class="modal">
+        <div class="modal-title">📋 選擇複製資訊</div>
+        <div class="modal-content" style="text-align: left; font-size: 1rem;">
+          <label style="display: flex; align-items: center; margin-bottom: 12px; cursor: pointer;">
+            <input type="checkbox" id="copy-opt-unitprice" checked style="transform: scale(1.3); margin-right: 10px;"> 單價
+          </label>
+          <label style="display: flex; align-items: center; margin-bottom: 12px; cursor: pointer;">
+            <input type="checkbox" id="copy-opt-totalprice" checked style="transform: scale(1.3); margin-right: 10px;"> 總價
+          </label>
+          <label style="display: flex; align-items: center; margin-bottom: 12px; cursor: pointer;">
+            <input type="checkbox" id="copy-opt-vp" checked style="transform: scale(1.3); margin-right: 10px;"> VP
+          </label>
+          <label style="display: flex; align-items: center; margin-bottom: 12px; cursor: pointer;">
+            <input type="checkbox" id="copy-opt-totalvp" checked style="transform: scale(1.3); margin-right: 10px;"> 總VP
+          </label>
+  `;
+
+  if (hasProfit) {
+      modalHtml += `
+          <label style="display: flex; align-items: center; margin-bottom: 12px; cursor: pointer;">
+            <input type="checkbox" id="copy-opt-profit" checked style="transform: scale(1.3); margin-right: 10px;"> 利潤
+          </label>
+      `;
+  }
+
+  modalHtml += `
+        </div>
+        <div class="modal-actions">
+          <button onclick="document.getElementById('copy-modal').remove()" style="padding: 8px 16px;">取消</button>
+          <button class="btn-primary" onclick="executeCopy()" style="padding: 8px 16px;">確定複製</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const oldModal = document.getElementById('copy-modal');
+  if (oldModal) oldModal.remove();
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function executeCopy() {
+  // 五個獨立選項
+  const includeUnitPrice  = document.getElementById('copy-opt-unitprice')  ? document.getElementById('copy-opt-unitprice').checked  : false;
+  const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false;
+  const includeVP         = document.getElementById('copy-opt-vp')         ? document.getElementById('copy-opt-vp').checked         : false;
+  const includeTotalVP    = document.getElementById('copy-opt-totalvp')    ? document.getElementById('copy-opt-totalvp').checked    : false;
+  const includeProfit     = document.getElementById('copy-opt-profit')     ? document.getElementById('copy-opt-profit').checked     : false;
+
+  const copyModal = document.getElementById('copy-modal');
+  if (copyModal) copyModal.remove();
+
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  const cmp = t2 && t1 !== t2;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('zh-HK') + ' ' + now.toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
+  let lines = ['📋 產品計算', '日期：' + dateStr, '等級：' + t1 + (cmp ? ' / ' + t2 : ''), '================================', ''];
+
+  selectedProducts.forEach((p, i) => {
+    const isPkg = p.type === 'package';
+    const price1 = p[t1], totalPrice1 = price1 * p.quantity, totalVP = p.vp * p.quantity;
+    lines.push((i+1) + '. ' + p.prod_name + (isPkg ? '【套裝】' : '') + ' ×' + p.quantity);
+
+    if (cmp) {
+      const price2 = p[t2], totalPrice2 = price2 * p.quantity;
+      let up, tp;
+      if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; }
+      else { up = Math.abs(price2 - price1); tp = up * p.quantity; }
+
+      // 等級1
+      let parts1 = [];
+      if (includeUnitPrice)  parts1.push('單價：' + formatPrice(price1, isPkg));
+      if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg));
+      if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  '));
+
+      // 等級2
+      let parts2 = [];
+      if (includeUnitPrice)  parts2.push('單價：' + formatPrice(price2, isPkg));
+      if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg));
+      if (parts2.length) lines.push('   ' + t2 + ' ' + parts2.join('  '));
+
+      if (includeProfit) {
+        lines.push('   💰 利潤：' + formatProfit(up) + ' / 件 合計：' + formatProfit(tp));
+      }
+    } else {
+      let parts = [];
+      if (includeUnitPrice)  parts.push('單價：' + formatPrice(price1, isPkg));
+      if (includeTotalPrice) parts.push('總價：' + formatPrice(totalPrice1, isPkg));
+      if (parts.length) lines.push('   ' + parts.join('  '));
+
+      if (includeProfit && isPkg && p.fixedProfit !== undefined) {
+         lines.push('   💰 固定利潤：' + formatProfit(p.fixedProfit) + ' / 件 合計：' + formatProfit(p.fixedProfit * p.quantity));
+      }
+    }
+
+    // VP / 總VP
+    let vpParts = [];
+    if (includeVP)      vpParts.push('VP：' + p.vp.toFixed(2));
+    if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2));
+    if (vpParts.length) lines.push('   ' + vpParts.join('  '));
+
+    lines.push('');
+  });
+
+  const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0);
+  const totalP1  = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0);
+  const totalVP  = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0);
+  const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined);
+  const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0);
+
+  lines.push('================================', '📊 總計', '總數量：' + totalQty + ' 件');
+
+  if (includeTotalPrice) {
+    lines.push('總金額（' + t1 + '）：$' + totalP1.toFixed(2));
+    if (cmp) {
+      const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0);
+      lines.push('總金額（' + t2 + '）：$' + totalP2.toFixed(2));
+    }
+  }
+
+  if (includeProfit && cmp) {
+    const totalPr = selectedProducts.reduce((s, p) => {
+      if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity;
+      return s + Math.abs(p[t2] - p[t1]) * p.quantity;
+    }, 0);
+    lines.push('💰 總利潤：' + formatProfit(totalPr));
+  }
+
+  if (includeTotalVP) {
+    lines.push('總VP：' + totalVP.toFixed(2));
+  }
+
+  if (includeProfit && pkgProds.length > 0) {
+    lines.push('', '💰 套裝固定利潤');
+    pkgProds.forEach(p => lines.push('  ' + p.prod_name + ' ×' + p.quantity + '：' + formatProfit(p.fixedProfit * p.quantity)));
+    lines.push('  套裝利潤合計：' + formatProfit(totalPkgPr));
+  }
+
+  const text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('✅ 已複製！')).catch(() => fallbackCopy(text));
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); showToast('✅ 已複製！'); }
+  catch (e) { showToast('複製失敗，請手動選取'); }
+  document.body.removeChild(ta);
+}
+
+function switchView(viewType) {
+  currentView = viewType;
+  if (viewType === 'table') {
+    document.getElementById('table-container').style.display = 'block';
+    document.getElementById('product-cards').style.display = 'none';
+    document.getElementById('table-view-btn').classList.add('active');
+    document.getElementById('card-view-btn').classList.remove('active');
+  } else {
+    document.getElementById('table-container').style.display = 'none';
+    document.getElementById('product-cards').style.display = 'block';
+    document.getElementById('table-view-btn').classList.remove('active');
+    document.getElementById('card-view-btn').classList.add('active');
+  }
+  updateProductDisplay();
+}
+
+function initCategories() {
+  const categories = ['all', ...new Set(productsData.map(p => p.category))];
+  const tabsContainer = document.getElementById('category-tabs');
+  categories.forEach(category => {
+    const tab = document.createElement('div');
+    tab.className = 'category-tab' + (category === 'all' ? ' active' : '');
+    tab.textContent = category === 'all' ? '全部' : category;
+    tab.onclick = () => {
+      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active'); currentCategory = category; filterProducts(); scrollListToTop();
+    };
+    tabsContainer.appendChild(tab);
+  });
+}
+
+function filterProducts() {
+  const searchText = document.getElementById('product-search').value.toLowerCase();
+  const t1 = document.getElementById('pricing-tier1').value;
+  const productList = document.getElementById('product-list');
+  productList.innerHTML = '';
+  const filtered = productsData.filter(p => {
+    const matchSearch = !searchText ||
+      p.stock_no.toLowerCase().includes(searchText) ||
+      p.prod_name.toLowerCase().includes(searchText) ||
+      p.prod_name_en.toLowerCase().includes(searchText);
+    const matchCat = currentCategory === 'all' || p.category === currentCategory;
+    return matchSearch && matchCat;
+  });
+  filtered.sort((a, b) => a.prod_seq - b.prod_seq);
+  filtered.forEach(product => {
+    const item = document.createElement('div');
+    const isPkg = product.type === 'package';
+    item.className = 'product-item' + (isPkg ? ' product-item-package' : '');
+    const sel = selectedProducts.find(p => p.stock_no === product.stock_no);
+    const badge = sel ? `<span class="selected-badge">✓ ${sel.quantity}</span>` : '';
+    const price = isPkg ? '$' + Math.round(product[t1]) : '$' + product[t1].toFixed(2);
+    item.innerHTML = `<div class="product-item-inner">
+      <div class="product-item-left">${badge}<strong>${product.stock_no}</strong> - ${product.prod_name}${isPkg ? ' <span style="color:#7c3aed;font-size:0.78em;">[套裝]</span>' : ''}</div>
+      <div class="product-item-price">${price}</div>
+    </div>`;
+    item.onclick = () => addProduct(product);
+    productList.appendChild(item);
+  });
+  if (filtered.length === 0) {
+    const el = document.createElement('div');
+    el.className = 'product-item';
+    el.style.color = '#888'; el.style.fontStyle = 'italic'; el.style.textAlign = 'center';
+    el.textContent = '沒有找到符合條件的產品';
+    productList.appendChild(el);
+  }
+}
+
+function addProduct(product) {
+  const existing = selectedProducts.find(p => p.stock_no === product.stock_no);
+  if (existing) { existing.quantity += 1; showToast(`${product.prod_name} ×${existing.quantity}`); }
+  else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(product.stock_no); showToast(`已添加：${product.prod_name}`); }
+  updateProductDisplay(); filterProducts();
+  setTimeout(() => newlyAddedStockNos.clear(), 400);
+}
+  // ============================================================
+// ===== 快捷組合：大餐四寶 (含防誤觸二次確認) =====
+// ============================================================
+function addBigMealCombo() {
+  // 使用網頁內建的確認對話框
+  showConfirmDialog('確定要快捷添加「大餐四寶」到購物車嗎？', () => {
+    // 點擊「確定」後才會執行以下添加邏輯
+    const stockNos = ["0079", "0210", "0111", "0130"];
+    let added = false;
+
+    stockNos.forEach(stockNo => {
+      const product = productsData.find(p => p.stock_no === stockNo);
+      if (product) {
+        const existing = selectedProducts.find(p => p.stock_no === stockNo);
+        if (existing) {
+          existing.quantity += 1; // 如果已經在購物車，數量 +1
+        } else {
+          selectedProducts.push({ ...product, quantity: 1 }); // 如果沒有，新增一筆
+          newlyAddedStockNos.add(stockNo); // 加入動畫效果標記
+        }
+        added = true;
+      }
+    });
+
+    if (added) {
+      updateProductDisplay(); // 更新畫面表格/卡片與總計
+      showToast('🍽️ 已成功添加：大餐四寶 (4件獨立產品)');
+      
+      // 延遲清除動畫標記
+      setTimeout(() => newlyAddedStockNos.clear(), 400);
+    }
+  });
+}
+function addPackagePlan(stockNo) {
+  const plan = productsData.find(p => p.stock_no === stockNo);
+  if (!plan) return;
+  const existing = selectedProducts.find(p => p.stock_no === stockNo);
+  if (existing) { existing.quantity += 1; } else { selectedProducts.push({ ...plan, quantity: 1 }); newlyAddedStockNos.add(stockNo); }
+  updateProductDisplay();
+  setTimeout(() => newlyAddedStockNos.clear(), 400);
+  showToast(`已添加：${plan.prod_name}`);
+}
+
+function removeProductWithAnimation(stockNo) {
+  const els = document.querySelectorAll(`[data-stockno="${stockNo}"]`);
+  if (els.length > 0) { els.forEach(el => el.classList.add('removing')); setTimeout(() => removeProduct(stockNo), 200); }
+  else { removeProduct(stockNo); }
+}
+function removeProduct(stockNo) { selectedProducts = selectedProducts.filter(p => p.stock_no !== stockNo); updateProductDisplay(); }
+function updateQuantity(stockNo, newQty) { const p = selectedProducts.find(p => p.stock_no === stockNo); if (p) { p.quantity = Math.max(1, newQty); updateProductDisplay(); } }
+function increaseQuantity(stockNo) { const p = selectedProducts.find(p => p.stock_no === stockNo); if (p) { p.quantity += 1; updateProductDisplay(); } }
+function decreaseQuantity(stockNo) { const p = selectedProducts.find(p => p.stock_no === stockNo); if (p && p.quantity > 1) { p.quantity -= 1; updateProductDisplay(); } }
+
+function updateProductDisplay() { updateTableHeader(); if (currentView === 'table') updateProductTable(); else updateProductCards(); updateSummary(); }
+
+function updateTableHeader() {
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  let h = '<tr><th>編號</th><th>名稱</th><th>數量</th>';
+  if (t2 && t1 !== t2) {
+    h += `<th>${t1}<br>單價</th><th>${t1}<br>總價</th><th>${t2}<br>單價</th><th>${t2}<br>總價</th><th>單件<br>利潤</th><th>總<br>利潤</th>`;
+  } else {
+    h += '<th>單價</th><th>總價</th><th>單件<br>利潤</th><th>總<br>利潤</th>';
+  }
+  h += '<th>VP</th><th>總VP</th><th>操作</th></tr>';
+  document.getElementById('product-table-head').innerHTML = h;
+}
+
+function qtyBtnHTML(action, stockNo, label) {
+  const fn = action === 'inc' ? 'startIncrease' : 'startDecrease';
+  return `<div class="qty-btn"
+    onmousedown="${fn}('${stockNo}')" onmouseup="endLongPress()" onmouseleave="endLongPress()"
+    ontouchstart="event.preventDefault();${fn}('${stockNo}')" ontouchend="endLongPress()" ontouchcancel="endLongPress()">${label}</div>`;
+}
+
+function updateProductTable() {
+  const tbody = document.getElementById('product-table-body');
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  const cmp = t2 && t1 !== t2;
+  tbody.innerHTML = '';
+  if (selectedProducts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="${cmp ? 12 : 10}" class="empty-table-message">尚未選擇任何產品</td></tr>`;
+    return;
+  }
+  selectedProducts.forEach(product => {
+    const row = document.createElement('tr');
+    const isPkg = product.type === 'package';
+    row.className = [isPkg ? 'package-row' : '', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
+    row.setAttribute('data-stockno', product.stock_no);
+    const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
+    let html = `<td>${product.stock_no}</td>
+      <td class="product-name">${product.prod_name}${isPkg ? '<span class="package-badge">套裝</span>' : ''}</td>
+      <td style="white-space:nowrap;"><div class="qty-control">
+        ${qtyBtnHTML('dec', product.stock_no, '−')}
+        <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
+        ${qtyBtnHTML('inc', product.stock_no, '+')}
+      </div></td>`;
+    if (cmp) {
+      const p2 = product[t2], tp2 = p2 * product.quantity;
+      let up, tpr;
+      if (isPkg && product.fixedProfit !== undefined) { up = product.fixedProfit; tpr = up * product.quantity; }
+      else { up = Math.abs(p2 - p1); tpr = up * product.quantity; }
+      html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td><td>${formatPrice(p2,isPkg)}</td><td>${formatPrice(tp2,isPkg)}</td>
+        <td class="profit${isPkg?' pkg-profit-cell':''}">${formatProfit(up)}</td>
+        <td class="profit${isPkg?' pkg-profit-cell':''}">${formatProfit(tpr)}</td>`;
+    } else {
+      if (isPkg && product.fixedProfit !== undefined) {
+        html += `<td>${formatPrice(p1,true)}</td><td>${formatPrice(tp1,true)}</td>
+          <td class="profit pkg-profit-cell">${formatProfit(product.fixedProfit)}</td>
+          <td class="profit pkg-profit-cell">${formatProfit(product.fixedProfit*product.quantity)}</td>`;
+      } else {
+        html += `<td>${formatPrice(p1,false)}</td><td>${formatPrice(tp1,false)}</td><td class="no-profit">-</td><td class="no-profit">-</td>`;
+      }
+    }
+    html += `<td>${product.vp.toFixed(2)}</td><td>${tvp.toFixed(2)}</td>
+      <td><button class="btn-danger" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></td>`;
+    row.innerHTML = html; tbody.appendChild(row);
+  });
+}
+
+function updateProductCards() {
+  const cc = document.getElementById('product-cards');
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  const cmp = t2 && t1 !== t2;
+  cc.innerHTML = '';
+  if (selectedProducts.length === 0) {
+    cc.innerHTML = '<div style="text-align:center;padding:20px;color:#666;font-style:italic;">尚未選擇任何產品</div>';
+    return;
+  }
+  selectedProducts.forEach(product => {
+    const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
+    const isPkg = product.type === 'package';
+    const card = document.createElement('div');
+    card.className = ['product-card', isPkg ? 'package-card' : '', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
+    card.setAttribute('data-stockno', product.stock_no);
+    let html = `<div class="card-header">
+      <div>${product.prod_name}${isPkg ? '<span class="package-badge">套裝</span>' : ''}</div>
+      <div class="card-stock">${product.stock_no}</div>
+    </div><div class="card-body"><div class="card-detail">${product.prod_name_en}</div>`;
+    if (isPkg && product.packageItems && product.packageItems.length > 0) {
+      html += `<div class="package-items"><div class="package-items-title">📦 套裝包含：</div>
+        <div class="package-items-tags">${product.packageItems.map(i => `<span class="package-item-tag">${i}</span>`).join('')}</div></div>`;
+    }
+    if (isPkg) {
+      html += `<div class="card-fixed-price">⚠ 此套裝價格固定，不受等級影響</div>
+        <div class="card-price-row"><div>套裝價：</div><div style="color:#7c3aed;font-weight:bold;">${formatPrice(p1,true)}</div></div>
+        <div class="card-price-row"><div>套裝總價 (×${product.quantity})：</div><div style="color:#7c3aed;font-weight:bold;">${formatPrice(tp1,true)}</div></div>`;
+      if (product.fixedProfit !== undefined) {
+        html += `<div class="card-profit-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div>
+          <div class="card-profit-row"><div>💰 固定利潤 (×${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
+      }
+    } else if (cmp) {
+      const p2 = product[t2], tp2 = p2 * product.quantity;
+      const up = Math.abs(p2 - p1), tpr = up * product.quantity;
+      html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
+        <div class="card-price-row"><div>${t2} 單價:</div><div>${formatPrice(p2,false)}</div></div>
+        <div class="card-price-row"><div>單件利潤:</div><div class="profit">${formatProfit(up)}</div></div>
+        <div class="card-price-row"><div>${t1} 總價 (×${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>
+        <div class="card-price-row"><div>${t2} 總價 (×${product.quantity}):</div><div>${formatPrice(tp2,false)}</div></div>
+        <div class="card-price-row"><div>總利潤:</div><div class="profit">${formatProfit(tpr)}</div></div>`;
+    } else {
+      html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
+        <div class="card-price-row"><div>${t1} 總價 (×${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`;
+    }
+    html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
+      <div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div>
+      <div class="card-footer">
+        <div class="qty-control">
+          ${qtyBtnHTML('dec', product.stock_no, '−')}
+          <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
+          ${qtyBtnHTML('inc', product.stock_no, '+')}
+        </div>
+        <div class="card-actions"><button class="btn-danger" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></div>
+      </div>`;
+    card.innerHTML = html; cc.appendChild(card);
+  });
+}
+
+function updatePricing() { updateProductDisplay(); }
+
+function updateSummary() {
+  const sc = document.getElementById('summary');
+  const t1 = document.getElementById('pricing-tier1').value;
+  const t2 = document.getElementById('pricing-tier2').value;
+  const cmp = t2 && t1 !== t2;
+  const totalQty   = selectedProducts.reduce((s, p) => s + p.quantity, 0);
+  const totalP1    = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0);
+  const totalVP    = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0);
+  const pkgProds   = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined);
+  const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0);
+  let html = '<div class="summary-flex">';
+  if (cmp) {
+    const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0);
+    const totalPr = selectedProducts.reduce((s, p) => {
+      if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity;
+      return s + Math.abs(p[t2] - p[t1]) * p.quantity;
+    }, 0);
+    const prRate = totalP1 > 0 ? (totalPr / totalP1) * 100 : 0;
+    html += `<div class="summary-item"><h3>${t1} 價格</h3>
+      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
+      <div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>
+      <div class="summary-item"><h3>${t2} 價格</h3>
+      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
+      <div class="summary-row total"><div>總金額:</div><div>$${totalP2.toFixed(2)}</div></div></div>
+      <div class="summary-item"><h3>利潤計算</h3>
+      <div class="summary-row"><div>總利潤:</div><div class="profit">${formatProfit(totalPr)}</div></div>
+      <div class="summary-row"><div>利潤率:</div><div class="profit">${prRate.toFixed(2)}%</div></div>
+      <div class="summary-row"><div>平均單件:</div><div class="profit">${totalQty > 0 ? formatProfit(totalPr / totalQty) : '$0'}</div></div></div>`;
+    if (pkgProds.length > 0) {
+      html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
+      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(×${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
+      html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
+    }
+  } else {
+    html += `<div class="summary-item"><h3>${t1} 總計</h3>
+      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
+      <div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>`;
+    if (pkgProds.length > 0) {
+      html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
+      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(×${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
+      html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
+    }
+  }
+  html += `<div class="summary-item"><h3>VP計算</h3>
+    <div class="summary-row"><div>總VP:</div><div>${totalVP.toFixed(2)}</div></div>
+    <div class="summary-row"><div>平均VP:</div><div>${totalQty > 0 ? (totalVP / totalQty).toFixed(2) : '0.00'}</div></div></div>`;
+  html += '</div>';
+  sc.innerHTML = html;
+}
+
+function confirmClearSelection() {
+  if (selectedProducts.length === 0) { showToast('沒有可清空的產品'); return; }
+  showConfirmDialog('確定要清空所有已選產品嗎?', () => clearSelection());
+}
+function showConfirmDialog(message, callback) {
+  document.getElementById('confirm-message').textContent = message;
+  document.getElementById('confirm-action-btn').onclick = () => { hideConfirmDialog(); if (typeof callback === 'function') callback(); };
+  document.getElementById('confirm-modal').style.display = 'flex';
+}
+function hideConfirmDialog() { document.getElementById('confirm-modal').style.display = 'none'; }
+function showToast(message, duration = 2500) {
+  const t = document.getElementById('toast-message');
+  t.textContent = message; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+function clearSelection() { selectedProducts = []; updateProductDisplay(); showToast('已清空所有選擇的產品'); }
+
+// ============================================================
+// ===== PWA START =====
+// ============================================================
+function pwaGenerateIcon(size) {
+  try {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '">'
+      + '<rect width="' + size + '" height="' + size + '" rx="' + Math.round(size*0.22) + '" fill="#2c7be5"/>'
+      + '<text x="50%" y="53%" text-anchor="middle" dominant-baseline="middle" fill="white" '
+      + 'font-family="Arial,sans-serif" font-weight="bold" font-size="' + Math.round(size*0.42) + '">産</text>'
+      + '</svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  } catch(e) { return ''; }
+}
+
+let deferredInstallPrompt = null;
+
+function initPWA() {
+  // Service Worker 註冊（雙端離線功能保留，不影響圖標）
+  if ('serviceWorker' in navigator) {
+    const swCode = 'self.addEventListener("install",function(){self.skipWaiting();});self.addEventListener("activate",function(){self.clients.claim();});self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).catch(function(){return new Response("",{status:503});});}));});';
+    try {
+      navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' })))
+        .then(() => console.log('✅ PWA ServiceWorker 已啟用'))
+        .catch(() => console.log('ℹ️ ServiceWorker 跳過'));
+    } catch (e) { console.warn('ServiceWorker 註冊失敗', e); }
+  }
+
+  // PWA安裝彈窗事件（安卓Chrome專用，iOS不影響）
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    showPwaInstallBtn();
+  });
+
+  // 安裝成功回調（雙端通用）
+  window.addEventListener('appinstalled', () => {
+    hidePwaInstallBtn();
+    showToast('✅ App 已成功安裝到主畫面！');
+  });
+
+  // 關閉新產品通知，並記錄到瀏覽器
+function closeNewProductModal() {
+  document.getElementById('new-product-modal').style.display = 'none';
+  localStorage.setItem('seen_new_product_liver', 'true');
+}
+
+// 檢查是否需要顯示通知
+function checkNewProductNotification() {
+  if (!localStorage.getItem('seen_new_product_liver')) {
+    document.getElementById('new-product-modal').style.display = 'flex';
+  }
+}
+  
+  // 已安裝狀態隱藏安裝按鈕
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (!isStandalone) setTimeout(showPwaInstallBtn, 600);
+}
+function showPwaInstallBtn() { var w = document.getElementById('pwa-install-wrap'); if (w) w.style.display = 'block'; }
+function hidePwaInstallBtn() { var w = document.getElementById('pwa-install-wrap'); if (w) w.style.display = 'none'; }
+
+function handlePwaInstall() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(r) { deferredInstallPrompt = null; if (r.outcome === 'accepted') hidePwaInstallBtn(); });
+    return;
+  }
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  var isAndroid = /Android/.test(navigator.userAgent);
+  var msg;
+  if (isIOS) {
+    msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅';
+  } else if (isAndroid) {
+    msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅';
+  } else {
+    msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅';
+  }
+  document.getElementById('pwa-info-content').textContent = msg;
+  document.getElementById('pwa-info-modal').style.display = 'flex';
+}
+// ============================================================
+// ===== PWA END =====
+// ============================================================
+
+// 1. 關閉新產品通知，並記錄到瀏覽器 (放在這裡)
+function closeNewProductModal() {
+  document.getElementById('new-product-modal').style.display = 'none';
+  localStorage.setItem('seen_new_product_liver', 'true');
+}
+
+// 2. 檢查是否需要顯示通知 (放在這裡)
+function checkNewProductNotification() {
+  if (!localStorage.getItem('seen_new_product_liver')) {
+    document.getElementById('new-product-modal').style.display = 'flex';
+  }
+}
+
+window.onload = function () {
+  initPWA();
+  initFontSize();   // ← 字體大小初始化（讀取上次設定）
+  initCategories();
+  switchView('table'); // ← 永遠默認表格視圖，用戶仍可手動切換
+  updateProductDisplay();
+  
+  // 3. 觸發卡片檢查
+  checkNewProductNotification();
+  
+  document.addEventListener('touchend', function (e) {
+    const btn = e.target.closest('button');
+    if (btn) setTimeout(() => btn.blur(), 50);
+  }, { passive: true });
+};
+</script>
+</body>
+</html>
