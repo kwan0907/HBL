@@ -21,33 +21,40 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./IMG_4289.png">
 
 <style>
-/* ===== 全局變數：淺色模式 (水藍色主題) ===== */
+/* ===== 全局變數：淺色模式 (水藍色主題 - 修復頂部死白刺眼) ===== */
 :root {
   --bg-gradient: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #bae6fd, #e0f2fe);
   
   /* 毛玻璃材質 */
-  --glass-bg: rgba(255, 255, 255, 0.92);
-  --glass-bg-solid: rgba(255, 255, 255, 0.98);
-  --glass-border: rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.08);
-  --glass-item-bg: rgba(255, 255, 255, 0.85);
-  --glass-item-hover: rgba(255, 255, 255, 1);
+  --glass-bg: rgba(255, 255, 255, 0.85); /* 整體大背景稍微透出漸層 */
+  --glass-bg-solid: rgba(240, 249, 255, 0.95); /* 用冰雪藍取代純死白，保護眼睛 */
+  --glass-border: rgba(14, 165, 233, 0.25); /* 邊框加深一點點，讓框架更明顯 */
+  --glass-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.1);
+  --glass-item-bg: rgba(14, 165, 233, 0.08); /* 關鍵修復：頂部控制列、選項的底色改為水藍微透，不再是刺眼白色 */
+  --glass-item-hover: rgba(14, 165, 233, 0.15);
   
-  /* 文字顏色 - 加深對比度 */
+  /* 文字顏色 */
   --text-main: #1e293b;
   --text-muted: #64748b;
   --text-heading: #0f172a;
   
-  /* 品牌與功能色 (統一為水藍色系) */
+  /* 品牌與功能色 */
   --primary-color: #0ea5e9;
   --primary-hover: #0284c7;
   --danger-bg: rgba(239, 68, 68, 0.95);
   --danger-hover: #dc2626;
   --copy-bg: rgba(14, 165, 233, 0.95);
   --copy-hover: #0284c7;
+
+  /* 清空選擇按鈕 (柔和微透紅) */
+  --clear-bg: rgba(239, 68, 68, 0.1);
+  --clear-text: #ef4444;
+  --clear-border: rgba(239, 68, 68, 0.4);
+  --clear-hover-bg: rgba(239, 68, 68, 0.2);
+  --clear-hover-text: #dc2626;
   
   /* 表格與卡片 */
-  --table-head-bg: rgba(255, 255, 255, 0.95);
+  --table-head-bg: rgba(240, 249, 255, 0.9);
   --table-border: rgba(14, 165, 233, 0.15);
   --table-row-even: rgba(240, 249, 255, 0.5);
   --table-row-hover: rgba(224, 242, 254, 0.8);
@@ -68,22 +75,21 @@
   
   /* 彈窗 */
   --modal-overlay: rgba(15, 23, 42, 0.4);
-  --modal-bg: rgba(255, 255, 255, 0.98);
-  --input-bg: rgba(255, 255, 255, 0.95);
+  --modal-bg: rgba(248, 250, 252, 0.98);
+  --input-bg: rgba(255, 255, 255, 0.6); /* 讓輸入框也微透 */
 }
 
-/* ===== 全局變數：深色模式 (水藍色主題) ===== */
+/* ===== 全局變數：深色模式 ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-gradient: linear-gradient(-45deg, #082f49, #0f172a, #0c4a6e, #1e293b);
     
-    /* 毛玻璃材質 */
     --glass-bg: rgba(15, 23, 42, 0.88);
     --glass-bg-solid: rgba(15, 23, 42, 0.98);
-    --glass-border: rgba(56, 189, 248, 0.15);
+    --glass-border: rgba(56, 189, 248, 0.25);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
-    --glass-item-bg: rgba(15, 23, 42, 0.75);
-    --glass-item-hover: rgba(30, 41, 59, 0.9);
+    --glass-item-bg: rgba(14, 165, 233, 0.12); /* 深色模式下的控制框微藍透色 */
+    --glass-item-hover: rgba(56, 189, 248, 0.2);
     
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
@@ -95,6 +101,12 @@
     --danger-hover: #e11d48;
     --copy-bg: rgba(14, 165, 233, 0.95);
     --copy-hover: #0284c7;
+
+    --clear-bg: rgba(244, 63, 94, 0.15);
+    --clear-text: #fb7185;
+    --clear-border: rgba(244, 63, 94, 0.4);
+    --clear-hover-bg: rgba(244, 63, 94, 0.25);
+    --clear-hover-text: #f43f5e;
     
     --table-head-bg: rgba(15, 23, 42, 0.95);
     --table-border: rgba(56, 189, 248, 0.2);
@@ -108,7 +120,6 @@
     --color-pkg-bg: rgba(91, 33, 182, 0.4);
     --color-pkg-border: rgba(139, 92, 246, 0.4);
 
-    /* 購物車專屬 */
     --cart-item-bg: rgba(14, 165, 233, 0.15);
     --cart-item-border: rgba(56, 189, 248, 0.3);
     --cart-price-color: #7dd3fc;
@@ -116,13 +127,12 @@
     
     --modal-overlay: rgba(0, 0, 0, 0.7);
     --modal-bg: rgba(15, 23, 42, 0.98);
-    --input-bg: rgba(30, 41, 59, 0.9);
+    --input-bg: rgba(15, 23, 42, 0.6);
   }
 }
 
 * { box-sizing: border-box; }
 
-/* 全局加粗字體 */
 body { 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
   margin: 0; 
@@ -159,6 +169,7 @@ input, select { font-size: 16px !important; color: var(--text-main); font-weight
 select option { background: var(--glass-bg-solid); color: var(--text-main); font-weight: 600;}
 
 .controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+/* 頂部這些面板，套用 var(--glass-item-bg) 後，就會呈現微透水藍色，不再刺眼 */
 .tier-select, .actions { 
   padding: 10px; border-radius: 12px; width: 100%; 
   background: var(--glass-item-bg); border: 1px solid var(--glass-border);
@@ -197,7 +208,6 @@ button {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent;
 }
-/* 限定非特定類別的按鈕才套用全局 Hover */
 button:not([class*="btn-"]):not([class*="package-plan-btn"]):hover { 
   background: var(--glass-item-hover); box-shadow: 0 4px 8px rgba(14,165,233,0.15); border-color: var(--primary-color); color: var(--primary-color);
 }
@@ -218,6 +228,18 @@ select {
 
 .actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
 .actions button { flex: 1; min-width: 80px; padding: 10px 5px; font-weight: 800; }
+
+/* 專屬：清空選擇按鈕 (取代原本刺眼的死白底色) */
+.btn-clear {
+  background: var(--clear-bg);
+  color: var(--clear-text);
+  border: 1px solid var(--clear-border);
+  font-weight: 800;
+}
+.btn-clear:hover {
+  background: var(--clear-hover-bg) !important;
+  color: var(--clear-hover-text) !important;
+}
 
 .btn-primary { background: var(--primary-color); color: white; border: none; }
 .btn-primary:hover { background: var(--primary-hover) !important; color: white !important; }
@@ -313,7 +335,7 @@ select {
 .view-toggle button { margin: 0 4px; border-radius: 8px; background: var(--glass-item-bg); padding: 8px 12px; font-size: 0.85rem; font-weight: 700; border-color: var(--glass-border);}
 .view-toggle button.active { background: var(--glass-bg-solid); border-color: var(--primary-color); color: var(--primary-color); font-weight: 800; box-shadow: 0 2px 8px rgba(14,165,233,0.2);}
 
-/* 表格區塊 - 數量按鈕縮小版 */
+/* 表格區塊 */
 .table-container { overflow-x: auto; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--glass-border); }
 table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 th, td { border: 1px solid var(--table-border); padding: 10px 6px; text-align: left; }
@@ -337,7 +359,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .card-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 800; font-size: 0.95rem; color: var(--text-heading); }
 .card-price-row { display: flex; justify-content: space-between; margin-bottom: 4px; padding: 4px 0; border-bottom: 1px dashed var(--table-border); font-size: 0.85rem; }
 
-/* 🛒 購物車視圖 (水藍色專屬，更醒目數量) */
+/* 🛒 購物車視圖 */
 .cart-container { display: none; margin-bottom: 12px; }
 .cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 12px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.2s; }
 .cart-item-info { flex: 1; margin-right: 10px; }
@@ -345,7 +367,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .cart-item-price { color: var(--cart-price-color); font-weight: 800; font-size: 0.95rem; }
 .cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .cart-item-total { font-weight: 800; font-size: 1rem; color: var(--primary-color); }
-/* 購物車專屬數量輸入框樣式 */
 .cart-qty-input { font-size: 16px !important; font-weight: 900; color: var(--primary-color); width: 36px; height: 28px; border: 2px solid var(--primary-color); background: var(--glass-bg-solid); }
 
 .cart-summary { background: var(--cart-summary-bg); border: 1px solid var(--cart-item-border); border-radius: 16px; padding: 16px; margin-top: 16px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
@@ -449,7 +470,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     </div>
   </div>
   <div class="actions">
-    <button style="background: var(--glass-bg-solid); color: #ef4444; border-color: #ef4444; font-weight: 800;" onclick="confirmClearSelection()">清空選擇</button>
+    <button class="btn-clear" onclick="confirmClearSelection()">清空選擇</button>
     <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製全資料</button>
   </div>
 </div>
@@ -927,7 +948,6 @@ function copyCartSimple() {
   selectedProducts.forEach(p => {
     const isPkg = p.type === 'package';
     const pr = p[t1];
-    // 使用 * 號顯示產品數量
     lines.push(`${p.prod_name}${isPkg ? ' (套裝)' : ''} * ${p.quantity} = ${formatPrice(pr * p.quantity, isPkg)}`);
     tQty += p.quantity;
     tPrice += pr * p.quantity;
@@ -1033,7 +1053,7 @@ function filterProducts() {
 function addProduct(product) {
   triggerHaptic('medium');
   const existing = selectedProducts.find(p => p.stock_no === product.stock_no);
-  if (existing) { existing.quantity += 1; showToast(`${product.prod_name} ×${existing.quantity}`); }
+  if (existing) { existing.quantity += 1; showToast(`${product.prod_name} * ${existing.quantity}`); }
   else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(product.stock_no); showToast(`已添加：${product.prod_name}`); }
   updateProductDisplay(); filterProducts();
   setTimeout(() => newlyAddedStockNos.clear(), 400);
@@ -1198,10 +1218,10 @@ function updateProductCards() {
     if (isPkg) {
       html += `<div style="font-size:0.75rem;color:var(--color-pkg);margin-bottom:6px;">⚠ 此套裝價格固定，不受等級影響</div>
         <div class="card-price-row"><div>套裝價：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(p1,true)}</div></div>
-        <div class="card-price-row"><div>套裝總價 (×${product.quantity})：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(tp1,true)}</div></div>`;
+        <div class="card-price-row"><div>套裝總價 (* ${product.quantity})：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(tp1,true)}</div></div>`;
       if (product.fixedProfit !== undefined) {
         html += `<div class="card-price-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div>
-          <div class="card-price-row"><div>💰 固定利潤 (×${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
+          <div class="card-price-row"><div>💰 固定利潤 (* ${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
       }
     } else if (cmp) {
       const p2 = product[t2], tp2 = p2 * product.quantity;
@@ -1209,12 +1229,12 @@ function updateProductCards() {
       html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
         <div class="card-price-row"><div>${t2} 單價:</div><div>${formatPrice(p2,false)}</div></div>
         <div class="card-price-row"><div>單件利潤:</div><div class="profit">${formatProfit(up)}</div></div>
-        <div class="card-price-row"><div>${t1} 總價 (×${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>
-        <div class="card-price-row"><div>${t2} 總價 (×${product.quantity}):</div><div>${formatPrice(tp2,false)}</div></div>
+        <div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>
+        <div class="card-price-row"><div>${t2} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp2,false)}</div></div>
         <div class="card-price-row"><div>總利潤:</div><div class="profit">${formatProfit(tpr)}</div></div>`;
     } else {
       html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
-        <div class="card-price-row"><div>${t1} 總價 (×${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`;
+        <div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`;
     }
     html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
       <div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div>
@@ -1288,7 +1308,6 @@ function updatePricing() { updateProductDisplay(); }
 
 function updateSummary() {
   const sc = document.getElementById('summary');
-  // 如果在購物車模式，底部隱藏原有詳細總計，因為購物車有專屬自己的
   if (currentView === 'cart') { sc.style.display = 'none'; return; } 
   sc.style.display = 'block';
 
@@ -1320,7 +1339,7 @@ function updateSummary() {
       <div class="summary-row"><div>平均單件:</div><div class="profit">${totalQty > 0 ? formatProfit(totalPr / totalQty) : '$0'}</div></div></div>`;
     if (pkgProds.length > 0) {
       html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
-      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(×${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
+      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
       html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
     }
   } else {
@@ -1329,7 +1348,7 @@ function updateSummary() {
       <div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>`;
     if (pkgProds.length > 0) {
       html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
-      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(×${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
+      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
       html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
     }
   }
