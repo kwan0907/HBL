@@ -21,101 +21,102 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./IMG_4289.png">
 
 <style>
-/* ===== 全局變數：淺色模式 ===== */
+/* ===== 全局變數：淺色模式 (降低透明度版本) ===== */
 :root {
   --bg-gradient: linear-gradient(-45deg, #f5f7fa, #c3cfe2, #e0c3fc, #e9f0ff);
   
-  /* 毛玻璃材質 */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-bg-solid: rgba(255, 255, 255, 0.95);
-  --glass-border: rgba(255, 255, 255, 0.9);
-  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
-  --glass-item-bg: rgba(255, 255, 255, 0.6);
-  --glass-item-hover: rgba(255, 255, 255, 0.9);
+  /* 毛玻璃材質 - 調高不透明度 */
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-solid: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.95);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+  --glass-item-bg: rgba(255, 255, 255, 0.85);
+  --glass-item-hover: rgba(255, 255, 255, 1);
   
   /* 文字顏色 */
   --text-main: #2d3748;
-  --text-muted: #718096;
+  --text-muted: #5a6a82;
   --text-heading: #1a3b5c;
   
   /* 品牌與功能色 */
   --primary-color: #2c7be5;
   --primary-hover: #1a5fb5;
-  --danger-bg: rgba(230, 55, 87, 0.85);
-  --danger-hover: rgba(230, 55, 87, 1);
-  --copy-bg: rgba(13, 148, 136, 0.85);
-  --copy-hover: rgba(13, 148, 136, 1);
+  --danger-bg: rgba(230, 55, 87, 0.95);
+  --danger-hover: #c82333;
+  --copy-bg: rgba(13, 148, 136, 0.95);
+  --copy-hover: #0f766e;
   
   /* 表格與卡片 */
-  --table-head-bg: rgba(255, 255, 255, 0.85);
-  --table-border: rgba(0, 0, 0, 0.08);
-  --table-row-even: rgba(255, 255, 255, 0.3);
-  --table-row-hover: rgba(255, 255, 255, 0.6);
+  --table-head-bg: rgba(255, 255, 255, 0.95);
+  --table-border: rgba(0, 0, 0, 0.1);
+  --table-row-even: rgba(248, 250, 252, 0.7);
+  --table-row-hover: rgba(226, 232, 240, 0.8);
   
   /* 利潤與套裝特殊色 */
   --color-profit: #15803d;
-  --color-profit-bg: rgba(220, 252, 231, 0.6);
-  --color-profit-border: rgba(134, 239, 172, 0.6);
+  --color-profit-bg: rgba(220, 252, 231, 0.8);
+  --color-profit-border: rgba(134, 239, 172, 0.8);
   --color-pkg: #7c3aed;
-  --color-pkg-bg: rgba(245, 240, 255, 0.7);
-  --color-pkg-border: rgba(196, 181, 253, 0.6);
+  --color-pkg-bg: rgba(245, 240, 255, 0.85);
+  --color-pkg-border: rgba(196, 181, 253, 0.8);
 
   /* 水藍色購物車專屬 */
-  --cart-item-bg: rgba(14, 165, 233, 0.12);
-  --cart-item-border: rgba(56, 189, 248, 0.5);
+  --cart-item-bg: rgba(14, 165, 233, 0.15);
+  --cart-item-border: rgba(56, 189, 248, 0.6);
   --cart-price-color: #0284c7;
-  --cart-summary-bg: rgba(14, 165, 233, 0.2);
+  --cart-summary-bg: rgba(14, 165, 233, 0.25);
   
   /* 彈窗 */
-  --modal-overlay: rgba(0, 0, 0, 0.3);
-  --modal-bg: rgba(255, 255, 255, 0.9);
-  --input-bg: rgba(255, 255, 255, 0.85);
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --modal-bg: rgba(255, 255, 255, 0.98);
+  --input-bg: rgba(255, 255, 255, 0.95);
 }
 
-/* ===== 全局變數：深色模式 ===== */
+/* ===== 全局變數：深色模式 (降低透明度版本) ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-gradient: linear-gradient(-45deg, #0f172a, #1e1b4b, #172554, #312e81);
     
-    --glass-bg: rgba(30, 41, 59, 0.65);
-    --glass-bg-solid: rgba(30, 41, 59, 0.95);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-    --glass-item-bg: rgba(15, 23, 42, 0.5);
-    --glass-item-hover: rgba(51, 65, 85, 0.8);
+    /* 毛玻璃材質 - 調高不透明度 */
+    --glass-bg: rgba(30, 41, 59, 0.88);
+    --glass-bg-solid: rgba(30, 41, 59, 0.98);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+    --glass-item-bg: rgba(15, 23, 42, 0.75);
+    --glass-item-hover: rgba(51, 65, 85, 0.9);
     
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --text-heading: #e2e8f0;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --text-heading: #f1f5f9;
     
     --primary-color: #60a5fa;
     --primary-hover: #3b82f6;
-    --danger-bg: rgba(244, 63, 94, 0.85);
-    --danger-hover: rgba(244, 63, 94, 1);
-    --copy-bg: rgba(20, 184, 166, 0.85);
-    --copy-hover: rgba(20, 184, 166, 1);
+    --danger-bg: rgba(225, 29, 72, 0.95);
+    --danger-hover: #be123c;
+    --copy-bg: rgba(20, 184, 166, 0.95);
+    --copy-hover: #0d9488;
     
-    --table-head-bg: rgba(30, 41, 59, 0.9);
-    --table-border: rgba(255, 255, 255, 0.1);
-    --table-row-even: rgba(255, 255, 255, 0.03);
-    --table-row-hover: rgba(255, 255, 255, 0.1);
+    --table-head-bg: rgba(30, 41, 59, 0.95);
+    --table-border: rgba(255, 255, 255, 0.15);
+    --table-row-even: rgba(255, 255, 255, 0.05);
+    --table-row-hover: rgba(255, 255, 255, 0.15);
     
     --color-profit: #4ade80;
-    --color-profit-bg: rgba(20, 83, 45, 0.4);
-    --color-profit-border: rgba(74, 222, 128, 0.3);
+    --color-profit-bg: rgba(20, 83, 45, 0.6);
+    --color-profit-border: rgba(74, 222, 128, 0.4);
     --color-pkg: #a78bfa;
-    --color-pkg-bg: rgba(76, 29, 149, 0.3);
-    --color-pkg-border: rgba(139, 92, 246, 0.3);
+    --color-pkg-bg: rgba(76, 29, 149, 0.5);
+    --color-pkg-border: rgba(139, 92, 246, 0.4);
 
     /* 水藍色購物車專屬 (深色) */
-    --cart-item-bg: rgba(14, 165, 233, 0.15);
-    --cart-item-border: rgba(56, 189, 248, 0.3);
+    --cart-item-bg: rgba(14, 165, 233, 0.2);
+    --cart-item-border: rgba(56, 189, 248, 0.4);
     --cart-price-color: #38bdf8;
-    --cart-summary-bg: rgba(14, 165, 233, 0.2);
+    --cart-summary-bg: rgba(14, 165, 233, 0.3);
     
-    --modal-overlay: rgba(0, 0, 0, 0.6);
-    --modal-bg: rgba(15, 23, 42, 0.85);
-    --input-bg: rgba(15, 23, 42, 0.7);
+    --modal-overlay: rgba(0, 0, 0, 0.7);
+    --modal-bg: rgba(15, 23, 42, 0.98);
+    --input-bg: rgba(15, 23, 42, 0.9);
   }
 }
 
@@ -194,7 +195,10 @@ button {
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent;
 }
-button:hover { background: var(--glass-item-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+/* 限定非特定類別的按鈕才套用全局 Hover */
+button:not([class*="btn-"]):not([class*="package-plan-btn"]):hover { 
+  background: var(--glass-item-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
 button:active { transform: scale(0.98); }
 
 select, input {
@@ -213,18 +217,22 @@ select {
 .actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
 .actions button { flex: 1; min-width: 80px; padding: 10px 5px; font-weight: bold; }
 
-.btn-primary { background: rgba(44, 123, 229, 0.85); color: white; border: 1px solid rgba(44, 123, 229, 0.3); }
-.btn-primary:hover { background: var(--primary-color); }
+/* 修正特定按鈕 Hover/Active 背景色 */
+.btn-primary { background: rgba(44, 123, 229, 0.95); color: white; border: none; }
+.btn-primary:hover { background: var(--primary-hover) !important; color: white; }
 .btn-danger { background: var(--danger-bg); color: white; border: none; }
-.btn-danger:hover { background: var(--danger-hover); }
+.btn-danger:hover { background: var(--danger-hover) !important; color: white; }
 .btn-copy { background: var(--copy-bg); color: white; border: none; }
-.btn-copy:hover { background: var(--copy-hover); }
+.btn-copy:hover { background: var(--copy-hover) !important; color: white; }
 
 .btn-add-product {
   width: 100%; padding: 14px; font-size: 1rem; border-radius: 12px;
   display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; border: none;
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: white; font-weight: bold; box-shadow: 0 4px 15px rgba(44,123,229,0.3);
+}
+.btn-add-product:hover {
+  background: linear-gradient(135deg, var(--primary-hover), #124090) !important; color: white;
 }
 
 /* 搜尋 Modal */
@@ -242,7 +250,7 @@ select {
   animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes slideUpFromBottom { from { transform: translateY(100%); opacity: 0.7; } to { transform: translateY(0); opacity: 1; } }
-.search-modal-handle { width: 44px; height: 5px; background: rgba(128,128,128,0.3); border-radius: 3px; margin: 12px auto 6px; }
+.search-modal-handle { width: 44px; height: 5px; background: rgba(128,128,128,0.4); border-radius: 3px; margin: 12px auto 6px; }
 .search-modal-bar {
   display: flex; gap: 8px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
   background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center;
@@ -272,7 +280,7 @@ select {
 .selected-badge { background: rgba(22, 163, 74, 0.9); color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 8px; margin-right: 4px; }
 .product-item-package { border-left: 4px solid var(--color-pkg); background: var(--color-pkg-bg); }
 
-/* 套裝計畫區塊 */
+/* 套裝計畫區塊 - 修復白色閃爍問題 */
 .package-plans-section {
   margin-bottom: 12px; padding: 12px; border-radius: 12px;
   background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border);
@@ -280,9 +288,13 @@ select {
 .package-plans-title { font-size: 0.9rem; font-weight: bold; color: var(--color-pkg); margin-bottom: 8px; }
 .package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .package-plan-btn {
-  padding: 8px 10px; background: rgba(124, 58, 237, 0.8); color: white; border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 10px; background: rgba(139, 92, 246, 0.95); color: white; border: 1px solid rgba(255,255,255,0.25);
   border-radius: 10px; text-align: left; display: flex; flex-direction: column; gap: 4px;
 }
+/* 強制覆蓋 Hover 效果，確保不會變成白色 */
+.package-plan-btn:hover { background: rgba(109, 40, 217, 1) !important; color: white !important; }
+.package-plan-btn:active { background: rgba(91, 33, 182, 1) !important; color: white !important; transform: scale(0.98); }
+
 .plan-row1 { display: flex; justify-content: space-between; align-items: baseline; }
 .plan-name  { font-size: 0.8rem; font-weight: bold; }
 .plan-price { font-size: 0.9rem; font-weight: bold; color: #fef08a; }
@@ -351,7 +363,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); }
 .modal { background: var(--modal-bg); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 90%; width: 340px; padding: 24px; backdrop-filter: blur(16px); }
 .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 16px; color: var(--text-heading); text-align: center;}
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-/* 修復 Checkbox 走位與顏色 */
 .copy-opt-label { display: flex; align-items: center; padding: 12px 16px; margin-bottom: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 12px; cursor: pointer; color: var(--text-main); font-weight: 500; transition: background 0.2s; }
 .copy-opt-label:hover { background: var(--glass-item-hover); }
 .copy-opt-label input[type="checkbox"] { margin-right: 14px; width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
@@ -462,7 +473,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); }
 </div>
 
 <div class="shortcut-section" style="margin-bottom: 10px;">
-  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9)); box-shadow: 0 4px 15px rgba(16,185,129,0.3); font-size: 0.9rem;" onclick="addBigMealCombo()">
+  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 15px rgba(16,185,129,0.3); font-size: 0.9rem;" onclick="addBigMealCombo()">
     🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
   </button>
 </div>
