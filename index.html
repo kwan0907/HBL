@@ -22,7 +22,7 @@
 
 <style>
 /* ===== 阻擋手機端下拉刷新 ===== */
-html {
+html, body {
   overscroll-behavior-y: none;
 }
 
@@ -139,14 +139,6 @@ body {
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
   min-height: 100vh;
-  /* ===== 阻擋手機端下拉刷新 ===== */
-  overscroll-behavior-y: none;
-}
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 .container { 
@@ -232,7 +224,6 @@ select {
 }
 .btn-add-product:hover { background: linear-gradient(135deg, var(--primary-hover), #0369a1) !important; color: white !important; }
 
-/* 套裝計畫區塊 */
 .package-plans-section { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
 .package-plans-title { font-size: 0.85rem; font-weight: 800; color: var(--color-pkg); margin-bottom: 6px; }
 .package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -275,7 +266,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 /* 🛒 購物車視圖 */
 .cart-container { display: none; }
 .cart-scroll-area { padding-bottom: 110px; } 
-.cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.2s; }
 .cart-item-info { flex: 1; margin-right: 8px; }
 .cart-item-name { font-weight: 800; color: var(--text-heading); font-size: 0.9rem; margin-bottom: 4px; line-height: 1.3; }
 .cart-item-price { color: var(--cart-price-color); font-weight: 800; font-size: 0.85rem; }
@@ -330,22 +321,45 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .copy-opt-label:hover { background: var(--glass-item-hover); border-color: var(--primary-color); }
 .copy-opt-label input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
 
-/* Search Modal */
-.search-modal-content { width: 100%; max-width: 600px; height: 86vh; background: var(--modal-bg); backdrop-filter: blur(16px); border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border); box-shadow: 0 -8px 32px rgba(14,165,233,0.2); display: flex; flex-direction: column; animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
-.search-modal-handle { width: 40px; height: 4px; background: rgba(14,165,233,0.3); border-radius: 2px; margin: 10px auto 4px; }
-.search-modal-bar { display: flex; gap: 6px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center; }
+/* 完美恢復的搜尋添加 Modal */
+.search-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 800;
+  align-items: flex-end; justify-content: center; padding: 0;
+}
+.search-modal-content {
+  width: 100%; max-width: 600px; height: 86vh;
+  background: var(--modal-bg); backdrop-filter: blur(16px);
+  border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border);
+  box-shadow: 0 -8px 32px rgba(14,165,233,0.2); display: flex; flex-direction: column;
+  animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.search-modal-handle { width: 40px; height: 4px; background: rgba(14,165,233,0.3); border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0; }
+.search-modal-bar { display: flex; gap: 6px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center; flex-shrink: 0; }
 .search-modal-input-wrap { position: relative; flex: 1; }
-.search-modal-input-wrap input { padding: 10px 34px 10px 12px; border-radius: 10px; }
-#search-clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: rgba(14,165,233,0.15); width: 20px; height: 20px; border-radius: 50%; color: var(--primary-color); display: flex; align-items: center; justify-content: center; border: none; font-size: 10px; font-weight: 800; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.search-modal-input-wrap input { padding: 10px 34px 10px 12px; border-radius: 10px; font-size: 16px !important; width: 100%; }
+#search-clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: rgba(14,165,233,0.15); width: 20px; height: 20px; border-radius: 50%; color: var(--primary-color); display: flex; align-items: center; justify-content: center; border: none; font-size: 10px; font-weight: 800; opacity: 0; pointer-events: none; transition: opacity 0.2s; margin: 0; }
 #search-clear-btn.visible { opacity: 1; pointer-events: auto; }
-.btn-search-close { background: var(--glass-bg-solid); border-radius: 8px; font-weight: 800; color: var(--primary-color); border: 1px solid var(--primary-color);}
-.search-modal-cats { display: flex; overflow-x: auto; padding: 8px 10px; gap: 6px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; }
+.btn-search-close { background: var(--glass-bg-solid); border-radius: 8px; font-weight: 800; color: var(--primary-color); border: 1px solid var(--primary-color); margin: 0; white-space: nowrap; flex-shrink: 0;}
+.search-modal-cats { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 7px; gap: 6px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; flex-shrink: 0; }
+.search-modal-cats::-webkit-scrollbar { display: none; }
+.product-list-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.product-list-modal::before { content: ''; flex: 1 1 0; }
+.product-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--table-border); background: transparent; transition: background 0.15s; font-weight: 600; }
+.product-item:hover { background: var(--table-row-hover); }
+.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.product-item-left  { flex: 1; min-width: 0; }
+.product-item-price { font-size: 0.85em; color: var(--primary-color); font-weight: 800; background: var(--glass-bg-solid); padding: 4px 8px; border-radius: 10px; border: 1px solid var(--glass-border); flex-shrink: 0; }
+.selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.68em; padding: 2px 6px; border-radius: 8px; margin-right: 4px; vertical-align: middle; white-space: nowrap; }
+.product-item-package { background: var(--color-pkg-bg); border-left: 3px solid var(--color-pkg); }
+.product-item-package:hover  { background: var(--color-pkg-border); }
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(6px); color: white; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(14,165,233,0.3); z-index: 1100; opacity: 0; transition: opacity 0.3s; pointer-events: none; border: 1px solid rgba(56,189,248,0.3); font-weight: 800; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(6px); color: white; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(14,165,233,0.3); z-index: 1100; opacity: 0; transition: opacity 0.3s; pointer-events: none; border: 1px solid rgba(56,189,248,0.3); font-weight: 800; max-width: 80%; text-align: center; }
 .toast.show { opacity: 1; }
 
 .pwa-install-btn { background: linear-gradient(135deg, rgba(22,163,74,0.9), rgba(21,128,61,0.9)); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 20px; border-radius: 20px; font-weight: 800; box-shadow: 0 4px 12px rgba(22,163,74,0.3); margin-bottom:10px; }
 
+/* 動畫 */
 .animate-in { animation: slideInDown 0.22s ease-out; }
 .removing   { animation: fadeOut 0.2s ease-out forwards; pointer-events: none; }
 @keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -353,7 +367,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 
 @media screen and (max-width: 480px) {
   .qty-btn { width: 20px; height: 22px; font-size: 12px; }
-  .qty-input { width: 24px; height: 22px; }
+  .qty-input { width: 24px; height: 22px; margin: 0 1px; }
   .cart-qty-input { width: 30px; }
   .search-modal-content { height: 90vh; }
 }
@@ -375,6 +389,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
 
+<!-- 字體大小控制列 -->
 <div class="font-ctrl-bar">
   <span class="font-ctrl-label">🔠 字體</span>
   <div class="font-ctrl-btns">
@@ -442,7 +457,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 
-<div class="shortcut-section">
+<div class="shortcut-section" style="margin-bottom: 10px;">
   <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.3); font-size: 0.9rem;" onclick="addBigMealCombo()">
     🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
   </button>
@@ -451,20 +466,24 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   <button class="btn-add-product" onclick="triggerHaptic('light'); openSearchModal()">🔍 搜尋添加產品</button>
 </div>
 
+<!-- 視圖切換列 -->
 <div class="view-toggle">
   <button id="table-view-btn" class="active" onclick="switchView('table')">表格視圖</button>
   <button id="card-view-btn" onclick="switchView('card')">卡片視圖</button>
   <button id="cart-view-btn" onclick="switchView('cart')">🛒 購物車</button>
 </div>
 
+<!-- 表格視圖 -->
 <div id="table-container" class="table-container">
   <table id="selected-products">
     <thead id="product-table-head"></thead>
     <tbody id="product-table-body"></tbody>
   </table>
 </div>
+<!-- 卡片視圖 -->
 <div id="product-cards" class="product-cards" style="display:none;"></div>
 
+<!-- 🛒 購物車視圖 (含完美置底 Summary) -->
 <div id="cart-container" class="cart-container" style="display:none;">
   <div id="cart-view-content" class="cart-scroll-area"></div>
   <div id="cart-summary-section" class="cart-summary">
@@ -482,6 +501,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div class="summary" id="summary"></div>
 </div>
 
+<!-- 完美恢復的搜尋添加 Modal -->
 <div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
   <div class="search-modal-content" onclick="event.stopPropagation()">
     <div class="search-modal-handle"></div>
@@ -500,6 +520,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 
+<!-- 確認 Modal -->
 <div class="modal-overlay" id="confirm-modal">
   <div class="modal">
     <div class="modal-title">確認操作</div>
@@ -1344,7 +1365,6 @@ function handlePwaInstall() {
 
 function closeNewProductModal() {
   document.getElementById('new-product-modal').style.display = 'none';
-  localStorage.setItem('seen_new_product_liver_fixed', 'true');
 }
 
 function checkNewProductNotification() {
