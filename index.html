@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>產品計算器V3</title>
 
-<!-- 核心：靜態Manifest檔案 -->
 <link rel="manifest" href="./manifest.json" crossorigin="use-credentials">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
@@ -21,18 +20,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./IMG_4289.png">
 
 <style>
-/* ===== 阻擋手機端下拉刷新 ===== */
 html, body { overscroll-behavior-y: none; }
-
-/* ===== 全局變數：淺色模式 ===== */
 :root {
   --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-bg-solid: rgba(255, 255, 255, 0.98);
-  --glass-border: rgba(79, 70, 229, 0.12);
-  --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
-  --glass-item-bg: rgba(79, 70, 229, 0.05);
-  --glass-item-hover: rgba(79, 70, 229, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.85); --glass-bg-solid: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(79, 70, 229, 0.12); --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  --glass-item-bg: rgba(79, 70, 229, 0.05); --glass-item-hover: rgba(79, 70, 229, 0.1);
   --text-main: #334155; --text-muted: #64748b; --text-heading: #0f172a;
   --primary-color: #4f46e5; --primary-hover: #4338ca;
   --danger-bg: rgba(244, 63, 94, 0.95); --danger-hover: #e11d48;
@@ -49,8 +42,6 @@ html, body { overscroll-behavior-y: none; }
   --input-bg: rgba(248, 250, 252, 0.8);
   --vp-assistant-color: #f59e0b; --vp-assistant-hover: #d97706;
 }
-
-/* ===== 全局變數：深色模式 ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -73,27 +64,17 @@ html, body { overscroll-behavior-y: none; }
     --input-bg: rgba(30, 41, 59, 0.6);
   }
 }
-
 * { box-sizing: border-box; }
-
-body { 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-  margin: 0; padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; font-size: 13px; font-weight: 500;
-  color: var(--text-main); background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh;
-}
-
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; font-size: 13px; font-weight: 500; color: var(--text-main); background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh; }
 .container { max-width: 100%; margin: 0 auto; padding: 8px; border-radius: 12px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
-
 h1 { color: var(--text-heading); text-align: center; margin-bottom: 6px; font-size: 1.25rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
 input, select { font-size: 15px !important; color: var(--text-main); font-weight: 600; padding: 6px 8px; border-radius: 8px; }
 select option { background: var(--glass-bg-solid); color: var(--text-main); font-weight: 600;}
-
 .controls { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
 .tier-select, .actions { padding: 8px; border-radius: 10px; width: 100%; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
 .price-controls { display: flex; flex-direction: column; gap: 6px; }
 .price-control { width: 100%; }
 .price-control label { display: block; margin-bottom: 2px; font-weight: 700; font-size: 0.85rem; color: var(--primary-color); }
-
 .font-ctrl-bar { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; padding: 6px 10px; border-radius: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
 .font-ctrl-label { color: var(--primary-color); font-size: 0.8rem; white-space: nowrap; flex: 1; font-weight: 700; }
 .font-ctrl-btns { display: flex; align-items: center; gap: 4px; }
@@ -101,20 +82,15 @@ select option { background: var(--glass-bg-solid); color: var(--text-main); font
 .font-ctrl-btn:hover  { background: var(--glass-item-hover); }
 .font-ctrl-btn:active { transform: scale(0.95); }
 .font-ctrl-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--glass-border); }
-
 #font-size-display { min-width: 34px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; padding: 3px 6px; }
-
 button { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--glass-border); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: var(--glass-bg-solid); color: var(--text-main); backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent; }
-button:not([class*="btn-"]):not([class*="package-plan-btn"]):not([class*="btn-candidate"]):hover { background: var(--glass-item-hover); border-color: var(--primary-color); color: var(--primary-color); }
+button:not([class*="btn-"]):not([class*="package-plan-btn"]):not([class*="btn-candidate"]):not([class*="vp-strategy-opt"]):not([class*="btn-bulk"]):hover { background: var(--glass-item-hover); border-color: var(--primary-color); color: var(--primary-color); }
 button:active { transform: scale(0.98); }
-
 select, input { border: 1px solid var(--glass-border); width: 100%; background: var(--input-bg); backdrop-filter: blur(4px); color: var(--text-main); outline: none; }
 select:focus, input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15); }
 select { -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px; padding-right: 28px; }
-
 .actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
 .actions button { flex: 1; min-width: 80px; padding: 8px 5px; font-weight: 700; }
-
 .btn-clear { background: var(--clear-bg); color: var(--clear-text); border: 1px solid var(--clear-border); font-weight: 700; }
 .btn-clear:hover { background: var(--clear-hover-bg) !important; color: var(--clear-hover-text) !important; }
 .btn-primary { background: var(--primary-color); color: white; border: none; }
@@ -123,34 +99,27 @@ select { -webkit-appearance: none; background-image: url("data:image/svg+xml;cha
 .btn-danger:hover { background: var(--danger-hover) !important; color: white !important; }
 .btn-copy { background: var(--copy-bg); color: white; border: none; }
 .btn-copy:hover { background: var(--copy-hover) !important; color: white !important; }
-
 .btn-add-product { width: 100%; padding: 10px; font-size: 0.95rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; border: none; background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
 .btn-add-product:hover { opacity: 0.9; color: white !important; }
-
 .btn-candidate { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: var(--glass-item-bg); color: var(--text-muted); border: 1px solid var(--glass-border); }
 .btn-candidate.active { background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover); }
-
 .package-plans-section { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
 .package-plans-title { font-size: 0.85rem; font-weight: 700; color: var(--color-pkg); margin-bottom: 6px; }
 .package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .package-plan-btn { padding: 6px 8px; background: var(--color-pkg); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-align: left; display: flex; flex-direction: column; gap: 2px; font-weight: 600; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.15); }
 .package-plan-btn:hover { background: #6d28d9 !important; color: white !important; }
 .package-plan-btn:active { background: #5b21b6 !important; color: white !important; transform: scale(0.98); }
-
 .plan-row1 { display: flex; justify-content: space-between; align-items: baseline; }
 .plan-name  { font-size: 0.75rem; font-weight: 700; }
 .plan-price { font-size: 0.85rem; font-weight: 800; color: #fef08a; }
 .plan-row2  { display: flex; justify-content: space-between; align-items: center; }
 .plan-vp    { font-size: 0.65rem; opacity: 0.9; }
 .plan-profit{ font-size: 0.65rem; color: #bbf7d0; font-weight: 700; }
-
 .category-tab { padding: 4px 10px; border-radius: 14px; font-size: 0.8rem; border: 1px solid transparent; background: var(--glass-bg-solid); color: var(--text-main); transition: all 0.2s; font-weight: 600; }
 .category-tab.active { background: var(--primary-color); border-color: var(--primary-color); color: white; font-weight: 700; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2); }
-
 .view-toggle { display: flex; justify-content: center; margin: 6px 0 8px 0; background: var(--glass-item-bg); padding: 3px; border-radius: 10px; border: 1px solid var(--glass-border); }
 .view-toggle button { margin: 0; border-radius: 8px; background: transparent; padding: 6px 10px; font-size: 0.85rem; font-weight: 600; border: none; color: var(--text-muted); flex: 1; max-width: 120px;}
 .view-toggle button.active { background: var(--glass-bg-solid); border: 1px solid var(--glass-border); color: var(--primary-color); font-weight: 800; box-shadow: 0 1px 4px rgba(0,0,0,0.05);}
-
 .table-container { overflow-x: auto; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--glass-border); -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 th, td { border-bottom: 1px solid var(--table-border); padding: 8px 4px; text-align: left; }
@@ -159,16 +128,13 @@ tr:nth-child(even) { background: var(--table-row-even); }
 tr:hover { background: var(--table-row-hover); }
 td.product-name { min-width: 70px; max-width: 120px; font-size: 0.78rem; font-weight: 700; color: var(--text-heading); }
 tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700; }
-
 .qty-control { display: flex; align-items: center; justify-content: center; gap: 2px; }
 .qty-btn { width: 22px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--primary-color); }
 .qty-btn:active { transform: scale(0.9); background: var(--primary-color); color: white; }
 .qty-input { width: 26px; height: 24px; text-align: center; border: 1px solid var(--glass-border); border-radius: 6px; background: var(--input-bg); margin: 0; padding: 0; font-size: 13px !important; font-weight: 700;}
-
 .product-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.03);}
 .card-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 800; font-size: 0.9rem; color: var(--text-heading); }
 .card-price-row { display: flex; justify-content: space-between; margin-bottom: 4px; padding: 3px 0; border-bottom: 1px dashed var(--table-border); font-size: 0.8rem; }
-
 .cart-container { display: none; }
 .cart-scroll-area { padding-bottom: 110px; } 
 .cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.2s; }
@@ -178,7 +144,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .cart-item-total { font-weight: 800; font-size: 0.95rem; color: var(--primary-color); }
 .cart-qty-input { font-size: 15px !important; font-weight: 800; color: var(--primary-color); width: 34px; height: 26px; border: 2px solid var(--primary-color); background: var(--glass-bg-solid); border-radius: 6px; }
-
 .cart-summary { position: fixed; bottom: 0; left: 0; right: 0; background: var(--cart-summary-bg); border-top: 1px solid var(--glass-border); border-radius: 20px 20px 0 0; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; }
 @media (min-width: 768px) { .cart-summary { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); } }
 .cart-summary-top-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
@@ -187,7 +152,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .cart-summary-total { font-weight: 900; font-size: 1.15rem; color: var(--text-heading); }
 .btn-copy-cart { background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); cursor: pointer; margin: 0; }
 .btn-copy-cart:active { transform: scale(0.95); }
-
 .summary { background: transparent; padding: 0; border-radius: 10px; border: none; }
 .summary-item { flex: 1; min-width: 140px; margin-bottom: 6px; background: var(--glass-bg); padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); }
 .summary-item h3 { margin-top: 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid var(--table-border); padding-bottom: 4px; margin-bottom: 6px; }
@@ -196,7 +160,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .profit { color: var(--color-profit); font-weight: 800; }
 .summary-item.profit-section { background: var(--color-profit-bg); border-color: var(--color-profit-border); }
 .summary-item.profit-section h3 { color: var(--color-profit); }
-
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
 .modal { background: var(--modal-bg); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 90%; width: 320px; padding: 20px; backdrop-filter: blur(16px); }
 .modal-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 12px; color: var(--text-heading); text-align: center;}
@@ -204,15 +167,12 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .copy-opt-label { display: flex; align-items: center; padding: 10px 14px; margin-bottom: 8px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 10px; cursor: pointer; color: var(--text-main); font-weight: 600; transition: background 0.2s; }
 .copy-opt-label:hover { background: var(--glass-item-hover); border-color: var(--primary-color); }
 .copy-opt-label input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
-
-/* VP 助手樣式 */
 .vp-strategy-group { display: flex; gap: 6px; margin-bottom: 12px; }
 .vp-strategy-opt { flex: 1; padding: 8px 4px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 8px; text-align: center; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: var(--text-muted); }
 .vp-strategy-opt.active { background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover); }
 .vp-result-card { background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; margin-bottom: 8px; }
 .vp-result-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px; }
 .vp-result-items { font-size: 0.85rem; color: var(--text-main); margin-bottom: 8px; line-height: 1.4; }
-
 .search-modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 800; align-items: flex-end; justify-content: center; padding: 0; }
 .search-modal-content { width: 100%; max-width: 600px; height: 86vh; background: var(--modal-bg); backdrop-filter: blur(16px); border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border); box-shadow: 0 -8px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column; animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
 .search-modal-handle { width: 40px; height: 4px; background: var(--text-muted); opacity: 0.3; border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0; }
@@ -224,6 +184,12 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .btn-search-close { background: var(--primary-color); border-radius: 8px; font-weight: 700; color: white; border: none; margin: 0; white-space: nowrap; flex-shrink: 0; padding: 10px 14px;}
 .search-modal-cats { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 7px; gap: 6px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; flex-shrink: 0; }
 .search-modal-cats::-webkit-scrollbar { display: none; }
+/* 批次操作工具列樣式 */
+.search-modal-bulk-actions { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--glass-border); background: var(--glass-bg-solid); flex-shrink: 0; }
+.btn-bulk { flex: 1; font-size: 0.8rem; padding: 6px; border-radius: 8px; font-weight: 700; border: 1px solid var(--glass-border); background: var(--glass-item-bg); color: var(--text-main); }
+.btn-bulk.add { border-color: var(--vp-assistant-color); color: var(--vp-assistant-color); }
+.btn-bulk.remove { border-color: var(--clear-text); color: var(--clear-text); }
+.btn-bulk:hover { opacity: 0.9; }
 .product-list-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 10px; }
 .product-list-modal::before { content: ''; flex: 1 1 0; }
 .product-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--table-border); background: transparent; transition: background 0.15s; font-weight: 600; border-radius: 8px; margin-top: 6px; }
@@ -234,43 +200,24 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.68em; padding: 2px 6px; border-radius: 6px; margin-right: 4px; vertical-align: middle; white-space: nowrap; font-weight: 700; }
 .product-item-package { background: var(--color-pkg-bg); border-left: 3px solid var(--color-pkg); }
 .product-item-package:hover  { background: var(--color-pkg-border); }
-
 .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text-heading); backdrop-filter: blur(6px); color: white; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 1100; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; font-weight: 600; max-width: 80%; text-align: center; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-5px); }
-
 .pwa-install-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 10px rgba(16,185,129,0.25); margin-bottom:10px; font-size: 0.9rem; }
-
 .animate-in { animation: slideInDown 0.22s ease-out; }
 .removing   { animation: fadeOut 0.2s ease-out forwards; pointer-events: none; }
 @keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
 @keyframes slideUpFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-@media screen and (max-width: 480px) {
-  .qty-btn { width: 20px; height: 22px; font-size: 12px; }
-  .qty-input { width: 24px; height: 22px; margin: 0; }
-  .cart-qty-input { width: 30px; }
-  .search-modal-content { height: 90vh; }
-  h1 { font-size: 1.1rem; }
-}
-@media (min-width: 768px) {
-  .container { max-width: 1200px; padding: 16px; }
-  .controls { flex-direction: row; }
-  .price-controls { flex-direction: row; }
-  .package-plans-grid { grid-template-columns: repeat(4, 1fr); }
-  .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; }
-  .search-modal-overlay { align-items: center; padding: 20px; }
-}
+@media screen and (max-width: 480px) { .qty-btn { width: 20px; height: 22px; font-size: 12px; } .qty-input { width: 24px; height: 22px; margin: 0; } .cart-qty-input { width: 30px; } .search-modal-content { height: 90vh; } h1 { font-size: 1.1rem; } }
+@media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .price-controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>產品計算器</h1>
-
 <div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
-
 <div class="font-ctrl-bar">
   <span class="font-ctrl-label">🔠 字體</span>
   <div class="font-ctrl-btns">
@@ -279,7 +226,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)">A＋</button>
   </div>
 </div>
-
 <div class="controls">
   <div class="tier-select">
     <div class="price-controls">
@@ -302,7 +248,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製全資料</button>
   </div>
 </div>
-
 <div class="package-plans-section">
   <div class="package-plans-title">🏃 套裝計畫（價格不受等級影響）</div>
   <div class="package-plans-grid">
@@ -312,7 +257,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     <button class="package-plan-btn" onclick="addPackagePlan('PKG4')"><div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">$9,998</span></div><div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 $3,188</span></div></button>
   </div>
 </div>
-
 <div class="shortcut-section" style="margin-bottom: 10px;">
   <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)</button>
 </div>
@@ -320,16 +264,13 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   <button class="btn-add-product" onclick="triggerHaptic('light'); openSearchModal()">🔍 搜尋/管理候選產品</button>
   <button id="btn-vp-assistant" class="btn-add-product" style="background: linear-gradient(135deg, var(--vp-assistant-color), var(--vp-assistant-hover)); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);" onclick="openVpAssistantModal()">🎯 VP 推薦助手 (0)</button>
 </div>
-
 <div class="view-toggle">
   <button id="table-view-btn" class="active" onclick="switchView('table')">表格視圖</button>
   <button id="card-view-btn" onclick="switchView('card')">卡片視圖</button>
   <button id="cart-view-btn" onclick="switchView('cart')">🛒 購物車</button>
 </div>
-
 <div id="table-container" class="table-container"><table id="selected-products"><thead id="product-table-head"></thead><tbody id="product-table-body"></tbody></table></div>
 <div id="product-cards" class="product-cards" style="display:none;"></div>
-
 <div id="cart-container" class="cart-container" style="display:none;">
   <div id="cart-view-content" class="cart-scroll-area"></div>
   <div id="cart-summary-section" class="cart-summary">
@@ -343,15 +284,20 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     </div>
   </div>
 </div>
-
 <div class="summary" id="summary"></div>
 </div>
 
+<!-- 搜尋 Modal -->
 <div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
   <div class="search-modal-content" onclick="event.stopPropagation()">
     <div class="search-modal-handle"></div>
     <div id="product-list" class="product-list-modal"></div>
     <div class="search-modal-cats" id="category-tabs"></div>
+    <!-- 批次操作工具列 -->
+    <div class="search-modal-bulk-actions">
+      <button class="btn-bulk add" onclick="bulkAddCandidates()">☑️ 全選當前為候選</button>
+      <button class="btn-bulk remove" onclick="bulkRemoveCandidates()">✖️ 移除當前候選</button>
+    </div>
     <div class="search-modal-bar">
       <div class="search-modal-input-wrap">
         <input type="text" id="product-search" placeholder="搜尋產品編號或名稱..." oninput="filterProducts(); updateClearBtn()" autocomplete="off">
@@ -396,7 +342,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="pwa-info-modal">
   <div class="modal">
     <div class="modal-title">📲 安裝到主畫面</div>
@@ -406,7 +351,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
   <div class="modal" style="text-align: center;">
     <div class="modal-title" style="color: var(--primary-color); font-size: 1.25rem; margin-bottom: 12px;">🎉 最新消息</div>
@@ -420,10 +364,10 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 
 <script>
 const productsData = [
-  { stock_no: "PKG1", prod_name: "慢跑計畫", prod_name_en: "Jogging Plan", category: "套裝", type: "package", vp: 61.85, retail_price: 1369, 標準價: 1369, 銅級: 1369, 銀級: 1369, 金級: 1369, "58%": 1369, "50%": 1369, cost: 1369, fixedProfit: 553.5, fav: 1, prod_seq: 1, packageItems: ["1 營養蛋白素", "1 佳能蛋白質粉", "1 即溶草本飲品50克"] },
-  { stock_no: "PKG2", prod_name: "快跑計畫", prod_name_en: "Running Plan", category: "套裝", type: "package", vp: 107.25, retail_price: 2177, 標準價: 2177, 銅級: 2177, 銀級: 2177, 金級: 2177, "58%": 2177, "50%": 2177, cost: 2177, fixedProfit: 929, fav: 2, prod_seq: 2, packageItems: ["1 營養蛋白素", "1 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克"] },
-  { stock_no: "PKG3", prod_name: "運動VIP計畫", prod_name_en: "Sport VIP Plan", category: "套裝", type: "package", vp: 347.9, retail_price: 6996, 標準價: 6996, 銅級: 6996, 銀級: 6996, 金級: 6996, "58%": 6996, "50%": 6996, cost: 6996, fixedProfit: 2338, fav: 3, prod_seq: 3, packageItems: ["5 營養蛋白素", "5 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克", "1 消脂片", "1 抗脂片"] },
-  { stock_no: "PKG4", prod_name: "運動VVIP計畫", prod_name_en: "Sport VVIP Plan", category: "套裝", type: "package", vp: 501.45, retail_price: 9998, 標準價: 9998, 銅級: 9998, 銀級: 9998, 金級: 9998, "58%": 9998, "50%": 9998, cost: 9998, fixedProfit: 3188, fav: 4, prod_seq: 4, packageItems: ["5 營養蛋白素", "5 佳能蛋白質粉", "1 濃縮蘆薈汁", "1 BC30益生菌", "1 即溶草本飲品50克", "1 消脂片", "1 抗脂片", "1 夜寧新", "1 莓之寶", "1 纖維粉", "1 膠原蛋白美肌飲料", "1 深海魚油"] },
+  { stock_no: "PKG1", prod_name: "慢跑計畫", prod_name_en: "Jogging Plan", category: "套裝", type: "package", vp: 61.85, retail_price: 1369, 標準價: 1369, 銅級: 1369, 銀級: 1369, 金級: 1369, "58%": 1369, "50%": 1369, cost: 1369, fixedProfit: 553.5, fav: 1, prod_seq: 1 },
+  { stock_no: "PKG2", prod_name: "快跑計畫", prod_name_en: "Running Plan", category: "套裝", type: "package", vp: 107.25, retail_price: 2177, 標準價: 2177, 銅級: 2177, 銀級: 2177, 金級: 2177, "58%": 2177, "50%": 2177, cost: 2177, fixedProfit: 929, fav: 2, prod_seq: 2 },
+  { stock_no: "PKG3", prod_name: "運動VIP計畫", prod_name_en: "Sport VIP Plan", category: "套裝", type: "package", vp: 347.9, retail_price: 6996, 標準價: 6996, 銅級: 6996, 銀級: 6996, 金級: 6996, "58%": 6996, "50%": 6996, cost: 6996, fixedProfit: 2338, fav: 3, prod_seq: 3 },
+  { stock_no: "PKG4", prod_name: "運動VVIP計畫", prod_name_en: "Sport VVIP Plan", category: "套裝", type: "package", vp: 501.45, retail_price: 9998, 標準價: 9998, 銅級: 9998, 銀級: 9998, 金級: 9998, "58%": 9998, "50%": 9998, cost: 9998, fixedProfit: 3188, fav: 4, prod_seq: 4 },
   { stock_no: "1154", prod_name: "21 日健肝計劃", prod_name_en: "21 Days Liver Plan", category: "内", type: "", vp: 21.45, retail_price: 394, 標準價: 394, 銅級: 344.58, 銀級: 312.81, 金級: 281.04, "58%": 245.74, "50%": 217.5, cost: 217.5, fav: 770, prod_seq: 5 },
   { stock_no: "0141", prod_name: "營養蛋白素-雲呢拿", prod_name_en: "F1 Shake - Vanilla", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 10, prod_seq: 10 },
   { stock_no: "0143", prod_name: "營養蛋白素-野草莓", prod_name_en: "F1 Shake - Wild Berry", category: "内", type: "", vp: 23.95, retail_price: 457, 標準價: 464, 銅級: 400.4, 銀級: 358, 金級: 315.6, "58%": 285.92, "50%": 252, cost: 252, fav: 20, prod_seq: 20 },
@@ -501,691 +445,77 @@ let currentCategory = "all";
 let currentView = "table";
 let newlyAddedStockNos = new Set();
 let candidateStockNos = new Set();
-let currentStrategy = "accurate"; // 預設策略: accurate, cheapest, fewest
+let currentStrategy = "accurate";
 
-function triggerHaptic(type = 'light') {
-  if (!navigator.vibrate) return;
-  try {
-    switch (type) {
-      case 'light':   navigator.vibrate(10); break;
-      case 'medium':  navigator.vibrate(20); break;
-      case 'heavy':   navigator.vibrate(30); break;
-      case 'success': navigator.vibrate([15, 50, 15]); break;
-    }
-  } catch(e) {}
-}
+function triggerHaptic(type = 'light') { if (!navigator.vibrate) return; try { switch (type) { case 'light': navigator.vibrate(10); break; case 'medium': navigator.vibrate(20); break; case 'heavy': navigator.vibrate(30); break; case 'success': navigator.vibrate([15, 50, 15]); break; } } catch(e) {} }
 
 const FONT_SIZES  = [11, 13, 16, 20];
 const FONT_LABELS = ['小', '標準', '大', '特大'];
 let currentFontLevel = 1;
 
-function initFontSize() {
-  try {
-    const saved = localStorage.getItem('calcFontLevel');
-    if (saved !== null) {
-      const v = parseInt(saved);
-      if (!isNaN(v) && v >= 0 && v < FONT_SIZES.length) currentFontLevel = v;
-    }
-  } catch(e) {}
-  applyFontSize();
-}
+function initFontSize() { try { const saved = localStorage.getItem('calcFontLevel'); if (saved !== null) { const v = parseInt(saved); if (!isNaN(v) && v >= 0 && v < FONT_SIZES.length) currentFontLevel = v; } } catch(e) {} applyFontSize(); }
+function changeFontSize(delta) { triggerHaptic('light'); const next = currentFontLevel + delta; if (next < 0 || next >= FONT_SIZES.length) return; currentFontLevel = next; try { localStorage.setItem('calcFontLevel', currentFontLevel); } catch(e) {} applyFontSize(); showToast('字體大小：' + FONT_LABELS[currentFontLevel]); }
+function applyFontSize() { document.body.style.fontSize = FONT_SIZES[currentFontLevel] + 'px'; const disp = document.getElementById('font-size-display'); if (disp) disp.textContent = FONT_LABELS[currentFontLevel]; const decBtn = document.getElementById('font-decrease-btn'); const incBtn = document.getElementById('font-increase-btn'); if (decBtn) decBtn.disabled = (currentFontLevel === 0); if (incBtn) incBtn.disabled = (currentFontLevel === FONT_SIZES.length - 1); }
 
-function changeFontSize(delta) {
-  triggerHaptic('light');
-  const next = currentFontLevel + delta;
-  if (next < 0 || next >= FONT_SIZES.length) return;
-  currentFontLevel = next;
-  try { localStorage.setItem('calcFontLevel', currentFontLevel); } catch(e) {}
-  applyFontSize();
-  showToast('字體大小：' + FONT_LABELS[currentFontLevel]);
-}
-
-function applyFontSize() {
-  document.body.style.fontSize = FONT_SIZES[currentFontLevel] + 'px';
-  const disp = document.getElementById('font-size-display');
-  if (disp) disp.textContent = FONT_LABELS[currentFontLevel];
-  const decBtn = document.getElementById('font-decrease-btn');
-  const incBtn = document.getElementById('font-increase-btn');
-  if (decBtn) decBtn.disabled = (currentFontLevel === 0);
-  if (incBtn) incBtn.disabled = (currentFontLevel === FONT_SIZES.length - 1);
-}
-
-let longPressTimer = null;
-let longPressInterval = null;
+let longPressTimer = null; let longPressInterval = null;
 function startIncrease(stockNo) { endLongPress(); triggerHaptic('light'); increaseQuantity(stockNo); longPressTimer = setTimeout(() => { longPressInterval = setInterval(() => {triggerHaptic('light'); increaseQuantity(stockNo);}, 90); }, 480); }
 function startDecrease(stockNo) { endLongPress(); triggerHaptic('light'); decreaseQuantity(stockNo); longPressTimer = setTimeout(() => { longPressInterval = setInterval(() => {triggerHaptic('light'); decreaseQuantity(stockNo);}, 90); }, 480); }
-function endLongPress() {
-  if (longPressTimer)    { clearTimeout(longPressTimer);    longPressTimer = null; }
-  if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; }
-}
+function endLongPress() { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } if (longPressInterval) { clearInterval(longPressInterval); longPressInterval = null; } }
 
 function scrollListToTop() { document.getElementById('product-list').scrollTop = 0; }
-
-function openSearchModal() {
-  const overlay = document.getElementById('search-modal-overlay');
-  overlay.style.display = 'flex';
-  const content = overlay.querySelector('.search-modal-content');
-  content.style.animation = 'none'; content.offsetHeight; content.style.animation = '';
-  filterProducts(); scrollListToTop();
-  setTimeout(() => { document.getElementById('product-search').focus(); }, 80);
-}
-function closeSearchModal() {
-  document.getElementById('search-modal-overlay').style.display = 'none';
-  document.getElementById('product-search').value = ''; updateClearBtn();
-}
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('search-modal-overlay')) { triggerHaptic('light'); closeSearchModal(); }
-}
-function updateClearBtn() {
-  const val = document.getElementById('product-search').value;
-  document.getElementById('search-clear-btn').classList.toggle('visible', !!val);
-}
-function clearSearch() {
-  document.getElementById('product-search').value = ''; updateClearBtn();
-  filterProducts(); scrollListToTop(); document.getElementById('product-search').focus();
-}
+function openSearchModal() { const overlay = document.getElementById('search-modal-overlay'); overlay.style.display = 'flex'; const content = overlay.querySelector('.search-modal-content'); content.style.animation = 'none'; content.offsetHeight; content.style.animation = ''; filterProducts(); scrollListToTop(); setTimeout(() => { document.getElementById('product-search').focus(); }, 80); }
+function closeSearchModal() { document.getElementById('search-modal-overlay').style.display = 'none'; document.getElementById('product-search').value = ''; updateClearBtn(); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('search-modal-overlay')) { triggerHaptic('light'); closeSearchModal(); } }
+function updateClearBtn() { const val = document.getElementById('product-search').value; document.getElementById('search-clear-btn').classList.toggle('visible', !!val); }
+function clearSearch() { document.getElementById('product-search').value = ''; updateClearBtn(); filterProducts(); scrollListToTop(); document.getElementById('product-search').focus(); }
 
 function formatPrice(price, isPackage) { return isPackage ? '$' + Math.round(price) : '$' + price.toFixed(2); }
-function formatProfit(profit) {
-  const rounded = Math.round(profit * 10) / 10;
-  const intPart = Math.floor(rounded), decPart = Math.round((rounded - intPart) * 10);
-  const intStr  = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return decPart > 0 ? '$' + intStr + '.' + decPart : '$' + intStr;
-}
+function formatProfit(profit) { const rounded = Math.round(profit * 10) / 10; const intPart = Math.floor(rounded), decPart = Math.round((rounded - intPart) * 10); const intStr  = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); return decPart > 0 ? '$' + intStr + '.' + decPart : '$' + intStr; }
 
-function copyToClipboard() {
-  if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可複製的產品'); return; }
-  triggerHaptic('light');
-  
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
-  const hasProfit = cmp || hasPkgProfit;
+function copyToClipboard() { if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可複製的產品'); return; } triggerHaptic('light'); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined); const hasProfit = cmp || hasPkgProfit; let modalHtml = `<div class="modal-overlay" id="copy-modal" style="display:flex; z-index: 2000;"><div class="modal"><div class="modal-title">📋 選擇複製資訊</div><div class="modal-content"><label class="copy-opt-label"><input type="checkbox" id="copy-opt-unitprice" checked> 單價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalprice" checked> 總價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-vp" checked> VP 分數</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數</label>`; if (hasProfit) modalHtml += `<label class="copy-opt-label"><input type="checkbox" id="copy-opt-profit" checked> 利潤</label>`; modalHtml += `</div><div class="modal-actions"><button onclick="triggerHaptic('light'); document.getElementById('copy-modal').remove()" style="padding: 8px 16px;">取消</button><button class="btn-primary" onclick="triggerHaptic('success'); executeCopy()" style="padding: 8px 16px;">確定複製</button></div></div></div>`; const oldModal = document.getElementById('copy-modal'); if (oldModal) oldModal.remove(); document.body.insertAdjacentHTML('beforeend', modalHtml); }
+function executeCopy() { const includeUnitPrice = document.getElementById('copy-opt-unitprice') ? document.getElementById('copy-opt-unitprice').checked : false; const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false; const includeVP = document.getElementById('copy-opt-vp') ? document.getElementById('copy-opt-vp').checked : false; const includeTotalVP = document.getElementById('copy-opt-totalvp') ? document.getElementById('copy-opt-totalvp').checked : false; const includeProfit = document.getElementById('copy-opt-profit') ? document.getElementById('copy-opt-profit').checked : false; const copyModal = document.getElementById('copy-modal'); if (copyModal) copyModal.remove(); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const now = new Date(); const dateStr = now.toLocaleDateString('zh-HK') + ' ' + now.toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' }); let lines = ['📋 產品詳細計算', '日期：' + dateStr, '等級：' + t1 + (cmp ? ' / ' + t2 : ''), '================================', '']; selectedProducts.forEach((p, i) => { const isPkg = p.type === 'package'; const price1 = p[t1], totalPrice1 = price1 * p.quantity, totalVP = p.vp * p.quantity; lines.push((i+1) + '. ' + p.prod_name + (isPkg ? '【套裝】' : '') + ' * ' + p.quantity); if (cmp) { const price2 = p[t2], totalPrice2 = price2 * p.quantity; let up, tp; if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; } else { up = Math.abs(price2 - price1); tp = up * p.quantity; } let parts1 = []; if (includeUnitPrice) parts1.push('單價：' + formatPrice(price1, isPkg)); if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  ')); let parts2 = []; if (includeUnitPrice) parts2.push('單價：' + formatPrice(price2, isPkg)); if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg)); if (parts2.length) lines.push('   ' + t2 + ' ' + parts2.join('  ')); if (includeProfit) { lines.push('   💰 利潤：' + formatProfit(up) + ' / 件 合計：' + formatProfit(tp)); } } else { let parts = []; if (includeUnitPrice) parts.push('單價：' + formatPrice(price1, isPkg)); if (includeTotalPrice) parts.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts.length) lines.push('   ' + parts.join('  ')); if (includeProfit && isPkg && p.fixedProfit !== undefined) { lines.push('   💰 固定利潤：' + formatProfit(p.fixedProfit) + ' / 件 合計：' + formatProfit(p.fixedProfit * p.quantity)); } } let vpParts = []; if (includeVP) vpParts.push('VP：' + p.vp.toFixed(2)); if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2)); if (vpParts.length) lines.push('   ' + vpParts.join('  ')); lines.push(''); }); const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0); const totalP1 = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0); const totalVP = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0); const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined); const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0); lines.push('================================', '📊 總計', '總數量：' + totalQty + ' 件'); if (includeTotalPrice) { lines.push('總金額（' + t1 + '）：$' + totalP1.toFixed(2)); if (cmp) { const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0); lines.push('總金額（' + t2 + '）：$' + totalP2.toFixed(2)); } } if (includeProfit && cmp) { const totalPr = selectedProducts.reduce((s, p) => { if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity; return s + Math.abs(p[t2] - p[t1]) * p.quantity; }, 0); lines.push('💰 總利潤：' + formatProfit(totalPr)); } if (includeTotalVP) { lines.push('總VP：' + totalVP.toFixed(2)); } if (includeProfit && pkgProds.length > 0) { lines.push('', '💰 套裝固定利潤'); pkgProds.forEach(p => lines.push('  ' + p.prod_name + ' * ' + p.quantity + '：' + formatProfit(p.fixedProfit * p.quantity))); lines.push('  套裝利潤合計：' + formatProfit(totalPkgPr)); } const text = lines.join('\n'); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => showToast('✅ 全資料已複製！')).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); } }
+function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast('✅ 成功複製！'); } catch (e) { showToast('複製失敗，請手動選取'); } document.body.removeChild(ta); }
+function copyCartSimple() { triggerHaptic('light'); if (selectedProducts.length === 0) { showToast('購物車是空的'); return; } const t1 = document.getElementById('pricing-tier1').value; let lines = ['🛒 購物車清單', '====================']; let tQty = 0, tPrice = 0, tVP = 0; selectedProducts.forEach(p => { const isPkg = p.type === 'package'; const pr = p[t1]; lines.push(`- ${p.prod_name}${isPkg ? ' (套裝)' : ''} * ${p.quantity}`); tQty += p.quantity; tPrice += pr * p.quantity; tVP += p.vp * p.quantity; }); lines.push('===================='); lines.push(`總數量: ${tQty} 件`); lines.push(`總VP分數: ${tVP.toFixed(2)}`); lines.push(`💰 總計價錢: $${tPrice.toFixed(2)}`); const text = lines.join('\n'); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => { triggerHaptic('success'); showToast('✅ 購物車已複製！'); }).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); } }
 
-  let modalHtml = `
-    <div class="modal-overlay" id="copy-modal" style="display:flex; z-index: 2000;">
-      <div class="modal">
-        <div class="modal-title">📋 選擇複製資訊</div>
-        <div class="modal-content">
-          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-unitprice" checked> 單價</label>
-          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalprice" checked> 總價</label>
-          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-vp" checked> VP 分數</label>
-          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數</label>
-  `;
-  if (hasProfit) modalHtml += `<label class="copy-opt-label"><input type="checkbox" id="copy-opt-profit" checked> 利潤</label>`;
-  modalHtml += `
-        </div>
-        <div class="modal-actions">
-          <button onclick="triggerHaptic('light'); document.getElementById('copy-modal').remove()" style="padding: 8px 16px;">取消</button>
-          <button class="btn-primary" onclick="triggerHaptic('success'); executeCopy()" style="padding: 8px 16px;">確定複製</button>
-        </div>
-      </div>
-    </div>
-  `;
-  const oldModal = document.getElementById('copy-modal');
-  if (oldModal) oldModal.remove();
-  document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
+function switchView(viewType) { triggerHaptic('light'); currentView = viewType; document.getElementById('table-container').style.display = 'none'; document.getElementById('product-cards').style.display = 'none'; document.getElementById('cart-container').style.display = 'none'; document.getElementById('table-view-btn').classList.remove('active'); document.getElementById('card-view-btn').classList.remove('active'); document.getElementById('cart-view-btn').classList.remove('active'); if (viewType === 'table') { document.getElementById('table-container').style.display = 'block'; document.getElementById('table-view-btn').classList.add('active'); } else if (viewType === 'card') { document.getElementById('product-cards').style.display = 'block'; document.getElementById('card-view-btn').classList.add('active'); } else if (viewType === 'cart') { document.getElementById('cart-container').style.display = 'block'; document.getElementById('cart-view-btn').classList.add('active'); } updateProductDisplay(); }
+function initCategories() { const categories = ['all', ...new Set(productsData.map(p => p.category))]; const tabsContainer = document.getElementById('category-tabs'); categories.forEach(category => { const tab = document.createElement('div'); tab.className = 'category-tab' + (category === 'all' ? ' active' : ''); tab.textContent = category === 'all' ? '全部' : category; tab.onclick = () => { triggerHaptic('light'); document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); currentCategory = category; filterProducts(); scrollListToTop(); }; tabsContainer.appendChild(tab); }); }
 
-function executeCopy() {
-  const includeUnitPrice  = document.getElementById('copy-opt-unitprice')  ? document.getElementById('copy-opt-unitprice').checked  : false;
-  const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false;
-  const includeVP         = document.getElementById('copy-opt-vp')         ? document.getElementById('copy-opt-vp').checked         : false;
-  const includeTotalVP    = document.getElementById('copy-opt-totalvp')    ? document.getElementById('copy-opt-totalvp').checked    : false;
-  const includeProfit     = document.getElementById('copy-opt-profit')     ? document.getElementById('copy-opt-profit').checked     : false;
+function toggleCandidate(stockNo) { if (candidateStockNos.has(stockNo)) candidateStockNos.delete(stockNo); else candidateStockNos.add(stockNo); saveCandidates(); filterProducts(); updateCandidateCount(); }
+function bulkAddCandidates() { triggerHaptic('medium'); const searchText = document.getElementById('product-search').value.toLowerCase(); const filtered = productsData.filter(p => { const matchSearch = !searchText || p.stock_no.toLowerCase().includes(searchText) || p.prod_name.toLowerCase().includes(searchText) || p.prod_name_en.toLowerCase().includes(searchText); const matchCat = currentCategory === 'all' || p.category === currentCategory; return matchSearch && matchCat; }); filtered.forEach(p => candidateStockNos.add(p.stock_no)); saveCandidates(); updateCandidateCount(); filterProducts(); showToast(`已加入 ${filtered.length} 件候選產品`); }
+function bulkRemoveCandidates() { triggerHaptic('medium'); const searchText = document.getElementById('product-search').value.toLowerCase(); const filtered = productsData.filter(p => { const matchSearch = !searchText || p.stock_no.toLowerCase().includes(searchText) || p.prod_name.toLowerCase().includes(searchText) || p.prod_name_en.toLowerCase().includes(searchText); const matchCat = currentCategory === 'all' || p.category === currentCategory; return matchSearch && matchCat; }); filtered.forEach(p => candidateStockNos.delete(p.stock_no)); saveCandidates(); updateCandidateCount(); filterProducts(); showToast(`已移除 ${filtered.length} 件候選產品`); }
+function saveCandidates() { try { localStorage.setItem('calcCandidates', JSON.stringify([...candidateStockNos])); } catch(e) {} }
+function loadCandidates() { try { const saved = localStorage.getItem('calcCandidates'); if (saved) candidateStockNos = new Set(JSON.parse(saved)); } catch(e) {} updateCandidateCount(); }
+function updateCandidateCount() { const btn = document.getElementById('btn-vp-assistant'); if (btn) btn.innerHTML = `🎯 VP 推薦助手 (${candidateStockNos.size})`; }
 
-  const copyModal = document.getElementById('copy-modal');
-  if (copyModal) copyModal.remove();
+function filterProducts() { const searchText = document.getElementById('product-search').value.toLowerCase(); const t1 = document.getElementById('pricing-tier1').value; const productList = document.getElementById('product-list'); productList.innerHTML = ''; const filtered = productsData.filter(p => { const matchSearch = !searchText || p.stock_no.toLowerCase().includes(searchText) || p.prod_name.toLowerCase().includes(searchText) || p.prod_name_en.toLowerCase().includes(searchText); const matchCat = currentCategory === 'all' || p.category === currentCategory; return matchSearch && matchCat; }); filtered.sort((a, b) => a.prod_seq - b.prod_seq); filtered.forEach(product => { const item = document.createElement('div'); const isPkg = product.type === 'package'; item.className = 'product-item' + (isPkg ? ' product-item-package' : ''); const sel = selectedProducts.find(p => p.stock_no === product.stock_no); const badge = sel ? `<span class="selected-badge">✓ ${sel.quantity}</span>` : ''; const price = isPkg ? '$' + Math.round(product[t1]) : '$' + product[t1].toFixed(2); const isCand = candidateStockNos.has(product.stock_no); item.innerHTML = `<div class="product-item-inner"><div class="product-item-left">${badge}<strong>${product.stock_no}</strong> - ${product.prod_name}${isPkg ? ` <span style="color:var(--color-pkg);font-size:0.78em;">[套裝]</span>` : ''}</div><div style="display:flex; gap:6px; align-items:center;"><button class="btn-candidate ${isCand ? 'active' : ''}" onclick="event.stopPropagation(); toggleCandidate('${product.stock_no}')">${isCand ? '✓ 候選' : '🔖'}</button><div class="product-item-price">${price}</div></div></div>`; item.onclick = () => addProduct(product); productList.appendChild(item); }); if (filtered.length === 0) { const el = document.createElement('div'); el.className = 'product-item'; el.style.color = 'var(--text-muted)'; el.style.fontStyle = 'italic'; el.style.textAlign = 'center'; el.textContent = '沒有找到符合條件的產品'; productList.appendChild(el); } }
 
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('zh-HK') + ' ' + now.toLocaleTimeString('zh-HK', { hour: '2-digit', minute: '2-digit' });
-  let lines = ['📋 產品詳細計算', '日期：' + dateStr, '等級：' + t1 + (cmp ? ' / ' + t2 : ''), '================================', ''];
-
-  selectedProducts.forEach((p, i) => {
-    const isPkg = p.type === 'package';
-    const price1 = p[t1], totalPrice1 = price1 * p.quantity, totalVP = p.vp * p.quantity;
-    lines.push((i+1) + '. ' + p.prod_name + (isPkg ? '【套裝】' : '') + ' * ' + p.quantity);
-
-    if (cmp) {
-      const price2 = p[t2], totalPrice2 = price2 * p.quantity;
-      let up, tp;
-      if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; }
-      else { up = Math.abs(price2 - price1); tp = up * p.quantity; }
-
-      let parts1 = [];
-      if (includeUnitPrice)  parts1.push('單價：' + formatPrice(price1, isPkg));
-      if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg));
-      if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  '));
-
-      let parts2 = [];
-      if (includeUnitPrice)  parts2.push('單價：' + formatPrice(price2, isPkg));
-      if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg));
-      if (parts2.length) lines.push('   ' + t2 + ' ' + parts2.join('  '));
-
-      if (includeProfit) {
-        lines.push('   💰 利潤：' + formatProfit(up) + ' / 件 合計：' + formatProfit(tp));
-      }
-    } else {
-      let parts = [];
-      if (includeUnitPrice)  parts.push('單價：' + formatPrice(price1, isPkg));
-      if (includeTotalPrice) parts.push('總價：' + formatPrice(totalPrice1, isPkg));
-      if (parts.length) lines.push('   ' + parts.join('  '));
-
-      if (includeProfit && isPkg && p.fixedProfit !== undefined) {
-         lines.push('   💰 固定利潤：' + formatProfit(p.fixedProfit) + ' / 件 合計：' + formatProfit(p.fixedProfit * p.quantity));
-      }
-    }
-
-    let vpParts = [];
-    if (includeVP)      vpParts.push('VP：' + p.vp.toFixed(2));
-    if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2));
-    if (vpParts.length) lines.push('   ' + vpParts.join('  '));
-
-    lines.push('');
-  });
-
-  const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0);
-  const totalP1  = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0);
-  const totalVP  = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0);
-  const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined);
-  const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0);
-
-  lines.push('================================', '📊 總計', '總數量：' + totalQty + ' 件');
-
-  if (includeTotalPrice) {
-    lines.push('總金額（' + t1 + '）：$' + totalP1.toFixed(2));
-    if (cmp) {
-      const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0);
-      lines.push('總金額（' + t2 + '）：$' + totalP2.toFixed(2));
-    }
-  }
-
-  if (includeProfit && cmp) {
-    const totalPr = selectedProducts.reduce((s, p) => {
-      if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity;
-      return s + Math.abs(p[t2] - p[t1]) * p.quantity;
-    }, 0);
-    lines.push('💰 總利潤：' + formatProfit(totalPr));
-  }
-
-  if (includeTotalVP) {
-    lines.push('總VP：' + totalVP.toFixed(2));
-  }
-
-  if (includeProfit && pkgProds.length > 0) {
-    lines.push('', '💰 套裝固定利潤');
-    pkgProds.forEach(p => lines.push('  ' + p.prod_name + ' * ' + p.quantity + '：' + formatProfit(p.fixedProfit * p.quantity)));
-    lines.push('  套裝利潤合計：' + formatProfit(totalPkgPr));
-  }
-
-  const text = lines.join('\n');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => showToast('✅ 全資料已複製！')).catch(() => fallbackCopy(text));
-  } else { fallbackCopy(text); }
-}
-
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.focus(); ta.select();
-  try { document.execCommand('copy'); showToast('✅ 成功複製！'); }
-  catch (e) { showToast('複製失敗，請手動選取'); }
-  document.body.removeChild(ta);
-}
-
-function copyCartSimple() {
-  triggerHaptic('light');
-  if (selectedProducts.length === 0) { showToast('購物車是空的'); return; }
-  
-  const t1 = document.getElementById('pricing-tier1').value;
-  let lines = ['🛒 購物車清單', '===================='];
-  let tQty = 0, tPrice = 0, tVP = 0;
-  
-  selectedProducts.forEach(p => {
-    const isPkg = p.type === 'package';
-    const pr = p[t1];
-    lines.push(`- ${p.prod_name}${isPkg ? ' (套裝)' : ''} * ${p.quantity}`);
-    tQty += p.quantity;
-    tPrice += pr * p.quantity;
-    tVP += p.vp * p.quantity;
-  });
-  
-  lines.push('====================');
-  lines.push(`總數量: ${tQty} 件`);
-  lines.push(`總VP分數: ${tVP.toFixed(2)}`);
-  lines.push(`💰 總計價錢: $${tPrice.toFixed(2)}`);
-  
-  const text = lines.join('\n');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => { triggerHaptic('success'); showToast('✅ 購物車已複製！'); }).catch(() => fallbackCopy(text));
-  } else { fallbackCopy(text); }
-}
-
-function switchView(viewType) {
-  triggerHaptic('light');
-  currentView = viewType;
-  document.getElementById('table-container').style.display = 'none';
-  document.getElementById('product-cards').style.display = 'none';
-  document.getElementById('cart-container').style.display = 'none';
-  document.getElementById('table-view-btn').classList.remove('active');
-  document.getElementById('card-view-btn').classList.remove('active');
-  document.getElementById('cart-view-btn').classList.remove('active');
-  
-  if (viewType === 'table') {
-    document.getElementById('table-container').style.display = 'block';
-    document.getElementById('table-view-btn').classList.add('active');
-  } else if (viewType === 'card') {
-    document.getElementById('product-cards').style.display = 'block';
-    document.getElementById('card-view-btn').classList.add('active');
-  } else if (viewType === 'cart') {
-    document.getElementById('cart-container').style.display = 'block';
-    document.getElementById('cart-view-btn').classList.add('active');
-  }
-  updateProductDisplay();
-}
-
-function initCategories() {
-  const categories = ['all', ...new Set(productsData.map(p => p.category))];
-  const tabsContainer = document.getElementById('category-tabs');
-  categories.forEach(category => {
-    const tab = document.createElement('div');
-    tab.className = 'category-tab' + (category === 'all' ? ' active' : '');
-    tab.textContent = category === 'all' ? '全部' : category;
-    tab.onclick = () => {
-      triggerHaptic('light');
-      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active'); currentCategory = category; filterProducts(); scrollListToTop();
-    };
-    tabsContainer.appendChild(tab);
-  });
-}
-
-function toggleCandidate(stockNo) {
-  if (candidateStockNos.has(stockNo)) candidateStockNos.delete(stockNo);
-  else candidateStockNos.add(stockNo);
-  saveCandidates();
-  filterProducts(); 
-  updateCandidateCount();
-}
-
-function saveCandidates() {
-  try { localStorage.setItem('calcCandidates', JSON.stringify([...candidateStockNos])); } catch(e) {}
-}
-
-function loadCandidates() {
-  try {
-    const saved = localStorage.getItem('calcCandidates');
-    if (saved) candidateStockNos = new Set(JSON.parse(saved));
-  } catch(e) {}
-  updateCandidateCount();
-}
-
-function updateCandidateCount() {
-  const btn = document.getElementById('btn-vp-assistant');
-  if (btn) btn.innerHTML = `🎯 VP 推薦助手 (${candidateStockNos.size})`;
-}
-
-function filterProducts() {
-  const searchText = document.getElementById('product-search').value.toLowerCase();
-  const t1 = document.getElementById('pricing-tier1').value;
-  const productList = document.getElementById('product-list');
-  productList.innerHTML = '';
-  const filtered = productsData.filter(p => {
-    const matchSearch = !searchText ||
-      p.stock_no.toLowerCase().includes(searchText) ||
-      p.prod_name.toLowerCase().includes(searchText) ||
-      p.prod_name_en.toLowerCase().includes(searchText);
-    const matchCat = currentCategory === 'all' || p.category === currentCategory;
-    return matchSearch && matchCat;
-  });
-  filtered.sort((a, b) => a.prod_seq - b.prod_seq);
-  filtered.forEach(product => {
-    const item = document.createElement('div');
-    const isPkg = product.type === 'package';
-    item.className = 'product-item' + (isPkg ? ' product-item-package' : '');
-    const sel = selectedProducts.find(p => p.stock_no === product.stock_no);
-    const badge = sel ? `<span class="selected-badge">✓ ${sel.quantity}</span>` : '';
-    const price = isPkg ? '$' + Math.round(product[t1]) : '$' + product[t1].toFixed(2);
-    const isCand = candidateStockNos.has(product.stock_no);
-    item.innerHTML = `<div class="product-item-inner">
-      <div class="product-item-left">${badge}<strong>${product.stock_no}</strong> - ${product.prod_name}${isPkg ? ` <span style="color:var(--color-pkg);font-size:0.78em;">[套裝]</span>` : ''}</div>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <button class="btn-candidate ${isCand ? 'active' : ''}" onclick="event.stopPropagation(); toggleCandidate('${product.stock_no}')">${isCand ? '✓ 候選' : '🔖'}</button>
-        <div class="product-item-price">${price}</div>
-      </div>
-    </div>`;
-    item.onclick = () => addProduct(product);
-    productList.appendChild(item);
-  });
-  if (filtered.length === 0) {
-    const el = document.createElement('div');
-    el.className = 'product-item';
-    el.style.color = 'var(--text-muted)'; el.style.fontStyle = 'italic'; el.style.textAlign = 'center';
-    el.textContent = '沒有找到符合條件的產品';
-    productList.appendChild(el);
-  }
-}
-
-function addProduct(product) {
-  triggerHaptic('medium');
-  const existing = selectedProducts.find(p => p.stock_no === product.stock_no);
-  if (existing) { existing.quantity += 1; showToast(`${product.prod_name} * ${existing.quantity}`); }
-  else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(product.stock_no); showToast(`已添加：${product.prod_name}`); }
-  updateProductDisplay(); filterProducts();
-  setTimeout(() => newlyAddedStockNos.clear(), 400);
-}
-
-function addBigMealCombo() {
-  triggerHaptic('light');
-  showConfirmDialog('確定要快捷添加「大餐四寶」到購物車嗎？', () => {
-    triggerHaptic('success');
-    const stockNos = ["0079", "0210", "0111", "0130"];
-    let added = false;
-    stockNos.forEach(stockNo => {
-      const product = productsData.find(p => p.stock_no === stockNo);
-      if (product) {
-        const existing = selectedProducts.find(p => p.stock_no === stockNo);
-        if (existing) { existing.quantity += 1; } 
-        else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(stockNo); }
-        added = true;
-      }
-    });
-    if (added) {
-      updateProductDisplay(); 
-      showToast('🍽️ 已成功添加：大餐四寶 (4件獨立產品)');
-      setTimeout(() => newlyAddedStockNos.clear(), 400);
-    }
-  });
-}
-
-function addPackagePlan(stockNo) {
-  triggerHaptic('medium');
-  const plan = productsData.find(p => p.stock_no === stockNo);
-  if (!plan) return;
-  const existing = selectedProducts.find(p => p.stock_no === stockNo);
-  if (existing) { existing.quantity += 1; } else { selectedProducts.push({ ...plan, quantity: 1 }); newlyAddedStockNos.add(stockNo); }
-  updateProductDisplay();
-  setTimeout(() => newlyAddedStockNos.clear(), 400);
-  showToast(`已添加：${plan.prod_name}`);
-}
-
-function removeProductWithAnimation(stockNo) {
-  triggerHaptic('medium');
-  const els = document.querySelectorAll(`[data-stockno="${stockNo}"]`);
-  if (els.length > 0) { els.forEach(el => el.classList.add('removing')); setTimeout(() => removeProduct(stockNo), 200); }
-  else { removeProduct(stockNo); }
-}
+function addProduct(product) { triggerHaptic('medium'); const existing = selectedProducts.find(p => p.stock_no === product.stock_no); if (existing) { existing.quantity += 1; showToast(`${product.prod_name} * ${existing.quantity}`); } else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(product.stock_no); showToast(`已添加：${product.prod_name}`); } updateProductDisplay(); filterProducts(); setTimeout(() => newlyAddedStockNos.clear(), 400); }
+function addBigMealCombo() { triggerHaptic('light'); showConfirmDialog('確定要快捷添加「大餐四寶」到購物車嗎？', () => { triggerHaptic('success'); const stockNos = ["0079", "0210", "0111", "0130"]; let added = false; stockNos.forEach(stockNo => { const product = productsData.find(p => p.stock_no === stockNo); if (product) { const existing = selectedProducts.find(p => p.stock_no === stockNo); if (existing) { existing.quantity += 1; } else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(stockNo); } added = true; } }); if (added) { updateProductDisplay(); showToast('🍽️ 已成功添加：大餐四寶 (4件獨立產品)'); setTimeout(() => newlyAddedStockNos.clear(), 400); } }); }
+function addPackagePlan(stockNo) { triggerHaptic('medium'); const plan = productsData.find(p => p.stock_no === stockNo); if (!plan) return; const existing = selectedProducts.find(p => p.stock_no === stockNo); if (existing) { existing.quantity += 1; } else { selectedProducts.push({ ...plan, quantity: 1 }); newlyAddedStockNos.add(stockNo); } updateProductDisplay(); setTimeout(() => newlyAddedStockNos.clear(), 400); showToast(`已添加：${plan.prod_name}`); }
+function removeProductWithAnimation(stockNo) { triggerHaptic('medium'); const els = document.querySelectorAll(`[data-stockno="${stockNo}"]`); if (els.length > 0) { els.forEach(el => el.classList.add('removing')); setTimeout(() => removeProduct(stockNo), 200); } else { removeProduct(stockNo); } }
 function removeProduct(stockNo) { selectedProducts = selectedProducts.filter(p => p.stock_no !== stockNo); updateProductDisplay(); }
 function updateQuantity(stockNo, newQty) { triggerHaptic('light'); const p = selectedProducts.find(p => p.stock_no === stockNo); if (p) { p.quantity = Math.max(1, newQty); updateProductDisplay(); } }
 function increaseQuantity(stockNo) { const p = selectedProducts.find(p => p.stock_no === stockNo); if (p) { p.quantity += 1; updateProductDisplay(); } }
 function decreaseQuantity(stockNo) { const p = selectedProducts.find(p => p.stock_no === stockNo); if (p && p.quantity > 1) { p.quantity -= 1; updateProductDisplay(); } }
 
-function updateProductDisplay() { 
-  updateTableHeader(); 
-  if (currentView === 'table') updateProductTable(); 
-  else if (currentView === 'card') updateProductCards();
-  else if (currentView === 'cart') updateCartView(); 
-  updateSummary(); 
-}
-
-function updateTableHeader() {
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
-  const showProfitCols = cmp || hasPkgProfit;
-  let h = '<tr><th>編號</th><th>名稱</th><th>數量</th>';
-  if (cmp) h += `<th>${t1}<br>單價</th><th>${t1}<br>總價</th><th>${t2}<br>單價</th><th>${t2}<br>總價</th>`;
-  else h += '<th>單價</th><th>總價</th>';
-  if (showProfitCols) h += '<th>單件<br>利潤</th><th>總<br>利潤</th>';
-  h += '<th>VP</th><th>總VP</th><th>操作</th></tr>';
-  document.getElementById('product-table-head').innerHTML = h;
-}
-
-function qtyBtnHTML(action, stockNo, label) {
-  const fn = action === 'inc' ? 'startIncrease' : 'startDecrease';
-  return `<div class="qty-btn"
-    onmousedown="${fn}('${stockNo}')" onmouseup="endLongPress()" onmouseleave="endLongPress()"
-    ontouchstart="event.preventDefault();${fn}('${stockNo}')" ontouchend="endLongPress()" ontouchcancel="endLongPress()">${label}</div>`;
-}
-
-function updateProductTable() {
-  const tbody = document.getElementById('product-table-body');
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
-  const showProfitCols = cmp || hasPkgProfit;
-  const colCount = 6 + (cmp ? 4 : 2) + (showProfitCols ? 2 : 0);
-  tbody.innerHTML = '';
-  if (selectedProducts.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding:20px; color:var(--text-muted);">尚未選擇任何產品</td></tr>`;
-    return;
-  }
-  selectedProducts.forEach(product => {
-    const row = document.createElement('tr');
-    const isPkg = product.type === 'package';
-    row.className = [isPkg ? 'package-row' : '', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
-    row.setAttribute('data-stockno', product.stock_no);
-    const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
-    let html = `<td>${product.stock_no}</td>
-      <td class="product-name">${product.prod_name}${isPkg ? `<span class="package-badge" style="background:var(--color-pkg);color:white;font-size:0.6rem;padding:2px 4px;border-radius:4px;margin-left:4px;">套裝</span>` : ''}</td>
-      <td style="white-space:nowrap;"><div class="qty-control">
-        ${qtyBtnHTML('dec', product.stock_no, '−')}
-        <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
-        ${qtyBtnHTML('inc', product.stock_no, '+')}
-      </div></td>`;
-    if (cmp) {
-      const p2 = product[t2], tp2 = p2 * product.quantity;
-      let up, tpr;
-      if (isPkg && product.fixedProfit !== undefined) { up = product.fixedProfit; tpr = up * product.quantity; }
-      else { up = Math.abs(p2 - p1); tpr = up * product.quantity; }
-      html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td><td>${formatPrice(p2,isPkg)}</td><td>${formatPrice(tp2,isPkg)}</td>`;
-      if (showProfitCols) html += `<td class="profit">${formatProfit(up)}</td><td class="profit">${formatProfit(tpr)}</td>`;
-    } else {
-      html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td>`;
-      if (showProfitCols) {
-        if (isPkg && product.fixedProfit !== undefined) {
-          html += `<td class="profit">${formatProfit(product.fixedProfit)}</td><td class="profit">${formatProfit(product.fixedProfit*product.quantity)}</td>`;
-        } else {
-          html += `<td style="color:var(--text-muted);text-align:center;">-</td><td style="color:var(--text-muted);text-align:center;">-</td>`;
-        }
-      }
-    }
-    html += `<td>${product.vp.toFixed(2)}</td><td>${tvp.toFixed(2)}</td>
-      <td><button class="btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></td>`;
-    row.innerHTML = html; tbody.appendChild(row);
-  });
-}
-
-function updateProductCards() {
-  const cc = document.getElementById('product-cards');
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  cc.innerHTML = '';
-  if (selectedProducts.length === 0) {
-    cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">尚未選擇任何產品</div>';
-    return;
-  }
-  selectedProducts.forEach(product => {
-    const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity;
-    const isPkg = product.type === 'package';
-    const card = document.createElement('div');
-    card.className = ['product-card', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
-    card.setAttribute('data-stockno', product.stock_no);
-    let html = `<div class="card-header">
-      <div>${product.prod_name}${isPkg ? `<span style="background:var(--color-pkg);color:white;font-size:0.7rem;padding:2px 6px;border-radius:6px;margin-left:6px;">套裝</span>` : ''}</div>
-      <div style="color:var(--text-muted);">${product.stock_no}</div>
-    </div><div style="margin-bottom:8px;"><div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">${product.prod_name_en}</div>`;
-    if (isPkg) {
-      html += `<div style="font-size:0.75rem;color:var(--color-pkg);margin-bottom:6px;">⚠ 此套裝價格固定，不受等級影響</div>
-        <div class="card-price-row"><div>套裝價：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(p1,true)}</div></div>
-        <div class="card-price-row"><div>套裝總價 (* ${product.quantity})：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(tp1,true)}</div></div>`;
-      if (product.fixedProfit !== undefined) {
-        html += `<div class="card-price-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div>
-          <div class="card-price-row"><div>💰 固定利潤 (* ${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`;
-      }
-    } else if (cmp) {
-      const p2 = product[t2], tp2 = p2 * product.quantity;
-      const up = Math.abs(p2 - p1), tpr = up * product.quantity;
-      html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
-        <div class="card-price-row"><div>${t2} 單價:</div><div>${formatPrice(p2,false)}</div></div>
-        <div class="card-price-row"><div>單件利潤:</div><div class="profit">${formatProfit(up)}</div></div>
-        <div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>
-        <div class="card-price-row"><div>${t2} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp2,false)}</div></div>
-        <div class="card-price-row"><div>總利潤:</div><div class="profit">${formatProfit(tpr)}</div></div>`;
-    } else {
-      html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
-        <div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`;
-    }
-    html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
-      <div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
-        <div class="qty-control">
-          ${qtyBtnHTML('dec', product.stock_no, '−')}
-          <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
-          ${qtyBtnHTML('inc', product.stock_no, '+')}
-        </div>
-        <button class="btn-danger" style="padding:6px 12px;font-size:0.85rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button>
-      </div>`;
-    card.innerHTML = html; cc.appendChild(card);
-  });
-}
-
-function updateCartView() {
-  const cc = document.getElementById('cart-view-content');
-  const t1 = document.getElementById('pricing-tier1').value;
-  cc.innerHTML = '';
-  if (selectedProducts.length === 0) {
-    cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">🛒 購物車是空的</div>';
-    document.getElementById('cart-summary-section').style.display = 'none';
-    return;
-  }
-  document.getElementById('cart-summary-section').style.display = 'block';
-  let totalQty = 0, totalPrice = 0, totalVP = 0;
-  selectedProducts.forEach(product => {
-    const isPkg = product.type === 'package';
-    const price = product[t1];
-    const tp = price * product.quantity;
-    totalQty += product.quantity;
-    totalPrice += tp;
-    totalVP += product.vp * product.quantity;
-
-    const item = document.createElement('div');
-    item.className = ['cart-item', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
-    item.setAttribute('data-stockno', product.stock_no);
-    item.innerHTML = `
-      <div class="cart-item-info">
-        <div class="cart-item-name">${product.prod_name}${isPkg ? ' <span style="font-size:0.8em;color:var(--color-pkg);">(套裝)</span>' : ''}</div>
-        <div class="cart-item-price">${formatPrice(price, isPkg)} / 件</div>
-      </div>
-      <div class="cart-item-actions">
-        <div class="cart-item-total">計: ${formatPrice(tp, isPkg)}</div>
-        <div class="qty-control">
-          ${qtyBtnHTML('dec', product.stock_no, '−')}
-          <input type="number" class="qty-input cart-qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
-          ${qtyBtnHTML('inc', product.stock_no, '+')}
-        </div>
-      </div>
-    `;
-    cc.appendChild(item);
-  });
-  document.getElementById('cart-total-qty').textContent = totalQty;
-  document.getElementById('cart-total-vp').textContent = totalVP.toFixed(2);
-  document.getElementById('cart-total-price').textContent = '$' + totalPrice.toFixed(2);
-}
-
+function updateProductDisplay() { updateTableHeader(); if (currentView === 'table') updateProductTable(); else if (currentView === 'card') updateProductCards(); else if (currentView === 'cart') updateCartView(); updateSummary(); }
+function updateTableHeader() { const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined); const showProfitCols = cmp || hasPkgProfit; let h = '<tr><th>編號</th><th>名稱</th><th>數量</th>'; if (cmp) h += `<th>${t1}<br>單價</th><th>${t1}<br>總價</th><th>${t2}<br>單價</th><th>${t2}<br>總價</th>`; else h += '<th>單價</th><th>總價</th>'; if (showProfitCols) h += '<th>單件<br>利潤</th><th>總<br>利潤</th>'; h += '<th>VP</th><th>總VP</th><th>操作</th></tr>'; document.getElementById('product-table-head').innerHTML = h; }
+function qtyBtnHTML(action, stockNo, label) { const fn = action === 'inc' ? 'startIncrease' : 'startDecrease'; return `<div class="qty-btn" onmousedown="${fn}('${stockNo}')" onmouseup="endLongPress()" onmouseleave="endLongPress()" ontouchstart="event.preventDefault();${fn}('${stockNo}')" ontouchend="endLongPress()" ontouchcancel="endLongPress()">${label}</div>`; }
+function updateProductTable() { const tbody = document.getElementById('product-table-body'); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined); const showProfitCols = cmp || hasPkgProfit; const colCount = 6 + (cmp ? 4 : 2) + (showProfitCols ? 2 : 0); tbody.innerHTML = ''; if (selectedProducts.length === 0) { tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding:20px; color:var(--text-muted);">尚未選擇任何產品</td></tr>`; return; } selectedProducts.forEach(product => { const row = document.createElement('tr'); const isPkg = product.type === 'package'; row.className = [isPkg ? 'package-row' : '', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' '); row.setAttribute('data-stockno', product.stock_no); const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity; let html = `<td>${product.stock_no}</td><td class="product-name">${product.prod_name}${isPkg ? `<span class="package-badge" style="background:var(--color-pkg);color:white;font-size:0.6rem;padding:2px 4px;border-radius:4px;margin-left:4px;">套裝</span>` : ''}</td><td style="white-space:nowrap;"><div class="qty-control">${qtyBtnHTML('dec', product.stock_no, '−')}<input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">${qtyBtnHTML('inc', product.stock_no, '+')}</div></td>`; if (cmp) { const p2 = product[t2], tp2 = p2 * product.quantity; let up, tpr; if (isPkg && product.fixedProfit !== undefined) { up = product.fixedProfit; tpr = up * product.quantity; } else { up = Math.abs(p2 - p1); tpr = up * product.quantity; } html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td><td>${formatPrice(p2,isPkg)}</td><td>${formatPrice(tp2,isPkg)}</td>`; if (showProfitCols) html += `<td class="profit">${formatProfit(up)}</td><td class="profit">${formatProfit(tpr)}</td>`; } else { html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td>`; if (showProfitCols) { if (isPkg && product.fixedProfit !== undefined) { html += `<td class="profit">${formatProfit(product.fixedProfit)}</td><td class="profit">${formatProfit(product.fixedProfit*product.quantity)}</td>`; } else { html += `<td style="color:var(--text-muted);text-align:center;">-</td><td style="color:var(--text-muted);text-align:center;">-</td>`; } } } html += `<td>${product.vp.toFixed(2)}</td><td>${tvp.toFixed(2)}</td><td><button class="btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></td>`; row.innerHTML = html; tbody.appendChild(row); }); }
+function updateProductCards() { const cc = document.getElementById('product-cards'); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; cc.innerHTML = ''; if (selectedProducts.length === 0) { cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">尚未選擇任何產品</div>'; return; } selectedProducts.forEach(product => { const p1 = product[t1], tp1 = p1 * product.quantity, tvp = product.vp * product.quantity; const isPkg = product.type === 'package'; const card = document.createElement('div'); card.className = ['product-card', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' '); card.setAttribute('data-stockno', product.stock_no); let html = `<div class="card-header"><div>${product.prod_name}${isPkg ? `<span style="background:var(--color-pkg);color:white;font-size:0.7rem;padding:2px 6px;border-radius:6px;margin-left:6px;">套裝</span>` : ''}</div><div style="color:var(--text-muted);">${product.stock_no}</div></div><div style="margin-bottom:8px;"><div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">${product.prod_name_en}</div>`; if (isPkg) { html += `<div style="font-size:0.75rem;color:var(--color-pkg);margin-bottom:6px;">⚠ 此套裝價格固定，不受等級影響</div><div class="card-price-row"><div>套裝價：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(p1,true)}</div></div><div class="card-price-row"><div>套裝總價 (* ${product.quantity})：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(tp1,true)}</div></div>`; if (product.fixedProfit !== undefined) { html += `<div class="card-price-row"><div>💰 固定利潤 (單件)：</div><div class="profit">${formatProfit(product.fixedProfit)}</div></div><div class="card-price-row"><div>💰 固定利潤 (* ${product.quantity})：</div><div class="profit">${formatProfit(product.fixedProfit*product.quantity)}</div></div>`; } } else if (cmp) { const p2 = product[t2], tp2 = p2 * product.quantity; const up = Math.abs(p2 - p1), tpr = up * product.quantity; html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div><div class="card-price-row"><div>${t2} 單價:</div><div>${formatPrice(p2,false)}</div></div><div class="card-price-row"><div>單件利潤:</div><div class="profit">${formatProfit(up)}</div></div><div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div><div class="card-price-row"><div>${t2} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp2,false)}</div></div><div class="card-price-row"><div>總利潤:</div><div class="profit">${formatProfit(tpr)}</div></div>`; } else { html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div><div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`; } html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div><div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;"><div class="qty-control">${qtyBtnHTML('dec', product.stock_no, '−')}<input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">${qtyBtnHTML('inc', product.stock_no, '+')}</div><button class="btn-danger" style="padding:6px 12px;font-size:0.85rem;" onclick="removeProductWithAnimation('${product.stock_no}')">移除</button></div>`; card.innerHTML = html; cc.appendChild(card); }); }
+function updateCartView() { const cc = document.getElementById('cart-view-content'); const t1 = document.getElementById('pricing-tier1').value; cc.innerHTML = ''; if (selectedProducts.length === 0) { cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">🛒 購物車是空的</div>'; document.getElementById('cart-summary-section').style.display = 'none'; return; } document.getElementById('cart-summary-section').style.display = 'block'; let totalQty = 0, totalPrice = 0, totalVP = 0; selectedProducts.forEach(product => { const isPkg = product.type === 'package'; const price = product[t1]; const tp = price * product.quantity; totalQty += product.quantity; totalPrice += tp; totalVP += product.vp * product.quantity; const item = document.createElement('div'); item.className = ['cart-item', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' '); item.setAttribute('data-stockno', product.stock_no); item.innerHTML = `<div class="cart-item-info"><div class="cart-item-name">${product.prod_name}${isPkg ? ' <span style="font-size:0.8em;color:var(--color-pkg);">(套裝)</span>' : ''}</div><div class="cart-item-price">${formatPrice(price, isPkg)} / 件</div></div><div class="cart-item-actions"><div class="cart-item-total">計: ${formatPrice(tp, isPkg)}</div><div class="qty-control">${qtyBtnHTML('dec', product.stock_no, '−')}<input type="number" class="qty-input cart-qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">${qtyBtnHTML('inc', product.stock_no, '+')}</div></div>`; cc.appendChild(item); }); document.getElementById('cart-total-qty').textContent = totalQty; document.getElementById('cart-total-vp').textContent = totalVP.toFixed(2); document.getElementById('cart-total-price').textContent = '$' + totalPrice.toFixed(2); }
 function updatePricing() { updateProductDisplay(); }
+function updateSummary() { const sc = document.getElementById('summary'); if (currentView === 'cart') { sc.style.display = 'none'; return; } sc.style.display = 'block'; const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0); const totalP1 = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0); const totalVP = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0); const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined); const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0); let html = '<div style="display:flex;flex-wrap:wrap;gap:12px;">'; if (cmp) { const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0); const totalPr = selectedProducts.reduce((s, p) => { if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity; return s + Math.abs(p[t2] - p[t1]) * p.quantity; }, 0); const prRate = totalP1 > 0 ? (totalPr / totalP1) * 100 : 0; html += `<div class="summary-item"><h3>${t1} 價格</h3><div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div><div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div><div class="summary-item"><h3>${t2} 價格</h3><div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div><div class="summary-row total"><div>總金額:</div><div>$${totalP2.toFixed(2)}</div></div></div><div class="summary-item"><h3>利潤計算</h3><div class="summary-row"><div>總利潤:</div><div class="profit">${formatProfit(totalPr)}</div></div><div class="summary-row"><div>利潤率:</div><div class="profit">${prRate.toFixed(2)}%</div></div><div class="summary-row"><div>平均單件:</div><div class="profit">${totalQty > 0 ? formatProfit(totalPr / totalQty) : '$0'}</div></div></div>`; if (pkgProds.length > 0) { html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`; pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; }); html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`; } } else { html += `<div class="summary-item"><h3>${t1} 總計</h3><div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div><div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>`; if (pkgProds.length > 0) { html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`; pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; }); html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`; } } html += `<div class="summary-item"><h3>VP計算</h3><div class="summary-row"><div>總VP:</div><div>${totalVP.toFixed(2)}</div></div><div class="summary-row"><div>平均VP:</div><div>${totalQty > 0 ? (totalVP / totalQty).toFixed(2) : '0.00'}</div></div></div>`; html += '</div>'; sc.innerHTML = html; }
 
-function updateSummary() {
-  const sc = document.getElementById('summary');
-  if (currentView === 'cart') { sc.style.display = 'none'; return; } 
-  sc.style.display = 'block';
-  const t1 = document.getElementById('pricing-tier1').value;
-  const t2 = document.getElementById('pricing-tier2').value;
-  const cmp = t2 && t1 !== t2;
-  const totalQty   = selectedProducts.reduce((s, p) => s + p.quantity, 0);
-  const totalP1    = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0);
-  const totalVP    = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0);
-  const pkgProds   = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined);
-  const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0);
-  let html = '<div style="display:flex;flex-wrap:wrap;gap:12px;">';
-  if (cmp) {
-    const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0);
-    const totalPr = selectedProducts.reduce((s, p) => {
-      if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity;
-      return s + Math.abs(p[t2] - p[t1]) * p.quantity;
-    }, 0);
-    const prRate = totalP1 > 0 ? (totalPr / totalP1) * 100 : 0;
-    html += `<div class="summary-item"><h3>${t1} 價格</h3>
-      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
-      <div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>
-      <div class="summary-item"><h3>${t2} 價格</h3>
-      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
-      <div class="summary-row total"><div>總金額:</div><div>$${totalP2.toFixed(2)}</div></div></div>
-      <div class="summary-item"><h3>利潤計算</h3>
-      <div class="summary-row"><div>總利潤:</div><div class="profit">${formatProfit(totalPr)}</div></div>
-      <div class="summary-row"><div>利潤率:</div><div class="profit">${prRate.toFixed(2)}%</div></div>
-      <div class="summary-row"><div>平均單件:</div><div class="profit">${totalQty > 0 ? formatProfit(totalPr / totalQty) : '$0'}</div></div></div>`;
-    if (pkgProds.length > 0) {
-      html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
-      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
-      html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
-    }
-  } else {
-    html += `<div class="summary-item"><h3>${t1} 總計</h3>
-      <div class="summary-row"><div>總數量:</div><div>${totalQty}</div></div>
-      <div class="summary-row total"><div>總金額:</div><div>$${totalP1.toFixed(2)}</div></div></div>`;
-    if (pkgProds.length > 0) {
-      html += `<div class="summary-item profit-section"><h3>💰 套裝固定利潤</h3>`;
-      pkgProds.forEach(p => { html += `<div class="summary-row"><div>${p.prod_name}(* ${p.quantity}):</div><div class="profit">${formatProfit(p.fixedProfit * p.quantity)}</div></div>`; });
-      html += `<div class="summary-row total"><div>套裝利潤合計:</div><div class="profit">${formatProfit(totalPkgPr)}</div></div></div>`;
-    }
-  }
-  html += `<div class="summary-item"><h3>VP計算</h3>
-    <div class="summary-row"><div>總VP:</div><div>${totalVP.toFixed(2)}</div></div>
-    <div class="summary-row"><div>平均VP:</div><div>${totalQty > 0 ? (totalVP / totalQty).toFixed(2) : '0.00'}</div></div></div>`;
-  html += '</div>';
-  sc.innerHTML = html;
-}
-
-function confirmClearSelection() {
-  if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可清空的產品'); return; }
-  triggerHaptic('light');
-  showConfirmDialog('確定要清空所有已選產品嗎?', () => clearSelection());
-}
-function showConfirmDialog(message, callback) {
-  document.getElementById('confirm-message').textContent = message;
-  document.getElementById('confirm-action-btn').onclick = () => { triggerHaptic('light'); hideConfirmDialog(); if (typeof callback === 'function') callback(); };
-  document.getElementById('confirm-modal').style.display = 'flex';
-}
+function confirmClearSelection() { if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可清空的產品'); return; } triggerHaptic('light'); showConfirmDialog('確定要清空所有已選產品嗎?', () => clearSelection()); }
+function showConfirmDialog(message, callback) { document.getElementById('confirm-message').textContent = message; document.getElementById('confirm-action-btn').onclick = () => { triggerHaptic('light'); hideConfirmDialog(); if (typeof callback === 'function') callback(); }; document.getElementById('confirm-modal').style.display = 'flex'; }
 function hideConfirmDialog() { document.getElementById('confirm-modal').style.display = 'none'; }
-function showToast(message, duration = 2500) {
-  const t = document.getElementById('toast-message');
-  t.textContent = message; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
-}
+function showToast(message, duration = 2500) { const t = document.getElementById('toast-message'); t.textContent = message; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), duration); }
 function clearSelection() { triggerHaptic('success'); selectedProducts = []; updateProductDisplay(); showToast('已清空所有選擇的產品'); }
 
-// 智能推薦相關
-function openVpAssistantModal() {
-  document.getElementById('vp-assistant-modal').style.display = 'flex';
-  document.getElementById('target-vp-input').focus();
-}
-function closeVpAssistantModal() {
-  document.getElementById('vp-assistant-modal').style.display = 'none';
-}
-function selectStrategy(el) {
-  document.querySelectorAll('.vp-strategy-opt').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
-  currentStrategy = el.dataset.strategy;
-  triggerHaptic('light');
-}
+function openVpAssistantModal() { document.getElementById('vp-assistant-modal').style.display = 'flex'; document.getElementById('target-vp-input').focus(); }
+function closeVpAssistantModal() { document.getElementById('vp-assistant-modal').style.display = 'none'; }
+function selectStrategy(el) { document.querySelectorAll('.vp-strategy-opt').forEach(e => e.classList.remove('active')); el.classList.add('active'); currentStrategy = el.dataset.strategy; triggerHaptic('light'); }
 
 function calculateVpRecommendations() {
   const targetVP = parseFloat(document.getElementById('target-vp-input').value);
@@ -1193,24 +523,34 @@ function calculateVpRecommendations() {
   if (candidateStockNos.size === 0) { showToast('請先在搜尋頁面用 🔖 選擇候選產品'); return; }
 
   const t1 = document.getElementById('pricing-tier1').value;
-  const candidates = productsData.filter(p => candidateStockNos.has(p.stock_no) && p.vp > 0);
+  // 過濾出有VP的候選產品，並計算性價比 (VP/Price)
+  let candidates = productsData.filter(p => candidateStockNos.has(p.stock_no) && p.vp > 0);
+  candidates.forEach(p => p.cp = p.vp / p[t1]);
+  // 依據性價比降序排列，有助於更快找到省錢方案
+  candidates.sort((a, b) => b.cp - a.cp);
+
+  let bestPrice = null;
   let results = [];
-  
-  // 深度優先搜尋 (DFS) 產生所有可能的組合 (最多 4 件)
+
+  // DFS 搜尋，無件數限制，但加入價格剪枝
   function dfs(index, currentItems, currentVP, currentPrice, totalQty) {
-    if (totalQty > 4) return; // 限制最多 4 件
+    // 剪枝：如果策略是最省錢，且當前價格已經超過目前找到的最佳解，則放棄此路徑
+    if (currentStrategy === 'cheapest' && bestPrice !== null && currentPrice > bestPrice) return;
+    
+    // 防呆：超過 20 件就停止，避免極端情況無限循環
+    if (totalQty > 20) return;
+
     if (currentVP >= targetVP) {
-      results.push({ 
-        items: currentItems, 
-        totalVP: currentVP, 
-        totalPrice: currentPrice, 
-        qty: totalQty,
-        diff: currentVP - targetVP
-      });
-      return; // 因為再加只會更大
+      const diff = currentVP - targetVP;
+      // 更新最佳價格
+      if (bestPrice === null || currentPrice < bestPrice) bestPrice = currentPrice;
+      results.push({ items: currentItems, totalVP: currentVP, totalPrice: currentPrice, qty: totalQty, diff: diff });
+      return;
     }
+
     for (let i = index; i < candidates.length; i++) {
       const p = candidates[i];
+      // 計算最多需要幾件這個產品才能達標
       let maxQty = Math.ceil((targetVP - currentVP) / p.vp) + 1;
       for(let q = 1; q <= maxQty; q++) {
         let newItems = [...currentItems];
@@ -1223,11 +563,11 @@ function calculateVpRecommendations() {
 
   // 根據策略排序
   if (currentStrategy === 'accurate') {
-    results.sort((a, b) => a.diff - b.diff); // 誤差最小
+    results.sort((a, b) => a.diff - b.diff || a.totalPrice - b.totalPrice); // 誤差最小，其次價格低
   } else if (currentStrategy === 'cheapest') {
-    results.sort((a, b) => a.totalPrice - b.totalPrice); // 價格最低
+    results.sort((a, b) => a.totalPrice - b.totalPrice || a.diff - b.diff); // 價格最低，其次誤差小
   } else if (currentStrategy === 'fewest') {
-    results.sort((a, b) => a.qty - b.qty || a.diff - b.diff); // 件數最少，其次誤差最小
+    results.sort((a, b) => a.qty - b.qty || a.diff - b.diff); // 件數最少，其次誤差小
   }
 
   // 去重並取前 5 個
@@ -1248,38 +588,18 @@ function calculateVpRecommendations() {
 function renderVpResults(results, targetVP, tier) {
   const container = document.getElementById('vp-assistant-results');
   if (results.length === 0) {
-    container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">在 4 件限制內找不到達標組合，請增加候選產品。</div>';
+    container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">找不到符合的組合，請增加候選產品。</div>';
     return;
   }
-  
   let html = '';
   results.forEach((r, idx) => {
-    // 將相同產品合併顯示數量
     const itemMap = {};
     r.items.forEach(p => {
       if (!itemMap[p.stock_no]) itemMap[p.stock_no] = { ...p, count: 0 };
       itemMap[p.stock_no].count++;
     });
-    const itemsHtml = Object.values(itemMap).map(p => 
-      `${p.prod_name} <span style="color:var(--text-muted); font-size:0.8em;">(x${p.count})</span>`
-    ).join(' + ');
-    
-    html += `
-      <div class="vp-result-card">
-        <div class="vp-result-header">
-          <strong style="color: var(--text-heading);">方案 ${idx + 1}</strong>
-          <span style="color: var(--color-profit); font-weight: 800; font-size: 0.9rem;">
-            總 VP: ${r.totalVP.toFixed(2)} (+${r.diff.toFixed(2)})
-          </span>
-        </div>
-        <div class="vp-result-items">${itemsHtml}</div>
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
-          <span>件數: ${r.qty}</span>
-          <span>金額: $${r.totalPrice.toFixed(2)}</span>
-        </div>
-        <button class="btn-primary" style="width:100%; padding: 6px; font-size: 0.85rem; border-radius: 8px;" onclick='addRecommendationToCart(${JSON.stringify(Object.values(itemMap).map(p => ({stock_no: p.stock_no, qty: p.count})))})'>加入購物車</button>
-      </div>
-    `;
+    const itemsHtml = Object.values(itemMap).map(p => `${p.prod_name} <span style="color:var(--text-muted); font-size:0.8em;">(x${p.count})</span>`).join(' + ');
+    html += `<div class="vp-result-card"><div class="vp-result-header"><strong style="color: var(--text-heading);">方案 ${idx + 1}</strong><span style="color: var(--color-profit); font-weight: 800; font-size: 0.9rem;">總 VP: ${r.totalVP.toFixed(2)} (+${r.diff.toFixed(2)})</span></div><div class="vp-result-items">${itemsHtml}</div><div style="display:flex; justify-content:space-between; align-items:center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;"><span>件數: ${r.qty}</span><span>金額: $${r.totalPrice.toFixed(2)}</span></div><button class="btn-primary" style="width:100%; padding: 6px; font-size: 0.85rem; border-radius: 8px;" onclick='addRecommendationToCart(${JSON.stringify(Object.values(itemMap).map(p => ({stock_no: p.stock_no, qty: p.count})))})'>加入購物車</button></div>`;
   });
   container.innerHTML = html;
 }
@@ -1301,53 +621,12 @@ function addRecommendationToCart(items) {
 }
 
 let deferredInstallPrompt = null;
-function initPWA() {
-  if ('serviceWorker' in navigator) {
-    const swCode = 'self.addEventListener("install",function(){self.skipWaiting();});self.addEventListener("activate",function(){self.clients.claim();});self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).catch(function(){return new Response("",{status:503});});}));});';
-    try {
-      navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' })))
-        .then(() => console.log('✅ PWA ServiceWorker 已啟用')).catch(() => {});
-    } catch (e) {}
-  }
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); deferredInstallPrompt = e; showPwaInstallBtn();
-  });
-  window.addEventListener('appinstalled', () => {
-    hidePwaInstallBtn(); showToast('✅ App 已成功安裝到主畫面！');
-  });
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  if (!isStandalone) setTimeout(showPwaInstallBtn, 600);
-}
+function initPWA() { if ('serviceWorker' in navigator) { const swCode = 'self.addEventListener("install",function(){self.skipWaiting();});self.addEventListener("activate",function(){self.clients.claim();});self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).catch(function(){return new Response("",{status:503});});}));});'; try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).then(() => console.log('✅ PWA ServiceWorker 已啟用')).catch(() => {}); } catch (e) {} } window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; showPwaInstallBtn(); }); window.addEventListener('appinstalled', () => { hidePwaInstallBtn(); showToast('✅ App 已成功安裝到主畫面！'); }); const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; if (!isStandalone) setTimeout(showPwaInstallBtn, 600); }
 function showPwaInstallBtn() { var w = document.getElementById('pwa-install-wrap'); if (w) w.style.display = 'block'; }
 function hidePwaInstallBtn() { var w = document.getElementById('pwa-install-wrap'); if (w) w.style.display = 'none'; }
-
-function handlePwaInstall() {
-  triggerHaptic('medium');
-  if (deferredInstallPrompt) {
-    deferredInstallPrompt.prompt();
-    deferredInstallPrompt.userChoice.then(function(r) { deferredInstallPrompt = null; if (r.outcome === 'accepted') hidePwaInstallBtn(); });
-    return;
-  }
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  var isAndroid = /Android/.test(navigator.userAgent);
-  var msg;
-  if (isIOS) msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅';
-  else if (isAndroid) msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅';
-  else msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅';
-  document.getElementById('pwa-info-content').textContent = msg;
-  document.getElementById('pwa-info-modal').style.display = 'flex';
-}
-
-function closeNewProductModal() {
-  document.getElementById('new-product-modal').style.display = 'none';
-}
-
-function checkNewProductNotification() {
-  if (!localStorage.getItem('seen_new_product_liver_fixed')) {
-    document.getElementById('new-product-modal').style.display = 'flex';
-    localStorage.setItem('seen_new_product_liver_fixed', 'true');
-  }
-}
+function handlePwaInstall() { triggerHaptic('medium'); if (deferredInstallPrompt) { deferredInstallPrompt.prompt(); deferredInstallPrompt.userChoice.then(function(r) { deferredInstallPrompt = null; if (r.outcome === 'accepted') hidePwaInstallBtn(); }); return; } var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; var isAndroid = /Android/.test(navigator.userAgent); var msg; if (isIOS) msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅'; else if (isAndroid) msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅'; else msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅'; document.getElementById('pwa-info-content').textContent = msg; document.getElementById('pwa-info-modal').style.display = 'flex'; }
+function closeNewProductModal() { document.getElementById('new-product-modal').style.display = 'none'; }
+function checkNewProductNotification() { if (!localStorage.getItem('seen_new_product_liver_fixed')) { document.getElementById('new-product-modal').style.display = 'flex'; localStorage.setItem('seen_new_product_liver_fixed', 'true'); } }
 
 window.onload = function () {
   initPWA();
@@ -1357,11 +636,7 @@ window.onload = function () {
   switchView('table');
   updateProductDisplay();
   checkNewProductNotification();
-  
-  document.addEventListener('touchend', function (e) {
-    const btn = e.target.closest('button');
-    if (btn) setTimeout(() => btn.blur(), 50);
-  }, { passive: true });
+  document.addEventListener('touchend', function (e) { const btn = e.target.closest('button'); if (btn) setTimeout(() => btn.blur(), 50); }, { passive: true });
 };
 </script>
 </body>
