@@ -32,7 +32,7 @@ html, body {
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-bg-solid: rgba(255, 255, 255, 0.98);
   --glass-border: rgba(79, 70, 229, 0.12);
-  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+  --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
   --glass-item-bg: rgba(79, 70, 229, 0.05);
   --glass-item-hover: rgba(79, 70, 229, 0.1);
   
@@ -82,7 +82,7 @@ html, body {
     --glass-bg: rgba(15, 23, 42, 0.8);
     --glass-bg-solid: rgba(15, 23, 42, 0.95);
     --glass-border: rgba(129, 140, 248, 0.15);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     --glass-item-bg: rgba(129, 140, 248, 0.08);
     --glass-item-hover: rgba(129, 140, 248, 0.15);
     
@@ -131,8 +131,8 @@ html, body {
 body { 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
   margin: 0; 
-  padding: max(8px, env(safe-area-inset-top)) 8px 8px 8px; 
-  font-size: 14px; 
+  padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; 
+  font-size: 13px; /* 回復原本字體大小 */
   font-weight: 500;
   color: var(--text-main);
   background: var(--bg-gradient);
@@ -143,36 +143,36 @@ body {
 .container { 
   max-width: 100%; 
   margin: 0 auto; 
-  padding: 16px; 
-  border-radius: 20px; 
+  padding: 8px; /* 回復原本留白 */
+  border-radius: 12px; 
   background: var(--glass-bg);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 
-h1 { color: var(--text-heading); text-align: center; margin-bottom: 12px; font-size: 1.5rem; font-weight: 800; margin-top: 8px; letter-spacing: -0.5px; }
-input, select { font-size: 15px !important; color: var(--text-main); font-weight: 600; padding: 8px 10px; border-radius: 10px; }
+h1 { color: var(--text-heading); text-align: center; margin-bottom: 6px; font-size: 1.25rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
+input, select { font-size: 15px !important; color: var(--text-main); font-weight: 600; padding: 6px 8px; border-radius: 8px; }
 select option { background: var(--glass-bg-solid); color: var(--text-main); font-weight: 600;}
 
-.controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.controls { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
 .tier-select, .actions { 
-  padding: 12px; border-radius: 16px; width: 100%; 
+  padding: 8px; border-radius: 10px; width: 100%; 
   background: var(--glass-item-bg); border: 1px solid var(--glass-border);
 }
-.price-controls { display: flex; flex-direction: column; gap: 8px; }
+.price-controls { display: flex; flex-direction: column; gap: 6px; }
 .price-control { width: 100%; }
-.price-control label { display: block; margin-bottom: 4px; font-weight: 700; font-size: 0.85rem; color: var(--primary-color); }
+.price-control label { display: block; margin-bottom: 2px; font-weight: 700; font-size: 0.85rem; color: var(--primary-color); }
 
 .font-ctrl-bar {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; margin-bottom: 12px; padding: 8px 14px;
-  border-radius: 12px; background: var(--glass-item-bg); border: 1px solid var(--glass-border);
+  gap: 6px; margin-bottom: 6px; padding: 6px 10px;
+  border-radius: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border);
 }
-.font-ctrl-label { color: var(--primary-color); font-size: 0.85rem; white-space: nowrap; flex: 1; font-weight: 700; }
-.font-ctrl-btns { display: flex; align-items: center; gap: 6px; }
+.font-ctrl-label { color: var(--primary-color); font-size: 0.8rem; white-space: nowrap; flex: 1; font-weight: 700; }
+.font-ctrl-btns { display: flex; align-items: center; gap: 4px; }
 .font-ctrl-btn {
-  padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; min-width: 40px;
+  padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; min-width: 38px;
   background: var(--glass-bg-solid); border: 1px solid var(--primary-color); color: var(--primary-color);
 }
 .font-ctrl-btn:hover  { background: var(--glass-item-hover); }
@@ -180,13 +180,13 @@ select option { background: var(--glass-bg-solid); color: var(--text-main); font
 .font-ctrl-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--glass-border); }
 
 #font-size-display {
-  min-width: 40px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700;
-  background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 8px; padding: 4px 8px;
+  min-width: 34px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700;
+  background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; padding: 3px 6px;
 }
 
 button {
-  padding: 8px 12px; border-radius: 10px; border: 1px solid var(--glass-border);
-  font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--glass-border);
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
   background: var(--glass-bg-solid); color: var(--text-main);
   backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent;
 }
@@ -196,15 +196,15 @@ button:not([class*="btn-"]):not([class*="package-plan-btn"]):hover {
 button:active { transform: scale(0.98); }
 
 select, input { border: 1px solid var(--glass-border); width: 100%; background: var(--input-bg); backdrop-filter: blur(4px); color: var(--text-main); outline: none; }
-select:focus, input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+select:focus, input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15); }
 select {
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; padding-right: 30px;
+  background-repeat: no-repeat; background-position: right 8px center; background-size: 14px; padding-right: 28px;
 }
 
-.actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
-.actions button { flex: 1; min-width: 100px; padding: 10px 8px; font-weight: 700; }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
+.actions button { flex: 1; min-width: 80px; padding: 8px 5px; font-weight: 700; }
 
 .btn-clear { background: var(--clear-bg); color: var(--clear-text); border: 1px solid var(--clear-border); font-weight: 700; }
 .btn-clear:hover { background: var(--clear-hover-bg) !important; color: var(--clear-hover-text) !important; }
@@ -216,63 +216,63 @@ select {
 .btn-copy:hover { background: var(--copy-hover) !important; color: white !important; }
 
 .btn-add-product {
-  width: 100%; padding: 14px; font-size: 1rem; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; border: none;
+  width: 100%; padding: 10px; font-size: 0.95rem; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; border: none;
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
 }
 .btn-add-product:hover { opacity: 0.9; color: white !important; }
 
-.package-plans-section { margin-bottom: 12px; padding: 12px; border-radius: 16px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
-.package-plans-title { font-size: 0.9rem; font-weight: 700; color: var(--color-pkg); margin-bottom: 8px; }
-.package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.package-plan-btn { padding: 8px 10px; background: var(--color-pkg); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; text-align: left; display: flex; flex-direction: column; gap: 4px; font-weight: 600; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.2); }
+.package-plans-section { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
+.package-plans-title { font-size: 0.85rem; font-weight: 700; color: var(--color-pkg); margin-bottom: 6px; }
+.package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.package-plan-btn { padding: 6px 8px; background: var(--color-pkg); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-align: left; display: flex; flex-direction: column; gap: 2px; font-weight: 600; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.15); }
 .package-plan-btn:hover { background: #6d28d9 !important; color: white !important; }
 .package-plan-btn:active { background: #5b21b6 !important; color: white !important; transform: scale(0.98); }
 
 .plan-row1 { display: flex; justify-content: space-between; align-items: baseline; }
-.plan-name  { font-size: 0.8rem; font-weight: 700; }
-.plan-price { font-size: 0.9rem; font-weight: 800; color: #fef08a; }
+.plan-name  { font-size: 0.75rem; font-weight: 700; }
+.plan-price { font-size: 0.85rem; font-weight: 800; color: #fef08a; }
 .plan-row2  { display: flex; justify-content: space-between; align-items: center; }
-.plan-vp    { font-size: 0.7rem; opacity: 0.9; }
-.plan-profit{ font-size: 0.7rem; color: #bbf7d0; font-weight: 700; }
+.plan-vp    { font-size: 0.65rem; opacity: 0.9; }
+.plan-profit{ font-size: 0.65rem; color: #bbf7d0; font-weight: 700; }
 
-.category-tab { padding: 6px 12px; border-radius: 16px; font-size: 0.85rem; border: 1px solid transparent; background: var(--glass-bg-solid); color: var(--text-main); transition: all 0.2s; font-weight: 600; }
-.category-tab.active { background: var(--primary-color); border-color: var(--primary-color); color: white; font-weight: 700; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3); }
+.category-tab { padding: 4px 10px; border-radius: 14px; font-size: 0.8rem; border: 1px solid transparent; background: var(--glass-bg-solid); color: var(--text-main); transition: all 0.2s; font-weight: 600; }
+.category-tab.active { background: var(--primary-color); border-color: var(--primary-color); color: white; font-weight: 700; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2); }
 
 /* UX 優化：分段控制器風格的視圖切換 */
-.view-toggle { display: flex; justify-content: center; margin: 12px 0; background: var(--glass-item-bg); padding: 4px; border-radius: 14px; border: 1px solid var(--glass-border); }
-.view-toggle button { margin: 0; border-radius: 10px; background: transparent; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; border: none; color: var(--text-muted); flex: 1; max-width: 150px;}
-.view-toggle button.active { background: var(--glass-bg-solid); border: 1px solid var(--glass-border); color: var(--primary-color); font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,0.05);}
+.view-toggle { display: flex; justify-content: center; margin: 6px 0 8px 0; background: var(--glass-item-bg); padding: 3px; border-radius: 10px; border: 1px solid var(--glass-border); }
+.view-toggle button { margin: 0; border-radius: 8px; background: transparent; padding: 6px 10px; font-size: 0.85rem; font-weight: 600; border: none; color: var(--text-muted); flex: 1; max-width: 120px;}
+.view-toggle button.active { background: var(--glass-bg-solid); border: 1px solid var(--glass-border); color: var(--primary-color); font-weight: 800; box-shadow: 0 1px 4px rgba(0,0,0,0.05);}
 
-.table-container { overflow-x: auto; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--glass-border); -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-th, td { border-bottom: 1px solid var(--table-border); padding: 10px 6px; text-align: left; }
-th { background: var(--table-head-bg); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 10; font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.table-container { overflow-x: auto; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--glass-border); -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th, td { border-bottom: 1px solid var(--table-border); padding: 8px 4px; text-align: left; }
+th { background: var(--table-head-bg); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 10; font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3px; }
 tr:nth-child(even) { background: var(--table-row-even); }
 tr:hover { background: var(--table-row-hover); }
-td.product-name { min-width: 80px; max-width: 140px; font-size: 0.85rem; font-weight: 700; color: var(--text-heading); }
+td.product-name { min-width: 70px; max-width: 120px; font-size: 0.78rem; font-weight: 700; color: var(--text-heading); }
 tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700; }
 
-.qty-control { display: flex; align-items: center; justify-content: center; gap: 4px; }
-.qty-btn { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--primary-color); }
+.qty-control { display: flex; align-items: center; justify-content: center; gap: 2px; }
+.qty-btn { width: 22px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--primary-color); }
 .qty-btn:active { transform: scale(0.9); background: var(--primary-color); color: white; }
-.qty-input { width: 30px; height: 26px; text-align: center; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--input-bg); margin: 0; padding: 0; font-size: 14px !important; font-weight: 700;}
+.qty-input { width: 26px; height: 24px; text-align: center; border: 1px solid var(--glass-border); border-radius: 6px; background: var(--input-bg); margin: 0; padding: 0; font-size: 13px !important; font-weight: 700;}
 
-.product-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 14px; margin-bottom: 12px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.03);}
-.card-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 800; font-size: 1rem; color: var(--text-heading); }
-.card-price-row { display: flex; justify-content: space-between; margin-bottom: 6px; padding: 4px 0; border-bottom: 1px dashed var(--table-border); font-size: 0.85rem; }
+.product-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.03);}
+.card-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 800; font-size: 0.9rem; color: var(--text-heading); }
+.card-price-row { display: flex; justify-content: space-between; margin-bottom: 4px; padding: 3px 0; border-bottom: 1px dashed var(--table-border); font-size: 0.8rem; }
 
 /* 🛒 購物車視圖 */
 .cart-container { display: none; }
-.cart-scroll-area { padding-bottom: 120px; } 
-.cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.2s; }
-.cart-item-info { flex: 1; margin-right: 10px; }
-.cart-item-name { font-weight: 800; color: var(--text-heading); font-size: 0.95rem; margin-bottom: 4px; line-height: 1.4; }
+.cart-scroll-area { padding-bottom: 110px; } 
+.cart-item { background: var(--cart-item-bg); border: 1px solid var(--cart-item-border); border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.2s; }
+.cart-item-info { flex: 1; margin-right: 8px; }
+.cart-item-name { font-weight: 800; color: var(--text-heading); font-size: 0.9rem; margin-bottom: 4px; line-height: 1.3; }
 .cart-item-price { color: var(--cart-price-color); font-weight: 700; font-size: 0.85rem; }
-.cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.cart-item-total { font-weight: 800; font-size: 1rem; color: var(--primary-color); }
-.cart-qty-input { font-size: 15px !important; font-weight: 800; color: var(--primary-color); width: 36px; height: 28px; border: 2px solid var(--primary-color); background: var(--glass-bg-solid); border-radius: 8px; }
+.cart-item-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.cart-item-total { font-weight: 800; font-size: 0.95rem; color: var(--primary-color); }
+.cart-qty-input { font-size: 15px !important; font-weight: 800; color: var(--primary-color); width: 34px; height: 26px; border: 2px solid var(--primary-color); background: var(--glass-bg-solid); border-radius: 6px; }
 
 /* 完美置底的購物車總計 */
 .cart-summary { 
@@ -280,45 +280,45 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   bottom: 0; left: 0; right: 0; 
   background: var(--cart-summary-bg); 
   border-top: 1px solid var(--glass-border); 
-  border-radius: 24px 24px 0 0; 
-  padding: 16px 20px max(16px, env(safe-area-inset-bottom)); 
-  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.1); 
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); 
+  border-radius: 20px 20px 0 0; 
+  padding: 12px 16px max(12px, env(safe-area-inset-bottom)); 
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.1); 
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
   z-index: 100;
 }
 @media (min-width: 768px) {
   .cart-summary { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
 }
-.cart-summary-top-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+.cart-summary-top-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
 .cart-summary-val { color: var(--text-heading); font-weight: 800; margin-left: 4px; }
-.cart-summary-bottom-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 12px; }
-.cart-summary-total { font-weight: 900; font-size: 1.3rem; color: var(--text-heading); }
+.cart-summary-bottom-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 10px; }
+.cart-summary-total { font-weight: 900; font-size: 1.15rem; color: var(--text-heading); }
 .btn-copy-cart {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: white; border: none; padding: 12px 20px; border-radius: 12px;
-  font-weight: 700; font-size: 1rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  color: white; border: none; padding: 10px 16px; border-radius: 12px;
+  font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
   cursor: pointer; margin: 0;
 }
 .btn-copy-cart:active { transform: scale(0.95); }
 
 /* 總計區塊 */
-.summary { background: transparent; padding: 0; border-radius: 16px; border: none; }
-.summary-item { flex: 1; min-width: 140px; margin-bottom: 12px; background: var(--glass-bg); padding: 12px; border-radius: 14px; border: 1px solid var(--glass-border); }
-.summary-item h3 { margin-top: 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--table-border); padding-bottom: 8px; margin-bottom: 8px; }
-.summary-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600;}
-.summary-row.total { font-weight: 800; font-size: 1.1rem; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--table-border); color: var(--text-heading); }
+.summary { background: transparent; padding: 0; border-radius: 10px; border: none; }
+.summary-item { flex: 1; min-width: 140px; margin-bottom: 6px; background: var(--glass-bg); padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); }
+.summary-item h3 { margin-top: 0; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid var(--table-border); padding-bottom: 4px; margin-bottom: 6px; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; font-weight: 600;}
+.summary-row.total { font-weight: 800; font-size: 1rem; margin-top: 6px; padding-top: 4px; border-top: 1px dashed var(--table-border); color: var(--text-heading); }
 .profit { color: var(--color-profit); font-weight: 800; }
 .summary-item.profit-section { background: var(--color-profit-bg); border-color: var(--color-profit-border); }
 .summary-item.profit-section h3 { color: var(--color-profit); }
 
 /* Modal 彈窗與 Checkbox */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
-.modal { background: var(--modal-bg); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 90%; width: 340px; padding: 24px; backdrop-filter: blur(20px); }
-.modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; color: var(--text-heading); text-align: center;}
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-.copy-opt-label { display: flex; align-items: center; padding: 12px 16px; margin-bottom: 8px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 12px; cursor: pointer; color: var(--text-main); font-weight: 600; transition: background 0.2s; }
+.modal { background: var(--modal-bg); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 90%; width: 320px; padding: 20px; backdrop-filter: blur(16px); }
+.modal-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 12px; color: var(--text-heading); text-align: center;}
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.copy-opt-label { display: flex; align-items: center; padding: 10px 14px; margin-bottom: 8px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 10px; cursor: pointer; color: var(--text-main); font-weight: 600; transition: background 0.2s; }
 .copy-opt-label:hover { background: var(--glass-item-hover); border-color: var(--primary-color); }
-.copy-opt-label input[type="checkbox"] { margin-right: 12px; width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
+.copy-opt-label input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
 
 /* 完美恢復的搜尋添加 Modal */
 .search-modal-overlay {
@@ -327,36 +327,36 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   align-items: flex-end; justify-content: center; padding: 0;
 }
 .search-modal-content {
-  width: 100%; max-width: 600px; height: 85vh;
-  background: var(--modal-bg); backdrop-filter: blur(20px);
-  border-radius: 24px 24px 0 0; border: 1px solid var(--glass-border);
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column;
+  width: 100%; max-width: 600px; height: 86vh;
+  background: var(--modal-bg); backdrop-filter: blur(16px);
+  border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column;
   animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.search-modal-handle { width: 40px; height: 4px; background: var(--text-muted); opacity: 0.3; border-radius: 2px; margin: 12px auto 4px; flex-shrink: 0; }
-.search-modal-bar { display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center; flex-shrink: 0; }
+.search-modal-handle { width: 40px; height: 4px; background: var(--text-muted); opacity: 0.3; border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0; }
+.search-modal-bar { display: flex; gap: 6px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center; flex-shrink: 0; }
 .search-modal-input-wrap { position: relative; flex: 1; }
-.search-modal-input-wrap input { padding: 12px 40px 12px 14px; border-radius: 12px; font-size: 16px !important; width: 100%; }
-#search-clear-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: var(--glass-item-hover); width: 22px; height: 22px; border-radius: 50%; color: var(--text-muted); display: flex; align-items: center; justify-content: center; border: none; font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.2s; margin: 0; }
+.search-modal-input-wrap input { padding: 10px 34px 10px 12px; border-radius: 10px; font-size: 16px !important; width: 100%; }
+#search-clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: var(--glass-item-hover); width: 20px; height: 20px; border-radius: 50%; color: var(--text-muted); display: flex; align-items: center; justify-content: center; border: none; font-size: 10px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity 0.2s; margin: 0; }
 #search-clear-btn.visible { opacity: 1; pointer-events: auto; }
-.btn-search-close { background: var(--primary-color); border-radius: 12px; font-weight: 700; color: white; border: none; margin: 0; white-space: nowrap; flex-shrink: 0; padding: 12px 16px;}
-.search-modal-cats { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 10px 12px; gap: 8px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; flex-shrink: 0; }
+.btn-search-close { background: var(--primary-color); border-radius: 8px; font-weight: 700; color: white; border: none; margin: 0; white-space: nowrap; flex-shrink: 0; padding: 10px 14px;}
+.search-modal-cats { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 7px; gap: 6px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; flex-shrink: 0; }
 .search-modal-cats::-webkit-scrollbar { display: none; }
-.product-list-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 12px; }
+.product-list-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 10px; }
 .product-list-modal::before { content: ''; flex: 1 1 0; }
-.product-item { padding: 14px; cursor: pointer; border-bottom: 1px solid var(--table-border); background: transparent; transition: background 0.15s; font-weight: 600; border-radius: 12px; margin-top: 8px; }
+.product-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--table-border); background: transparent; transition: background 0.15s; font-weight: 600; border-radius: 8px; margin-top: 6px; }
 .product-item:hover { background: var(--table-row-hover); }
-.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .product-item-left  { flex: 1; min-width: 0; }
-.product-item-price { font-size: 0.9em; color: var(--primary-color); font-weight: 700; background: var(--glass-item-bg); padding: 6px 10px; border-radius: 10px; border: 1px solid var(--glass-border); flex-shrink: 0; }
-.selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.7em; padding: 3px 8px; border-radius: 8px; margin-right: 6px; vertical-align: middle; white-space: nowrap; font-weight: 700; }
+.product-item-price { font-size: 0.85em; color: var(--primary-color); font-weight: 700; background: var(--glass-item-bg); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0; }
+.selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.68em; padding: 2px 6px; border-radius: 6px; margin-right: 4px; vertical-align: middle; white-space: nowrap; font-weight: 700; }
 .product-item-package { background: var(--color-pkg-bg); border-left: 3px solid var(--color-pkg); }
 .product-item-package:hover  { background: var(--color-pkg-border); }
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text-heading); backdrop-filter: blur(6px); color: white; padding: 12px 24px; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); z-index: 1100; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; font-weight: 600; max-width: 80%; text-align: center; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--text-heading); backdrop-filter: blur(6px); color: white; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 1100; opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; font-weight: 600; max-width: 80%; text-align: center; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 
-.pwa-install-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 10px 24px; border-radius: 24px; font-weight: 700; box-shadow: 0 4px 12px rgba(16,185,129,0.3); margin-bottom:12px; font-size: 0.9rem; }
+.pwa-install-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: 700; box-shadow: 0 4px 10px rgba(16,185,129,0.25); margin-bottom:10px; font-size: 0.9rem; }
 
 /* 動畫 */
 .animate-in { animation: slideInDown 0.22s ease-out; }
@@ -366,18 +366,18 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @keyframes slideUpFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
 @media screen and (max-width: 480px) {
-  .qty-btn { width: 24px; height: 24px; font-size: 12px; }
-  .qty-input { width: 28px; height: 24px; margin: 0; }
-  .cart-qty-input { width: 32px; }
+  .qty-btn { width: 20px; height: 22px; font-size: 12px; }
+  .qty-input { width: 24px; height: 22px; margin: 0; }
+  .cart-qty-input { width: 30px; }
   .search-modal-content { height: 90vh; }
-  h1 { font-size: 1.3rem; }
+  h1 { font-size: 1.1rem; }
 }
 @media (min-width: 768px) {
-  .container { max-width: 1200px; padding: 24px; }
+  .container { max-width: 1200px; padding: 16px; }
   .controls { flex-direction: row; }
   .price-controls { flex-direction: row; }
   .package-plans-grid { grid-template-columns: repeat(4, 1fr); }
-  .search-modal-content { height: 80vh; max-width: 600px; border-radius: 24px; }
+  .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; }
   .search-modal-overlay { align-items: center; padding: 20px; }
 }
 </style>
@@ -459,7 +459,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 </div>
 
 <div class="shortcut-section" style="margin-bottom: 10px;">
-  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 12px rgba(16,185,129,0.25); font-size: 0.95rem;" onclick="addBigMealCombo()">
+  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">
     🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
   </button>
 </div>
@@ -528,7 +528,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     <div class="modal-content" id="confirm-message" style="margin-bottom:12px; text-align:center; color:var(--text-main); font-weight: 600;"></div>
     <div class="modal-actions">
       <button onclick="triggerHaptic('light'); hideConfirmDialog()">取消</button>
-      <button class="btn-danger" id="confirm-action-btn" style="padding: 8px 16px;">確定</button>
+      <button class="btn-danger" id="confirm-action-btn" style="padding: 6px 14px;">確定</button>
     </div>
   </div>
 </div>
@@ -545,12 +545,12 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 
 <div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
   <div class="modal" style="text-align: center;">
-    <div class="modal-title" style="color: var(--primary-color); font-size: 1.3rem; margin-bottom: 12px;">🎉 最新消息</div>
+    <div class="modal-title" style="color: var(--primary-color); font-size: 1.25rem; margin-bottom: 12px;">🎉 最新消息</div>
     <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px;">
       21day健肝新產品已經上架啦！
     </div>
     <div class="modal-actions" style="justify-content: center; margin-top: 16px;">
-      <button class="btn-primary" onclick="triggerHaptic('light'); closeNewProductModal()" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px;">我知道了</button>
+      <button class="btn-primary" onclick="triggerHaptic('light'); closeNewProductModal()" style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 10px;">我知道了</button>
     </div>
   </div>
 </div>
@@ -651,7 +651,7 @@ function triggerHaptic(type = 'light') {
   } catch(e) {}
 }
 
-const FONT_SIZES  = [12, 14, 17, 21];
+const FONT_SIZES  = [11, 13, 16, 20];
 const FONT_LABELS = ['小', '標準', '大', '特大'];
 let currentFontLevel = 1;
 
