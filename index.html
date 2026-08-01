@@ -82,6 +82,7 @@ select option { background: var(--glass-bg-solid); color: var(--text-main); font
 .font-ctrl-btn:hover  { background: var(--glass-item-hover); }
 .font-ctrl-btn:active { transform: scale(0.95); }
 .font-ctrl-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--glass-border); }
+.font-ctrl-btn.active { background: var(--primary-color); color: white; }
 #font-size-display { min-width: 34px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; padding: 3px 6px; }
 button { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--glass-border); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: var(--glass-bg-solid); color: var(--text-main); backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent; }
 button:not([class*="btn-"]):not([class*="package-plan-btn"]):not([class*="btn-candidate"]):not([class*="vp-strategy-opt"]):not([class*="btn-bulk"]):hover { background: var(--glass-item-hover); border-color: var(--primary-color); color: var(--primary-color); }
@@ -184,7 +185,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .btn-search-close { background: var(--primary-color); border-radius: 8px; font-weight: 700; color: white; border: none; margin: 0; white-space: nowrap; flex-shrink: 0; padding: 10px 14px;}
 .search-modal-cats { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 10px 7px; gap: 6px; border-top: 1px solid var(--glass-border); background: var(--glass-item-bg); scrollbar-width: none; flex-shrink: 0; }
 .search-modal-cats::-webkit-scrollbar { display: none; }
-/* 批次操作工具列樣式 */
 .search-modal-bulk-actions { display: flex; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--glass-border); background: var(--glass-bg-solid); flex-shrink: 0; }
 .btn-bulk { flex: 1; font-size: 0.8rem; padding: 6px; border-radius: 8px; font-weight: 700; border: 1px solid var(--glass-border); background: var(--glass-item-bg); color: var(--text-main); }
 .btn-bulk.add { border-color: var(--vp-assistant-color); color: var(--vp-assistant-color); }
@@ -208,6 +208,9 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @keyframes slideInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
 @keyframes slideUpFromBottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.vp-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; color: var(--text-muted); }
+.spinner { width: 30px; height: 30px; border: 3px solid var(--glass-border); border-top-color: var(--vp-assistant-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 @media screen and (max-width: 480px) { .qty-btn { width: 20px; height: 22px; font-size: 12px; } .qty-input { width: 24px; height: 22px; margin: 0; } .cart-qty-input { width: 30px; } .search-modal-content { height: 90vh; } h1 { font-size: 1.1rem; } }
 @media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .price-controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
 </style>
@@ -218,6 +221,8 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
+
+<!-- 字體控制列 -->
 <div class="font-ctrl-bar">
   <span class="font-ctrl-label">🔠 字體</span>
   <div class="font-ctrl-btns">
@@ -226,6 +231,16 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
     <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)">A＋</button>
   </div>
 </div>
+
+<!-- 運費版本切換列 -->
+<div class="font-ctrl-bar" style="margin-bottom: 6px;">
+  <span class="font-ctrl-label">💲 運費版本</span>
+  <div class="font-ctrl-btns">
+    <button class="font-ctrl-btn active" id="freight-normal" onclick="toggleFreight(false)">正常價</button>
+    <button class="font-ctrl-btn" id="freight-included" onclick="toggleFreight(true)">含運費價</button>
+  </div>
+</div>
+
 <div class="controls">
   <div class="tier-select">
     <div class="price-controls">
@@ -287,13 +302,11 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div class="summary" id="summary"></div>
 </div>
 
-<!-- 搜尋 Modal -->
 <div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
   <div class="search-modal-content" onclick="event.stopPropagation()">
     <div class="search-modal-handle"></div>
     <div id="product-list" class="product-list-modal"></div>
     <div class="search-modal-cats" id="category-tabs"></div>
-    <!-- 批次操作工具列 -->
     <div class="search-modal-bulk-actions">
       <button class="btn-bulk add" onclick="bulkAddCandidates()">☑️ 全選當前為候選</button>
       <button class="btn-bulk remove" onclick="bulkRemoveCandidates()">✖️ 移除當前候選</button>
@@ -308,7 +321,6 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 
-<!-- 智能推薦 Modal -->
 <div class="modal-overlay" id="vp-assistant-modal">
   <div class="modal" style="width: 340px;">
     <div class="modal-title">🎯 智能 VP 推薦助手</div>
@@ -440,12 +452,49 @@ const productsData = [
   { stock_no: "9909", prod_name: "會藉服務年費", prod_name_en: "Annual Membership Services Fee", category: "其他", type: "", vp: 0, retail_price: 92, 標準價: 93, 銅級: 93, 銀級: 93, 金級: 93, "58%": 93, "50%": 93, cost: 93, fav: 760, prod_seq: 910 }
 ];
 
+// 保存原始數據的深拷貝，用於切換運費版本
+const originalProductsData = JSON.parse(JSON.stringify(productsData));
+let includeFreight = false;
+
+function toggleFreight(val) {
+  includeFreight = val;
+  document.getElementById('freight-normal').classList.toggle('active', !val);
+  document.getElementById('freight-included').classList.toggle('active', val);
+  triggerHaptic('light');
+  
+  // 固定不加價的產品編號列表
+  const noFreightStockNos = ['PKG1', 'PKG2', 'PKG3', 'PKG4', 'BO1L', 'I839', 'H258', 'H260', 'H262', '8601', '8602', '5122', 'DC30', 'X001', 'DC40', '9909', 'DC60'];
+  const tiers = ['銅級', '銀級', '金級', '58%', '50%'];
+  
+  // 同步更新 productsData 和 selectedProducts
+  [productsData, selectedProducts].forEach(list => {
+    list.forEach(p => {
+      if (noFreightStockNos.includes(p.stock_no) || p.type === 'package') return;
+      tiers.forEach(tier => {
+        const origPrice = originalProductsData.find(op => op.stock_no === p.stock_no)[tier];
+        if (includeFreight) {
+          // 含運費版本規律：原價 + 標準價 * 3%，並四捨五入
+          p[tier] = Math.round(origPrice + p['標準價'] * 0.03);
+        } else {
+          // 恢復正常價
+          p[tier] = origPrice;
+        }
+      });
+    });
+  });
+  
+  updatePricing();
+  filterProducts();
+  showToast(val ? '已切換為含運費價格 (+3%)' : '已切換為正常價格');
+}
+
 let selectedProducts = [];
 let currentCategory = "all";
 let currentView = "table";
 let newlyAddedStockNos = new Set();
 let candidateStockNos = new Set();
 let currentStrategy = "accurate";
+let vpWorker = null;
 
 function triggerHaptic(type = 'light') { if (!navigator.vibrate) return; try { switch (type) { case 'light': navigator.vibrate(10); break; case 'medium': navigator.vibrate(20); break; case 'heavy': navigator.vibrate(30); break; case 'success': navigator.vibrate([15, 50, 15]); break; } } catch(e) {} }
 
@@ -517,75 +566,90 @@ function openVpAssistantModal() { document.getElementById('vp-assistant-modal').
 function closeVpAssistantModal() { document.getElementById('vp-assistant-modal').style.display = 'none'; }
 function selectStrategy(el) { document.querySelectorAll('.vp-strategy-opt').forEach(e => e.classList.remove('active')); el.classList.add('active'); currentStrategy = el.dataset.strategy; triggerHaptic('light'); }
 
+function initVpWorker() {
+  const workerCode = `
+    self.onmessage = function(e) {
+      const { targetVP, candidates, strategy } = e.data;
+      let validCandidates = candidates.filter(p => p.vp > 0);
+      validCandidates.forEach(p => p.cp = p.vp / p.price);
+      validCandidates.sort((a, b) => b.cp - a.cp);
+      let bestPrice = Infinity;
+      let bestResults = [];
+      let gVP = 0, gPrice = 0, gItems = [];
+      for(let p of validCandidates) {
+        while(gVP < targetVP) {
+          gVP += p.vp; gPrice += p.price; gItems.push(p);
+        }
+        if(gVP >= targetVP) break;
+      }
+      if(gVP >= targetVP) {
+        bestPrice = gPrice;
+        bestResults.push({ items: gItems, totalVP: gVP, totalPrice: gPrice, qty: gItems.length, diff: gVP - targetVP });
+      }
+      function dfs(index, currentItems, currentVP, currentPrice, totalQty) {
+        if (currentPrice > bestPrice && strategy !== 'fewest') return;
+        if (totalQty > 20) return;
+        if (currentVP >= targetVP) {
+          const diff = currentVP - targetVP;
+          if (currentPrice < bestPrice && strategy !== 'fewest') bestPrice = currentPrice;
+          bestResults.push({ items: [...currentItems], totalVP: currentVP, totalPrice: currentPrice, qty: totalQty, diff: diff });
+          return;
+        }
+        for (let i = index; i < validCandidates.length; i++) {
+          const p = validCandidates[i];
+          let maxQty = Math.ceil((targetVP - currentVP) / p.vp) + 1;
+          for(let q = 1; q <= maxQty; q++) {
+            let newPrice = currentPrice + p.price * q;
+            if (newPrice > bestPrice && strategy !== 'fewest') break;
+            let newItems = [...currentItems];
+            for(let k = 0; k < q; k++) newItems.push(p);
+            dfs(i + 1, newItems, currentVP + p.vp * q, newPrice, totalQty + q);
+          }
+        }
+      }
+      dfs(0, [], 0, 0, 0);
+      if (strategy === 'accurate') {
+        bestResults.sort((a, b) => a.diff - b.diff || a.totalPrice - b.totalPrice);
+      } else if (strategy === 'cheapest') {
+        bestResults.sort((a, b) => a.totalPrice - b.totalPrice || a.diff - b.diff);
+      } else if (strategy === 'fewest') {
+        bestResults.sort((a, b) => a.qty - b.qty || a.diff - b.diff);
+      }
+      const uniqueResults = [];
+      const seen = new Set();
+      for (const r of bestResults) {
+        const sig = r.items.map(p => p.stock_no).sort().join(',');
+        if (!seen.has(sig)) {
+          seen.add(sig);
+          uniqueResults.push(r);
+        }
+        if (uniqueResults.length >= 5) break;
+      }
+      self.postMessage(uniqueResults);
+    };
+  `;
+  const blob = new Blob([workerCode], { type: 'application/javascript' });
+  vpWorker = new Worker(URL.createObjectURL(blob));
+  vpWorker.onmessage = function(e) {
+    renderVpResults(e.data);
+  };
+}
+
 function calculateVpRecommendations() {
   const targetVP = parseFloat(document.getElementById('target-vp-input').value);
   if (isNaN(targetVP) || targetVP <= 0) { showToast('請輸入有效的 VP 分數'); return; }
   if (candidateStockNos.size === 0) { showToast('請先在搜尋頁面用 🔖 選擇候選產品'); return; }
-
   const t1 = document.getElementById('pricing-tier1').value;
-  // 過濾出有VP的候選產品，並計算性價比 (VP/Price)
-  let candidates = productsData.filter(p => candidateStockNos.has(p.stock_no) && p.vp > 0);
-  candidates.forEach(p => p.cp = p.vp / p[t1]);
-  // 依據性價比降序排列，有助於更快找到省錢方案
-  candidates.sort((a, b) => b.cp - a.cp);
-
-  let bestPrice = null;
-  let results = [];
-
-  // DFS 搜尋，無件數限制，但加入價格剪枝
-  function dfs(index, currentItems, currentVP, currentPrice, totalQty) {
-    // 剪枝：如果策略是最省錢，且當前價格已經超過目前找到的最佳解，則放棄此路徑
-    if (currentStrategy === 'cheapest' && bestPrice !== null && currentPrice > bestPrice) return;
-    
-    // 防呆：超過 20 件就停止，避免極端情況無限循環
-    if (totalQty > 20) return;
-
-    if (currentVP >= targetVP) {
-      const diff = currentVP - targetVP;
-      // 更新最佳價格
-      if (bestPrice === null || currentPrice < bestPrice) bestPrice = currentPrice;
-      results.push({ items: currentItems, totalVP: currentVP, totalPrice: currentPrice, qty: totalQty, diff: diff });
-      return;
-    }
-
-    for (let i = index; i < candidates.length; i++) {
-      const p = candidates[i];
-      // 計算最多需要幾件這個產品才能達標
-      let maxQty = Math.ceil((targetVP - currentVP) / p.vp) + 1;
-      for(let q = 1; q <= maxQty; q++) {
-        let newItems = [...currentItems];
-        for(let k = 0; k < q; k++) newItems.push(p);
-        dfs(i + 1, newItems, currentVP + p.vp * q, currentPrice + p[t1] * q, totalQty + q);
-      }
-    }
+  const container = document.getElementById('vp-assistant-results');
+  container.innerHTML = '<div class="vp-loading"><div class="spinner"></div>計算中，請稍候...</div>';
+  let candidates = productsData.filter(p => candidateStockNos.has(p.stock_no));
+  let simpleCandidates = candidates.map(p => ({ stock_no: p.stock_no, prod_name: p.prod_name, vp: p.vp, price: p[t1] }));
+  if (vpWorker) {
+    vpWorker.postMessage({ targetVP, candidates: simpleCandidates, strategy: currentStrategy });
   }
-  dfs(0, [], 0, 0, 0);
-
-  // 根據策略排序
-  if (currentStrategy === 'accurate') {
-    results.sort((a, b) => a.diff - b.diff || a.totalPrice - b.totalPrice); // 誤差最小，其次價格低
-  } else if (currentStrategy === 'cheapest') {
-    results.sort((a, b) => a.totalPrice - b.totalPrice || a.diff - b.diff); // 價格最低，其次誤差小
-  } else if (currentStrategy === 'fewest') {
-    results.sort((a, b) => a.qty - b.qty || a.diff - b.diff); // 件數最少，其次誤差小
-  }
-
-  // 去重並取前 5 個
-  const uniqueResults = [];
-  const seen = new Set();
-  for (const r of results) {
-    const sig = r.items.map(p => p.stock_no).sort().join(',');
-    if (!seen.has(sig)) {
-      seen.add(sig);
-      uniqueResults.push(r);
-    }
-    if (uniqueResults.length >= 5) break;
-  }
-
-  renderVpResults(uniqueResults, targetVP, t1);
 }
 
-function renderVpResults(results, targetVP, tier) {
+function renderVpResults(results) {
   const container = document.getElementById('vp-assistant-results');
   if (results.length === 0) {
     container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">找不到符合的組合，請增加候選產品。</div>';
@@ -633,6 +697,7 @@ window.onload = function () {
   initFontSize();
   loadCandidates();
   initCategories();
+  initVpWorker();
   switchView('table');
   updateProductDisplay();
   checkNewProductNotification();
