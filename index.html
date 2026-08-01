@@ -22,9 +22,7 @@
 
 <style>
 /* ===== 阻擋手機端下拉刷新 ===== */
-html, body {
-  overscroll-behavior-y: none;
-}
+html, body { overscroll-behavior-y: none; }
 
 /* ===== 全局變數：淺色模式 ===== */
 :root {
@@ -35,96 +33,43 @@ html, body {
   --glass-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
   --glass-item-bg: rgba(79, 70, 229, 0.05);
   --glass-item-hover: rgba(79, 70, 229, 0.1);
-  
-  --text-main: #334155;
-  --text-muted: #64748b;
-  --text-heading: #0f172a;
-  
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  --danger-bg: rgba(244, 63, 94, 0.95);
-  --danger-hover: #e11d48;
-  --copy-bg: rgba(79, 70, 229, 0.95);
-  --copy-hover: #4338ca;
-
-  --clear-bg: transparent;
-  --clear-text: #f43f5e;
-  --clear-border: rgba(244, 63, 94, 0.3);
-  --clear-hover-bg: rgba(244, 63, 94, 0.08);
-  --clear-hover-text: #e11d48;
-  
-  --table-head-bg: rgba(248, 250, 252, 0.95);
-  --table-border: rgba(226, 232, 240, 0.8);
-  --table-row-even: rgba(248, 250, 252, 0.6);
-  --table-row-hover: rgba(238, 242, 255, 0.9);
-  
-  --color-profit: #16a34a;
-  --color-profit-bg: rgba(220, 252, 231, 0.6);
-  --color-profit-border: rgba(134, 239, 172, 0.5);
-  --color-pkg: #7c3aed;
-  --color-pkg-bg: rgba(245, 243, 255, 0.8);
-  --color-pkg-border: rgba(196, 181, 253, 0.6);
-
-  --cart-item-bg: rgba(255, 255, 255, 0.6);
-  --cart-item-border: rgba(226, 232, 240, 0.8);
-  --cart-price-color: #4338ca;
-  --cart-summary-bg: rgba(255, 255, 255, 0.95);
-  
-  --modal-overlay: rgba(15, 23, 42, 0.6);
-  --modal-bg: rgba(255, 255, 255, 0.98);
+  --text-main: #334155; --text-muted: #64748b; --text-heading: #0f172a;
+  --primary-color: #4f46e5; --primary-hover: #4338ca;
+  --danger-bg: rgba(244, 63, 94, 0.95); --danger-hover: #e11d48;
+  --copy-bg: rgba(79, 70, 229, 0.95); --copy-hover: #4338ca;
+  --clear-bg: transparent; --clear-text: #f43f5e; --clear-border: rgba(244, 63, 94, 0.3);
+  --clear-hover-bg: rgba(244, 63, 94, 0.08); --clear-hover-text: #e11d48;
+  --table-head-bg: rgba(248, 250, 252, 0.95); --table-border: rgba(226, 232, 240, 0.8);
+  --table-row-even: rgba(248, 250, 252, 0.6); --table-row-hover: rgba(238, 242, 255, 0.9);
+  --color-profit: #16a34a; --color-profit-bg: rgba(220, 252, 231, 0.6); --color-profit-border: rgba(134, 239, 172, 0.5);
+  --color-pkg: #7c3aed; --color-pkg-bg: rgba(245, 243, 255, 0.8); --color-pkg-border: rgba(196, 181, 253, 0.6);
+  --cart-item-bg: rgba(255, 255, 255, 0.6); --cart-item-border: rgba(226, 232, 240, 0.8);
+  --cart-price-color: #4338ca; --cart-summary-bg: rgba(255, 255, 255, 0.95);
+  --modal-overlay: rgba(15, 23, 42, 0.6); --modal-bg: rgba(255, 255, 255, 0.98);
   --input-bg: rgba(248, 250, 252, 0.8);
-  
-  --vp-assistant-color: #f59e0b;
-  --vp-assistant-hover: #d97706;
+  --vp-assistant-color: #f59e0b; --vp-assistant-hover: #d97706;
 }
 
 /* ===== 全局變數：深色模式 ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    --glass-bg: rgba(15, 23, 42, 0.8);
-    --glass-bg-solid: rgba(15, 23, 42, 0.95);
-    --glass-border: rgba(129, 140, 248, 0.15);
-    --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --glass-item-bg: rgba(129, 140, 248, 0.08);
-    --glass-item-hover: rgba(129, 140, 248, 0.15);
-    
-    --text-main: #e2e8f0;
-    --text-muted: #94a3b8;
-    --text-heading: #f8fafc;
-    
-    --primary-color: #818cf8;
-    --primary-hover: #6366f1;
-    --danger-bg: rgba(244, 63, 94, 0.95);
-    --danger-hover: #be123c;
-    --copy-bg: rgba(99, 102, 241, 0.95);
-    --copy-hover: #4f46e5;
-
-    --clear-bg: transparent;
-    --clear-text: #fb7185;
-    --clear-border: rgba(244, 63, 94, 0.3);
-    --clear-hover-bg: rgba(244, 63, 94, 0.1);
-    --clear-hover-text: #f43f5e;
-    
-    --table-head-bg: rgba(15, 23, 42, 0.95);
-    --table-border: rgba(51, 65, 85, 0.6);
-    --table-row-even: rgba(30, 41, 59, 0.4);
-    --table-row-hover: rgba(49, 46, 129, 0.3);
-    
-    --color-profit: #4ade80;
-    --color-profit-bg: rgba(20, 83, 45, 0.4);
-    --color-profit-border: rgba(74, 222, 128, 0.3);
-    --color-pkg: #a78bfa;
-    --color-pkg-bg: rgba(76, 29, 149, 0.3);
-    --color-pkg-border: rgba(139, 92, 246, 0.3);
-
-    --cart-item-bg: rgba(30, 41, 59, 0.5);
-    --cart-item-border: rgba(51, 65, 85, 0.6);
-    --cart-price-color: #a5b4fc;
-    --cart-summary-bg: rgba(15, 23, 42, 0.95);
-    
-    --modal-overlay: rgba(0, 0, 0, 0.7);
-    --modal-bg: rgba(30, 41, 59, 0.98);
+    --glass-bg: rgba(15, 23, 42, 0.8); --glass-bg-solid: rgba(15, 23, 42, 0.95);
+    --glass-border: rgba(129, 140, 248, 0.15); --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --glass-item-bg: rgba(129, 140, 248, 0.08); --glass-item-hover: rgba(129, 140, 248, 0.15);
+    --text-main: #e2e8f0; --text-muted: #94a3b8; --text-heading: #f8fafc;
+    --primary-color: #818cf8; --primary-hover: #6366f1;
+    --danger-bg: rgba(244, 63, 94, 0.95); --danger-hover: #be123c;
+    --copy-bg: rgba(99, 102, 241, 0.95); --copy-hover: #4f46e5;
+    --clear-bg: transparent; --clear-text: #fb7185; --clear-border: rgba(244, 63, 94, 0.3);
+    --clear-hover-bg: rgba(244, 63, 94, 0.1); --clear-hover-text: #f43f5e;
+    --table-head-bg: rgba(15, 23, 42, 0.95); --table-border: rgba(51, 65, 85, 0.6);
+    --table-row-even: rgba(30, 41, 59, 0.4); --table-row-hover: rgba(49, 46, 129, 0.3);
+    --color-profit: #4ade80; --color-profit-bg: rgba(20, 83, 45, 0.4); --color-profit-border: rgba(74, 222, 128, 0.3);
+    --color-pkg: #a78bfa; --color-pkg-bg: rgba(76, 29, 149, 0.3); --color-pkg-border: rgba(139, 92, 246, 0.3);
+    --cart-item-bg: rgba(30, 41, 59, 0.5); --cart-item-border: rgba(51, 65, 85, 0.6);
+    --cart-price-color: #a5b4fc; --cart-summary-bg: rgba(15, 23, 42, 0.95);
+    --modal-overlay: rgba(0, 0, 0, 0.7); --modal-bg: rgba(30, 41, 59, 0.98);
     --input-bg: rgba(30, 41, 59, 0.6);
   }
 }
@@ -133,78 +78,39 @@ html, body {
 
 body { 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-  margin: 0; 
-  padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; 
-  font-size: 13px; 
-  font-weight: 500;
-  color: var(--text-main);
-  background: var(--bg-gradient);
-  background-attachment: fixed;
-  min-height: 100vh;
+  margin: 0; padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; font-size: 13px; font-weight: 500;
+  color: var(--text-main); background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh;
 }
 
-.container { 
-  max-width: 100%; 
-  margin: 0 auto; 
-  padding: 8px; 
-  border-radius: 12px; 
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-}
+.container { max-width: 100%; margin: 0 auto; padding: 8px; border-radius: 12px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
 
 h1 { color: var(--text-heading); text-align: center; margin-bottom: 6px; font-size: 1.25rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
 input, select { font-size: 15px !important; color: var(--text-main); font-weight: 600; padding: 6px 8px; border-radius: 8px; }
 select option { background: var(--glass-bg-solid); color: var(--text-main); font-weight: 600;}
 
 .controls { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
-.tier-select, .actions { 
-  padding: 8px; border-radius: 10px; width: 100%; 
-  background: var(--glass-item-bg); border: 1px solid var(--glass-border);
-}
+.tier-select, .actions { padding: 8px; border-radius: 10px; width: 100%; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
 .price-controls { display: flex; flex-direction: column; gap: 6px; }
 .price-control { width: 100%; }
 .price-control label { display: block; margin-bottom: 2px; font-weight: 700; font-size: 0.85rem; color: var(--primary-color); }
 
-.font-ctrl-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 6px; margin-bottom: 6px; padding: 6px 10px;
-  border-radius: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border);
-}
+.font-ctrl-bar { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; padding: 6px 10px; border-radius: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
 .font-ctrl-label { color: var(--primary-color); font-size: 0.8rem; white-space: nowrap; flex: 1; font-weight: 700; }
 .font-ctrl-btns { display: flex; align-items: center; gap: 4px; }
-.font-ctrl-btn {
-  padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; min-width: 38px;
-  background: var(--glass-bg-solid); border: 1px solid var(--primary-color); color: var(--primary-color);
-}
+.font-ctrl-btn { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; min-width: 38px; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); color: var(--primary-color); }
 .font-ctrl-btn:hover  { background: var(--glass-item-hover); }
 .font-ctrl-btn:active { transform: scale(0.95); }
 .font-ctrl-btn:disabled { opacity: 0.4; cursor: default; border-color: var(--glass-border); }
 
-#font-size-display {
-  min-width: 34px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700;
-  background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; padding: 3px 6px;
-}
+#font-size-display { min-width: 34px; text-align: center; font-size: 0.8rem; color: var(--primary-color); font-weight: 700; background: var(--glass-bg-solid); border: 1px solid var(--primary-color); border-radius: 6px; padding: 3px 6px; }
 
-button {
-  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--glass-border);
-  font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
-  background: var(--glass-bg-solid); color: var(--text-main);
-  backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent;
-}
-button:not([class*="btn-"]):not([class*="package-plan-btn"]):not([class*="btn-candidate"]):hover { 
-  background: var(--glass-item-hover); border-color: var(--primary-color); color: var(--primary-color);
-}
+button { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--glass-border); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: var(--glass-bg-solid); color: var(--text-main); backdrop-filter: blur(4px); outline: none; -webkit-tap-highlight-color: transparent; }
+button:not([class*="btn-"]):not([class*="package-plan-btn"]):not([class*="btn-candidate"]):hover { background: var(--glass-item-hover); border-color: var(--primary-color); color: var(--primary-color); }
 button:active { transform: scale(0.98); }
 
 select, input { border: 1px solid var(--glass-border); width: 100%; background: var(--input-bg); backdrop-filter: blur(4px); color: var(--text-main); outline: none; }
 select:focus, input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15); }
-select {
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center; background-size: 14px; padding-right: 28px;
-}
+select { -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px; padding-right: 28px; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; }
 .actions button { flex: 1; min-width: 80px; padding: 8px 5px; font-weight: 700; }
@@ -218,22 +124,11 @@ select {
 .btn-copy { background: var(--copy-bg); color: white; border: none; }
 .btn-copy:hover { background: var(--copy-hover) !important; color: white !important; }
 
-.btn-add-product {
-  width: 100%; padding: 10px; font-size: 0.95rem; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; border: none;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-}
+.btn-add-product { width: 100%; padding: 10px; font-size: 0.95rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; border: none; background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
 .btn-add-product:hover { opacity: 0.9; color: white !important; }
 
-/* 候選產品按鈕 */
-.btn-candidate {
-  padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;
-  background: var(--glass-item-bg); color: var(--text-muted); border: 1px solid var(--glass-border);
-}
-.btn-candidate.active {
-  background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover);
-}
+.btn-candidate { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: var(--glass-item-bg); color: var(--text-muted); border: 1px solid var(--glass-border); }
+.btn-candidate.active { background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover); }
 
 .package-plans-section { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
 .package-plans-title { font-size: 0.85rem; font-weight: 700; color: var(--color-pkg); margin-bottom: 6px; }
@@ -284,25 +179,13 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .cart-item-total { font-weight: 800; font-size: 0.95rem; color: var(--primary-color); }
 .cart-qty-input { font-size: 15px !important; font-weight: 800; color: var(--primary-color); width: 34px; height: 26px; border: 2px solid var(--primary-color); background: var(--glass-bg-solid); border-radius: 6px; }
 
-.cart-summary { 
-  position: fixed; bottom: 0; left: 0; right: 0; 
-  background: var(--cart-summary-bg); border-top: 1px solid var(--glass-border); 
-  border-radius: 20px 20px 0 0; 
-  padding: 12px 16px max(12px, env(safe-area-inset-bottom)); 
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100;
-}
-@media (min-width: 768px) {
-  .cart-summary { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
-}
+.cart-summary { position: fixed; bottom: 0; left: 0; right: 0; background: var(--cart-summary-bg); border-top: 1px solid var(--glass-border); border-radius: 20px 20px 0 0; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; }
+@media (min-width: 768px) { .cart-summary { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); } }
 .cart-summary-top-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
 .cart-summary-val { color: var(--text-heading); font-weight: 800; margin-left: 4px; }
 .cart-summary-bottom-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 10px; }
 .cart-summary-total { font-weight: 900; font-size: 1.15rem; color: var(--text-heading); }
-.btn-copy-cart {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-  color: white; border: none; padding: 10px 16px; border-radius: 12px;
-  font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); cursor: pointer; margin: 0;
-}
+.btn-copy-cart { background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); cursor: pointer; margin: 0; }
 .btn-copy-cart:active { transform: scale(0.95); }
 
 .summary { background: transparent; padding: 0; border-radius: 10px; border: none; }
@@ -322,12 +205,16 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .copy-opt-label:hover { background: var(--glass-item-hover); border-color: var(--primary-color); }
 .copy-opt-label input[type="checkbox"] { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; flex-shrink: 0; }
 
+/* VP 助手樣式 */
+.vp-strategy-group { display: flex; gap: 6px; margin-bottom: 12px; }
+.vp-strategy-opt { flex: 1; padding: 8px 4px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 8px; text-align: center; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: var(--text-muted); }
+.vp-strategy-opt.active { background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover); }
+.vp-result-card { background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; margin-bottom: 8px; }
+.vp-result-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px; }
+.vp-result-items { font-size: 0.85rem; color: var(--text-main); margin-bottom: 8px; line-height: 1.4; }
+
 .search-modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--modal-overlay); backdrop-filter: blur(8px); z-index: 800; align-items: flex-end; justify-content: center; padding: 0; }
-.search-modal-content {
-  width: 100%; max-width: 600px; height: 86vh; background: var(--modal-bg); backdrop-filter: blur(16px);
-  border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border); box-shadow: 0 -8px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column;
-  animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
+.search-modal-content { width: 100%; max-width: 600px; height: 86vh; background: var(--modal-bg); backdrop-filter: blur(16px); border-radius: 20px 20px 0 0; border: 1px solid var(--glass-border); box-shadow: 0 -8px 32px rgba(0,0,0,0.1); display: flex; flex-direction: column; animation: slideUpFromBottom 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
 .search-modal-handle { width: 40px; height: 4px; background: var(--text-muted); opacity: 0.3; border-radius: 2px; margin: 10px auto 4px; flex-shrink: 0; }
 .search-modal-bar { display: flex; gap: 6px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--glass-item-bg); border-top: 1px solid var(--glass-border); align-items: center; flex-shrink: 0; }
 .search-modal-input-wrap { position: relative; flex: 1; }
@@ -399,26 +286,13 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
       <div class="price-control">
         <label for="pricing-tier1">價格等級 1:</label>
         <select id="pricing-tier1" onchange="triggerHaptic('light'); updatePricing()">
-          <option value="標準價">標準價</option>
-          <option value="銅級">銅級</option>
-          <option value="銀級">銀級</option>
-          <option value="金級">金級</option>
-          <option value="58%">58%</option>
-          <option value="50%">50%</option>
-          <option value="cost">成本價</option>
+          <option value="標準價">標準價</option><option value="銅級">銅級</option><option value="銀級">銀級</option><option value="金級">金級</option><option value="58%">58%</option><option value="50%">50%</option><option value="cost">成本價</option>
         </select>
       </div>
       <div class="price-control">
         <label for="pricing-tier2">價格等級 2 (可選):</label>
         <select id="pricing-tier2" onchange="triggerHaptic('light'); updatePricing()">
-          <option value="">不使用</option>
-          <option value="標準價">標準價</option>
-          <option value="銅級">銅級</option>
-          <option value="銀級">銀級</option>
-          <option value="金級">金級</option>
-          <option value="58%">58%</option>
-          <option value="50%">50%</option>
-          <option value="cost">成本價</option>
+          <option value="">不使用</option><option value="標準價">標準價</option><option value="銅級">銅級</option><option value="銀級">銀級</option><option value="金級">金級</option><option value="58%">58%</option><option value="50%">50%</option><option value="cost">成本價</option>
         </select>
       </div>
     </div>
@@ -432,29 +306,15 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div class="package-plans-section">
   <div class="package-plans-title">🏃 套裝計畫（價格不受等級影響）</div>
   <div class="package-plans-grid">
-    <button class="package-plan-btn" onclick="addPackagePlan('PKG1')">
-      <div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">$1,369</span></div>
-      <div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 $553.5</span></div>
-    </button>
-    <button class="package-plan-btn" onclick="addPackagePlan('PKG2')">
-      <div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">$2,177</span></div>
-      <div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 $929</span></div>
-    </button>
-    <button class="package-plan-btn" onclick="addPackagePlan('PKG3')">
-      <div class="plan-row1"><span class="plan-name">運動VIP計畫</span><span class="plan-price">$6,996</span></div>
-      <div class="plan-row2"><span class="plan-vp">347.9 VP</span><span class="plan-profit">💰 利潤 $2,338</span></div>
-    </button>
-    <button class="package-plan-btn" onclick="addPackagePlan('PKG4')">
-      <div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">$9,998</span></div>
-      <div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 $3,188</span></div>
-    </button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG1')"><div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">$1,369</span></div><div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 $553.5</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG2')"><div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">$2,177</span></div><div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 $929</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG3')"><div class="plan-row1"><span class="plan-name">運動VIP計畫</span><span class="plan-price">$6,996</span></div><div class="plan-row2"><span class="plan-vp">347.9 VP</span><span class="plan-profit">💰 利潤 $2,338</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG4')"><div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">$9,998</span></div><div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 $3,188</span></div></button>
   </div>
 </div>
 
 <div class="shortcut-section" style="margin-bottom: 10px;">
-  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">
-    🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)
-  </button>
+  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)</button>
 </div>
 <div class="product-selection" style="display: flex; flex-direction: column; gap: 6px;">
   <button class="btn-add-product" onclick="triggerHaptic('light'); openSearchModal()">🔍 搜尋/管理候選產品</button>
@@ -467,12 +327,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   <button id="cart-view-btn" onclick="switchView('cart')">🛒 購物車</button>
 </div>
 
-<div id="table-container" class="table-container">
-  <table id="selected-products">
-    <thead id="product-table-head"></thead>
-    <tbody id="product-table-body"></tbody>
-  </table>
-</div>
+<div id="table-container" class="table-container"><table id="selected-products"><thead id="product-table-head"></thead><tbody id="product-table-body"></tbody></table></div>
 <div id="product-cards" class="product-cards" style="display:none;"></div>
 
 <div id="cart-container" class="cart-container" style="display:none;">
@@ -507,15 +362,23 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 
-<!-- VP 推薦助手 Modal -->
+<!-- 智能推薦 Modal -->
 <div class="modal-overlay" id="vp-assistant-modal">
   <div class="modal" style="width: 340px;">
-    <div class="modal-title">🎯 VP 推薦助手</div>
-    <div style="margin-bottom: 12px;">
+    <div class="modal-title">🎯 智能 VP 推薦助手</div>
+    <div style="margin-bottom: 10px;">
       <label style="display:block; margin-bottom:4px; font-weight:700; font-size:0.85rem; color:var(--vp-assistant-color);">輸入目標 VP 分數:</label>
       <input type="number" id="target-vp-input" placeholder="例如: 50" style="width: 100%; font-size: 16px; border-color: var(--vp-assistant-color);" oninput="triggerHaptic('light')">
     </div>
-    <div id="vp-assistant-results" style="max-height: 45vh; overflow-y: auto; margin-bottom: 12px; padding-right: 4px;"></div>
+    <div style="margin-bottom: 12px;">
+      <label style="display:block; margin-bottom:6px; font-weight:700; font-size:0.85rem; color:var(--text-muted);">推薦策略:</label>
+      <div class="vp-strategy-group">
+        <div class="vp-strategy-opt active" data-strategy="accurate" onclick="selectStrategy(this)">🎯最精準</div>
+        <div class="vp-strategy-opt" data-strategy="cheapest" onclick="selectStrategy(this)">💰最省錢</div>
+        <div class="vp-strategy-opt" data-strategy="fewest" onclick="selectStrategy(this)">📦最少件</div>
+      </div>
+    </div>
+    <div id="vp-assistant-results" style="max-height: 40vh; overflow-y: auto; margin-bottom: 12px; padding-right: 4px;"></div>
     <div class="modal-actions">
       <button onclick="triggerHaptic('light'); closeVpAssistantModal()">關閉</button>
       <button class="btn-primary" onclick="triggerHaptic('light'); calculateVpRecommendations()" style="background: var(--vp-assistant-color);">計算推薦</button>
@@ -547,9 +410,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
   <div class="modal" style="text-align: center;">
     <div class="modal-title" style="color: var(--primary-color); font-size: 1.25rem; margin-bottom: 12px;">🎉 最新消息</div>
-    <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px;">
-      21day健肝新產品已經上架啦！
-    </div>
+    <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px;">21day健肝新產品已經上架啦！</div>
     <div class="modal-actions" style="justify-content: center; margin-top: 16px;">
       <button class="btn-primary" onclick="triggerHaptic('light'); closeNewProductModal()" style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 10px;">我知道了</button>
     </div>
@@ -640,6 +501,7 @@ let currentCategory = "all";
 let currentView = "table";
 let newlyAddedStockNos = new Set();
 let candidateStockNos = new Set();
+let currentStrategy = "accurate"; // 預設策略: accurate, cheapest, fewest
 
 function triggerHaptic(type = 'light') {
   if (!navigator.vibrate) return;
@@ -746,28 +608,12 @@ function copyToClipboard() {
       <div class="modal">
         <div class="modal-title">📋 選擇複製資訊</div>
         <div class="modal-content">
-          <label class="copy-opt-label">
-            <input type="checkbox" id="copy-opt-unitprice" checked> 單價
-          </label>
-          <label class="copy-opt-label">
-            <input type="checkbox" id="copy-opt-totalprice" checked> 總價
-          </label>
-          <label class="copy-opt-label">
-            <input type="checkbox" id="copy-opt-vp" checked> VP 分數
-          </label>
-          <label class="copy-opt-label">
-            <input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數
-          </label>
+          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-unitprice" checked> 單價</label>
+          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalprice" checked> 總價</label>
+          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-vp" checked> VP 分數</label>
+          <label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數</label>
   `;
-
-  if (hasProfit) {
-      modalHtml += `
-          <label class="copy-opt-label">
-            <input type="checkbox" id="copy-opt-profit" checked> 利潤
-          </label>
-      `;
-  }
-
+  if (hasProfit) modalHtml += `<label class="copy-opt-label"><input type="checkbox" id="copy-opt-profit" checked> 利潤</label>`;
   modalHtml += `
         </div>
         <div class="modal-actions">
@@ -777,7 +623,6 @@ function copyToClipboard() {
       </div>
     </div>
   `;
-
   const oldModal = document.getElementById('copy-modal');
   if (oldModal) oldModal.remove();
   document.body.insertAdjacentHTML('beforeend', modalHtml);
@@ -923,11 +768,9 @@ function copyCartSimple() {
 function switchView(viewType) {
   triggerHaptic('light');
   currentView = viewType;
-  
   document.getElementById('table-container').style.display = 'none';
   document.getElementById('product-cards').style.display = 'none';
   document.getElementById('cart-container').style.display = 'none';
-  
   document.getElementById('table-view-btn').classList.remove('active');
   document.getElementById('card-view-btn').classList.remove('active');
   document.getElementById('cart-view-btn').classList.remove('active');
@@ -942,7 +785,6 @@ function switchView(viewType) {
     document.getElementById('cart-container').style.display = 'block';
     document.getElementById('cart-view-btn').classList.add('active');
   }
-  
   updateProductDisplay();
 }
 
@@ -962,12 +804,11 @@ function initCategories() {
   });
 }
 
-// 新功能：切換候選狀態
 function toggleCandidate(stockNo) {
   if (candidateStockNos.has(stockNo)) candidateStockNos.delete(stockNo);
   else candidateStockNos.add(stockNo);
   saveCandidates();
-  filterProducts(); // 重新渲染列表以更新按鈕狀態
+  filterProducts(); 
   updateCandidateCount();
 }
 
@@ -1097,18 +938,10 @@ function updateTableHeader() {
   const cmp = t2 && t1 !== t2;
   const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
   const showProfitCols = cmp || hasPkgProfit;
-  
   let h = '<tr><th>編號</th><th>名稱</th><th>數量</th>';
-  if (cmp) {
-    h += `<th>${t1}<br>單價</th><th>${t1}<br>總價</th><th>${t2}<br>單價</th><th>${t2}<br>總價</th>`;
-  } else {
-    h += '<th>單價</th><th>總價</th>';
-  }
-  
-  if (showProfitCols) {
-    h += '<th>單件<br>利潤</th><th>總<br>利潤</th>';
-  }
-  
+  if (cmp) h += `<th>${t1}<br>單價</th><th>${t1}<br>總價</th><th>${t2}<br>單價</th><th>${t2}<br>總價</th>`;
+  else h += '<th>單價</th><th>總價</th>';
+  if (showProfitCols) h += '<th>單件<br>利潤</th><th>總<br>利潤</th>';
   h += '<th>VP</th><th>總VP</th><th>操作</th></tr>';
   document.getElementById('product-table-head').innerHTML = h;
 }
@@ -1128,7 +961,6 @@ function updateProductTable() {
   const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined);
   const showProfitCols = cmp || hasPkgProfit;
   const colCount = 6 + (cmp ? 4 : 2) + (showProfitCols ? 2 : 0);
-  
   tbody.innerHTML = '';
   if (selectedProducts.length === 0) {
     tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align:center; padding:20px; color:var(--text-muted);">尚未選擇任何產品</td></tr>`;
@@ -1147,16 +979,13 @@ function updateProductTable() {
         <input type="number" class="qty-input" value="${product.quantity}" min="1" onchange="updateQuantity('${product.stock_no}', parseInt(this.value))">
         ${qtyBtnHTML('inc', product.stock_no, '+')}
       </div></td>`;
-      
     if (cmp) {
       const p2 = product[t2], tp2 = p2 * product.quantity;
       let up, tpr;
       if (isPkg && product.fixedProfit !== undefined) { up = product.fixedProfit; tpr = up * product.quantity; }
       else { up = Math.abs(p2 - p1); tpr = up * product.quantity; }
       html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td><td>${formatPrice(p2,isPkg)}</td><td>${formatPrice(tp2,isPkg)}</td>`;
-      if (showProfitCols) {
-        html += `<td class="profit">${formatProfit(up)}</td><td class="profit">${formatProfit(tpr)}</td>`;
-      }
+      if (showProfitCols) html += `<td class="profit">${formatProfit(up)}</td><td class="profit">${formatProfit(tpr)}</td>`;
     } else {
       html += `<td>${formatPrice(p1,isPkg)}</td><td>${formatPrice(tp1,isPkg)}</td>`;
       if (showProfitCols) {
@@ -1193,7 +1022,6 @@ function updateProductCards() {
       <div>${product.prod_name}${isPkg ? `<span style="background:var(--color-pkg);color:white;font-size:0.7rem;padding:2px 6px;border-radius:6px;margin-left:6px;">套裝</span>` : ''}</div>
       <div style="color:var(--text-muted);">${product.stock_no}</div>
     </div><div style="margin-bottom:8px;"><div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">${product.prod_name_en}</div>`;
-    
     if (isPkg) {
       html += `<div style="font-size:0.75rem;color:var(--color-pkg);margin-bottom:6px;">⚠ 此套裝價格固定，不受等級影響</div>
         <div class="card-price-row"><div>套裝價：</div><div style="color:var(--color-pkg);font-weight:800;">${formatPrice(p1,true)}</div></div>
@@ -1215,7 +1043,7 @@ function updateProductCards() {
       html += `<div class="card-price-row"><div>${t1} 單價:</div><div>${formatPrice(p1,false)}</div></div>
         <div class="card-price-row"><div>${t1} 總價 (* ${product.quantity}):</div><div>${formatPrice(tp1,false)}</div></div>`;
     }
-    html += `<div class="card-price-row><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
+    html += `<div class="card-price-row"><div>VP:</div><div>${product.vp.toFixed(2)}</div></div>
       <div class="card-price-row"><div>總VP:</div><div>${tvp.toFixed(2)}</div></div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
         <div class="qty-control">
@@ -1233,24 +1061,17 @@ function updateCartView() {
   const cc = document.getElementById('cart-view-content');
   const t1 = document.getElementById('pricing-tier1').value;
   cc.innerHTML = '';
-  
   if (selectedProducts.length === 0) {
     cc.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;">🛒 購物車是空的</div>';
     document.getElementById('cart-summary-section').style.display = 'none';
     return;
   }
-  
   document.getElementById('cart-summary-section').style.display = 'block';
-  
-  let totalQty = 0;
-  let totalPrice = 0;
-  let totalVP = 0;
-
+  let totalQty = 0, totalPrice = 0, totalVP = 0;
   selectedProducts.forEach(product => {
     const isPkg = product.type === 'package';
     const price = product[t1];
     const tp = price * product.quantity;
-    
     totalQty += product.quantity;
     totalPrice += tp;
     totalVP += product.vp * product.quantity;
@@ -1258,7 +1079,6 @@ function updateCartView() {
     const item = document.createElement('div');
     item.className = ['cart-item', newlyAddedStockNos.has(product.stock_no) ? 'animate-in' : ''].filter(Boolean).join(' ');
     item.setAttribute('data-stockno', product.stock_no);
-    
     item.innerHTML = `
       <div class="cart-item-info">
         <div class="cart-item-name">${product.prod_name}${isPkg ? ' <span style="font-size:0.8em;color:var(--color-pkg);">(套裝)</span>' : ''}</div>
@@ -1275,7 +1095,6 @@ function updateCartView() {
     `;
     cc.appendChild(item);
   });
-
   document.getElementById('cart-total-qty').textContent = totalQty;
   document.getElementById('cart-total-vp').textContent = totalVP.toFixed(2);
   document.getElementById('cart-total-price').textContent = '$' + totalPrice.toFixed(2);
@@ -1287,7 +1106,6 @@ function updateSummary() {
   const sc = document.getElementById('summary');
   if (currentView === 'cart') { sc.style.display = 'none'; return; } 
   sc.style.display = 'block';
-
   const t1 = document.getElementById('pricing-tier1').value;
   const t2 = document.getElementById('pricing-tier2').value;
   const cmp = t2 && t1 !== t2;
@@ -1354,7 +1172,7 @@ function showToast(message, duration = 2500) {
 }
 function clearSelection() { triggerHaptic('success'); selectedProducts = []; updateProductDisplay(); showToast('已清空所有選擇的產品'); }
 
-// 新功能：VP 推薦助手相關
+// 智能推薦相關
 function openVpAssistantModal() {
   document.getElementById('vp-assistant-modal').style.display = 'flex';
   document.getElementById('target-vp-input').focus();
@@ -1362,49 +1180,55 @@ function openVpAssistantModal() {
 function closeVpAssistantModal() {
   document.getElementById('vp-assistant-modal').style.display = 'none';
 }
+function selectStrategy(el) {
+  document.querySelectorAll('.vp-strategy-opt').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  currentStrategy = el.dataset.strategy;
+  triggerHaptic('light');
+}
 
 function calculateVpRecommendations() {
   const targetVP = parseFloat(document.getElementById('target-vp-input').value);
-  if (isNaN(targetVP) || targetVP <= 0) {
-    showToast('請輸入有效的 VP 分數'); return;
-  }
-  if (candidateStockNos.size === 0) {
-    showToast('請先在搜尋頁面用 🔖 選擇候選產品'); return;
-  }
+  if (isNaN(targetVP) || targetVP <= 0) { showToast('請輸入有效的 VP 分數'); return; }
+  if (candidateStockNos.size === 0) { showToast('請先在搜尋頁面用 🔖 選擇候選產品'); return; }
 
+  const t1 = document.getElementById('pricing-tier1').value;
   const candidates = productsData.filter(p => candidateStockNos.has(p.stock_no) && p.vp > 0);
   let results = [];
   
-  // 1件
-  candidates.forEach(p => results.push({ items: [p], totalVP: p.vp }));
-  // 2件
-  for (let i = 0; i < candidates.length; i++) {
-    for (let j = i + 1; j < candidates.length; j++) {
-      const vp = candidates[i].vp + candidates[j].vp;
-      results.push({ items: [candidates[i], candidates[j]], totalVP: vp });
+  // 深度優先搜尋 (DFS) 產生所有可能的組合 (最多 4 件)
+  function dfs(index, currentItems, currentVP, currentPrice, totalQty) {
+    if (totalQty > 4) return; // 限制最多 4 件
+    if (currentVP >= targetVP) {
+      results.push({ 
+        items: currentItems, 
+        totalVP: currentVP, 
+        totalPrice: currentPrice, 
+        qty: totalQty,
+        diff: currentVP - targetVP
+      });
+      return; // 因為再加只會更大
     }
-  }
-  // 3件
-  for (let i = 0; i < candidates.length; i++) {
-    for (let j = i + 1; j < candidates.length; j++) {
-      for (let k = j + 1; k < candidates.length; k++) {
-        const vp = candidates[i].vp + candidates[j].vp + candidates[k].vp;
-        results.push({ items: [candidates[i], candidates[j], candidates[k]], totalVP: vp });
+    for (let i = index; i < candidates.length; i++) {
+      const p = candidates[i];
+      let maxQty = Math.ceil((targetVP - currentVP) / p.vp) + 1;
+      for(let q = 1; q <= maxQty; q++) {
+        let newItems = [...currentItems];
+        for(let k = 0; k < q; k++) newItems.push(p);
+        dfs(i + 1, newItems, currentVP + p.vp * q, currentPrice + p[t1] * q, totalQty + q);
       }
     }
   }
+  dfs(0, [], 0, 0, 0);
 
-  // 排序：優先推薦 >= targetVP 且差距最小的，其次推薦 < targetVP 差距最小的
-  results.sort((a, b) => {
-    const diffA = Math.abs(a.totalVP - targetVP);
-    const diffB = Math.abs(b.totalVP - targetVP);
-    const aOver = a.totalVP >= targetVP;
-    const bOver = b.totalVP >= targetVP;
-    
-    if (aOver && !bOver) return -1;
-    if (!aOver && bOver) return 1;
-    return diffA - diffB;
-  });
+  // 根據策略排序
+  if (currentStrategy === 'accurate') {
+    results.sort((a, b) => a.diff - b.diff); // 誤差最小
+  } else if (currentStrategy === 'cheapest') {
+    results.sort((a, b) => a.totalPrice - b.totalPrice); // 價格最低
+  } else if (currentStrategy === 'fewest') {
+    results.sort((a, b) => a.qty - b.qty || a.diff - b.diff); // 件數最少，其次誤差最小
+  }
 
   // 去重並取前 5 個
   const uniqueResults = [];
@@ -1418,44 +1242,56 @@ function calculateVpRecommendations() {
     if (uniqueResults.length >= 5) break;
   }
 
-  renderVpResults(uniqueResults, targetVP);
+  renderVpResults(uniqueResults, targetVP, t1);
 }
 
-function renderVpResults(results, targetVP) {
+function renderVpResults(results, targetVP, tier) {
   const container = document.getElementById('vp-assistant-results');
   if (results.length === 0) {
-    container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">找不到符合的組合</div>';
+    container.innerHTML = '<div style="text-align:center; color:var(--text-muted);">在 4 件限制內找不到達標組合，請增加候選產品。</div>';
     return;
   }
   
   let html = '';
   results.forEach((r, idx) => {
-    const itemsHtml = r.items.map(p => `${p.prod_name} <span style="color:var(--text-muted); font-size:0.8em;">(${p.vp.toFixed(2)} VP)</span>`).join(' + ');
-    const isOver = r.totalVP >= targetVP;
+    // 將相同產品合併顯示數量
+    const itemMap = {};
+    r.items.forEach(p => {
+      if (!itemMap[p.stock_no]) itemMap[p.stock_no] = { ...p, count: 0 };
+      itemMap[p.stock_no].count++;
+    });
+    const itemsHtml = Object.values(itemMap).map(p => 
+      `${p.prod_name} <span style="color:var(--text-muted); font-size:0.8em;">(x${p.count})</span>`
+    ).join(' + ');
+    
     html += `
-      <div style="background: var(--glass-item-bg); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px; margin-bottom: 8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="color: var(--text-heading);">組合 ${idx + 1}</strong>
-          <span style="color: ${isOver ? 'var(--color-profit)' : 'var(--clear-text)'}; font-weight: 800; font-size: 0.9rem;">
-            總 VP: ${r.totalVP.toFixed(2)} ${isOver ? '✓ 達標' : '(不足)'}
+      <div class="vp-result-card">
+        <div class="vp-result-header">
+          <strong style="color: var(--text-heading);">方案 ${idx + 1}</strong>
+          <span style="color: var(--color-profit); font-weight: 800; font-size: 0.9rem;">
+            總 VP: ${r.totalVP.toFixed(2)} (+${r.diff.toFixed(2)})
           </span>
         </div>
-        <div style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 8px; line-height: 1.4;">${itemsHtml}</div>
-        <button class="btn-primary" style="width:100%; padding: 6px; font-size: 0.85rem; border-radius: 8px;" onclick='addRecommendationToCart(${JSON.stringify(r.items.map(p => p.stock_no))})'>加入購物車</button>
+        <div class="vp-result-items">${itemsHtml}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+          <span>件數: ${r.qty}</span>
+          <span>金額: $${r.totalPrice.toFixed(2)}</span>
+        </div>
+        <button class="btn-primary" style="width:100%; padding: 6px; font-size: 0.85rem; border-radius: 8px;" onclick='addRecommendationToCart(${JSON.stringify(Object.values(itemMap).map(p => ({stock_no: p.stock_no, qty: p.count})))})'>加入購物車</button>
       </div>
     `;
   });
   container.innerHTML = html;
 }
 
-function addRecommendationToCart(stockNos) {
+function addRecommendationToCart(items) {
   triggerHaptic('success');
-  stockNos.forEach(no => {
-    const product = productsData.find(p => p.stock_no === no);
+  items.forEach(item => {
+    const product = productsData.find(p => p.stock_no === item.stock_no);
     if (product) {
-      const existing = selectedProducts.find(p => p.stock_no === no);
-      if (existing) existing.quantity += 1;
-      else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(no); }
+      const existing = selectedProducts.find(p => p.stock_no === item.stock_no);
+      if (existing) existing.quantity += item.qty;
+      else { selectedProducts.push({ ...product, quantity: item.qty }); newlyAddedStockNos.add(item.stock_no); }
     }
   });
   updateProductDisplay();
@@ -1495,13 +1331,9 @@ function handlePwaInstall() {
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   var isAndroid = /Android/.test(navigator.userAgent);
   var msg;
-  if (isIOS) {
-    msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅';
-  } else if (isAndroid) {
-    msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅';
-  } else {
-    msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅';
-  }
+  if (isIOS) msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅';
+  else if (isAndroid) msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅';
+  else msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅';
   document.getElementById('pwa-info-content').textContent = msg;
   document.getElementById('pwa-info-modal').style.display = 'flex';
 }
@@ -1520,7 +1352,7 @@ function checkNewProductNotification() {
 window.onload = function () {
   initPWA();
   initFontSize();
-  loadCandidates(); // 載入候選產品
+  loadCandidates();
   initCategories();
   switchView('table');
   updateProductDisplay();
