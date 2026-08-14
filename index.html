@@ -366,7 +366,7 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 <div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
   <div class="modal" style="text-align: center;">
     <div class="modal-title" style="color: var(--primary-color); font-size: 1.25rem; margin-bottom: 12px;">🎉 最新消息</div>
-    <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px;">21day健肝新產品已經上架啦！</div>
+    <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px;">新產品「藏紅甜睡 (Night Mode)」已經上架啦！</div>
     <div class="modal-actions" style="justify-content: center; margin-top: 16px;">
       <button class="btn-primary" onclick="triggerHaptic('light'); closeNewProductModal()" style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 10px;">我知道了</button>
     </div>
@@ -429,6 +429,7 @@ const productsData = [
   { stock_no: "202K", prod_name: "鋅維思", prod_name_en: "Best Defense", category: "内", type: "", vp: 9.95, retail_price: 188, 標準價: 191, 銅級: 164.75, 銀級: 147.25, 金級: 129.75, "58%": 117.5, "50%": 103.5, cost: 103.5, fav: 460, prod_seq: 510 },
   { stock_no: "145K", prod_name: "禦之寶-黑加侖子味", prod_name_en: "ImmuLift", category: "内", type: "", vp: 10, retail_price: 191, 標準價: 194, 銅級: 167.45, 銀級: 149.75, 金級: 132.05, "58%": 119.66, "50%": 105.5, cost: 105.5, fav: 470, prod_seq: 520 },
   { stock_no: "011K", prod_name: "朱古力咖啡", prod_name_en: "Mocha", category: "内", type: "", vp: 25.95, retail_price: 478, 標準價: 485, 銅級: 418.55, 銀級: 374.25, 金級: 329.95, "58%": 298.94, "50%": 263.5, cost: 263.5, fav: 480, prod_seq: 530 },
+  { stock_no: "282K", prod_name: "藏紅甜睡", prod_name_en: "Night Mode", category: "内", type: "", vp: 25.2, retail_price: 470, 標準價: 470, 銅級: 405.65, 銀級: 362.75, 金級: 319.85, "58%": 289.82, "50%": 255.5, cost: 255.5, fav: 485, prod_seq: 6 },
   { stock_no: "0765", prod_name: "蘆薈舒緩潔面乳", prod_name_en: "Soothing Aloe Cleanser", category: "外", type: "", vp: 16.75, retail_price: 308, 標準價: 313, 銅級: 270.1, 銀級: 241.5, 金級: 212.9, "58%": 192.88, "50%": 170, cost: 170, fav: 490, prod_seq: 550 },
   { stock_no: "0891", prod_name: "活養草本爽膚水-150ML", prod_name_en: "Energizing Herbal Toner - 150ML", category: "外", type: "", vp: 32.3, retail_price: 591, 標準價: 600, 銅級: 517.8, 銀級: 463, 金級: 408.2, "58%": 369.84, "50%": 326, cost: 326, fav: 510, prod_seq: 580 },
   { stock_no: "0768", prod_name: "抗皺精華霜", prod_name_en: "Line Minimizing Serum", category: "外", type: "", vp: 37.7, retail_price: 688, 標準價: 698, 銅級: 602.3, 銀級: 538.5, 金級: 474.7, "58%": 430.04, "50%": 379, cost: 379, fav: 520, prod_seq: 590 },
@@ -461,11 +462,11 @@ function toggleFreight(val) {
   document.getElementById('freight-normal').classList.toggle('active', !val);
   document.getElementById('freight-included').classList.toggle('active', val);
   triggerHaptic('light');
-  
+
   // 固定不加價的產品編號列表
   const noFreightStockNos = ['PKG1', 'PKG2', 'PKG3', 'PKG4', 'BO1L', 'I839', 'H258', 'H260', 'H262', '8601', '8602', '5122', 'DC30', 'X001', 'DC40', '9909', 'DC60'];
   const tiers = ['銅級', '銀級', '金級', '58%', '50%'];
-  
+
   // 同步更新 productsData 和 selectedProducts
   [productsData, selectedProducts].forEach(list => {
     list.forEach(p => {
@@ -482,7 +483,7 @@ function toggleFreight(val) {
       });
     });
   });
-  
+
   updatePricing();
   filterProducts();
   showToast(val ? '已切換為含運費價格 (+3%)' : '已切換為正常價格');
@@ -690,7 +691,7 @@ function showPwaInstallBtn() { var w = document.getElementById('pwa-install-wrap
 function hidePwaInstallBtn() { var w = document.getElementById('pwa-install-wrap'); if (w) w.style.display = 'none'; }
 function handlePwaInstall() { triggerHaptic('medium'); if (deferredInstallPrompt) { deferredInstallPrompt.prompt(); deferredInstallPrompt.userChoice.then(function(r) { deferredInstallPrompt = null; if (r.outcome === 'accepted') hidePwaInstallBtn(); }); return; } var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; var isAndroid = /Android/.test(navigator.userAgent); var msg; if (isIOS) msg = 'iPhone / iPad 安裝步驟：\n\n① 確認使用 Safari 瀏覽器打開\n\n② 點底部的「分享」按鈕\n   （方框加箭頭的圖示 □↑）\n\n③ 向下滑動，找到\n   「加入主畫面」\n\n④ 點右上角「新增」即完成 ✅'; else if (isAndroid) msg = 'Android 安裝步驟：\n\n① 確認使用 Chrome 瀏覽器打開\n\n② 點右上角「⋮」選單\n\n③ 選「安裝應用程式」\n   或「新增至主畫面」\n\n④ 點「安裝」即完成 ✅'; else msg = '安裝步驟：\n\n在瀏覽器網址列右側\n或「⋮」選單中\n找到「安裝應用程式」\n點擊後即可安裝到桌面 ✅'; document.getElementById('pwa-info-content').textContent = msg; document.getElementById('pwa-info-modal').style.display = 'flex'; }
 function closeNewProductModal() { document.getElementById('new-product-modal').style.display = 'none'; }
-function checkNewProductNotification() { if (!localStorage.getItem('seen_new_product_liver_fixed')) { document.getElementById('new-product-modal').style.display = 'flex'; localStorage.setItem('seen_new_product_liver_fixed', 'true'); } }
+function checkNewProductNotification() { if (!localStorage.getItem('seen_new_product_night_mode')) { document.getElementById('new-product-modal').style.display = 'flex'; localStorage.setItem('seen_new_product_night_mode', 'true'); } }
 
 window.onload = function () {
   initPWA();
