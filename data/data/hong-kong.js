@@ -86,7 +86,7 @@ window.HBL_COUNTRY_DATA.HK = {
     "category": "内",
     "type": "",
     "vp": 21.45,
-    "retail_price": 394,
+    "retail_price": 353,
     "標準價": 394,
     "銅級": 341.05,
     "銀級": 305.75,
