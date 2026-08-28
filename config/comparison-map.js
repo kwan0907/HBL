@@ -304,7 +304,8 @@ window.HBL_COMPARISON_GROUPS = [
     "id": "supervisor-fee",
     "label": "督導年費",
     "TW": "0909",
-    "JP": "0909"
+    "JP": "0909",
+    "HK": "0909"
   },
   {
     "id": "distributor-fee",
