@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <link rel="preload" as="image" href="./logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HBL 多國產品格價計算器</title>
-<link rel="manifest" href="./manifest.json">
+<title>HBL 多區產品格價計算器</title>
+<link rel="manifest" href="./manifest.json?v=20260828-thailand">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="HBL 多國格價">
+<meta name="apple-mobile-web-app-title" content="HBL 多區格價">
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180.png">
 <link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167.png">
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="./styles.css?v=20260828-thailand">
 </head>
 <body>
 <div class="container">
-<h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 8px;">HBL 多國產品計算器</h1>
+<h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 8px;">HBL 多區產品計算器</h1>
 <div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
@@ -36,21 +36,25 @@
 </div>
 
 <div class="mode-switch" aria-label="功能模式">
-  <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單國計算</button>
-  <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 多國格價</button>
+  <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單區計算</button>
+  <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 多區格價</button>
 </div>
 
 <div id="single-country-workspace">
-<!-- 國家／地區切換列 -->
+<!-- 地區切換列 -->
 <div class="font-ctrl-bar" id="country-control" style="margin-bottom: 6px;">
-  <span class="font-ctrl-label">🌏 國家／地區</span>
+  <span class="font-ctrl-label">🌏 地區</span>
   <div class="font-ctrl-btns country-buttons-scroll" id="country-buttons"></div>
+</div>
+<div class="price-data-helper">
+  <span class="swipe-hint" id="country-swipe-hint">↔ 地區按鈕可左右滑動查看更多</span>
+  <button class="price-data-refresh" id="price-data-refresh" onclick="reloadCountryPriceData()">🔄 更新價目</button>
 </div>
 
 <div class="currency-panel" id="single-currency-panel">
   <div class="control-card-title"><span>💱 顯示貨幣</span><span id="single-currency-current"></span></div>
   <div class="currency-segment currency-buttons-scroll" id="single-currency-buttons"></div>
-  <div class="currency-note" id="single-currency-note">自動模式會按香港、台灣或日本顯示當地貨幣。</div>
+  <div class="currency-note" id="single-currency-note">自動模式會按所選地區顯示當地貨幣。</div>
 </div>
 
 <!-- 運費版本切換列 -->
@@ -125,7 +129,7 @@
 
 <div id="compare-workspace">
   <div class="compare-control-card">
-    <div class="control-card-title"><span id="compare-panel-title">🌍 多國產品格價</span><span id="compare-result-count"></span></div>
+    <div class="control-card-title"><span id="compare-panel-title">🌍 多區產品格價</span><span id="compare-result-count"></span></div>
     <div class="compare-toolbar-row">
       <div>
         <label for="compare-tier">比較價格等級</label>
@@ -146,18 +150,23 @@
     <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
     <div class="currency-segment currency-buttons-scroll" id="compare-currency-buttons"></div>
     <details class="rate-panel">
-      <summary><span>⚙️ 參考匯率設定</span><span id="rate-summary">1 HKD = 4.04 TWD = 20.33 JPY</span></summary>
+      <summary><span>⚙️ 參考匯率設定</span><span id="rate-summary">1 HKD = 4.0607 TWD = 20.3125 JPY = 4.184 THB</span></summary>
       <div class="rate-editor">
         <div id="rate-editor-fields"></div>
-        <button class="rate-save-btn" onclick="saveExchangeRates()">儲存並重新格價</button>
-        <div class="compare-note">預設為 2026-08-28 中間參考價；實際付款匯率及手續費可能不同，可以在此手動更新。</div>
+        <div class="rate-actions">
+          <button class="rate-refresh-btn" id="rate-refresh-btn" onclick="refreshExchangeRatesFromApi()">🔄 取得最新匯率</button>
+          <button class="rate-save-btn" onclick="saveExchangeRates()">儲存手動匯率</button>
+        </div>
+        <div class="rate-update-status" id="rate-update-status" role="status">載入時會每日自動檢查一次匯率。</div>
+        <div class="compare-note">匯率由 <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a> 提供，只作格價參考；若連線失敗，仍可在上方手動輸入。實際付款匯率及手續費可能不同。</div>
       </div>
     </details>
   </div>
 
   <div class="compare-control-card">
-    <div class="control-card-title"><span>↕️ 按國家價格排序</span><span id="compare-sort-label">香港・由低至高</span></div>
+    <div class="control-card-title"><span>↕️ 按地區價格排序</span><span id="compare-sort-label">香港・由低至高</span></div>
     <div class="compare-sort-grid compare-sort-scroll" id="compare-sort-buttons"></div>
+    <div class="swipe-hint">↔ 排序及格價地區可左右滑動</div>
     <div class="compare-note">綠色「最平」按已選匯率及同一價格等級計算。只比較價目表的單件售價；各地容量、包裝與稅費可能不同。</div>
   </div>
 
@@ -241,8 +250,8 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js"></script>
-<script src="./config/comparison-map.js"></script>
-<script src="./app.js"></script>
+<script src="./config/countries.js?v=20260828-thailand"></script>
+<script src="./config/comparison-map.js?v=20260828-thailand"></script>
+<script src="./app.js?v=20260828-thailand"></script>
 </body>
 </html>

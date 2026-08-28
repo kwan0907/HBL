@@ -174,6 +174,8 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .product-item:hover { background: var(--table-row-hover); }
 .product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .product-item-left  { flex: 1; min-width: 0; }
+.product-item-actions { display:flex; gap:5px; align-items:center; flex-shrink:0; }
+.product-item-vp { font-size:.68em; color:var(--text-muted); font-weight:800; white-space:nowrap; }
 .product-item-price { font-size: 0.85em; color: var(--primary-color); font-weight: 700; background: var(--glass-item-bg); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0; }
 .selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.68em; padding: 2px 6px; border-radius: 6px; margin-right: 4px; vertical-align: middle; white-space: nowrap; font-weight: 700; }
 .product-item-package { background: var(--color-pkg-bg); border-left: 3px solid var(--color-pkg); }
@@ -192,9 +194,9 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @media screen and (max-width: 480px) { .qty-btn { width: 20px; height: 22px; font-size: 12px; } .qty-input { width: 24px; height: 22px; margin: 0; } .cart-qty-input { width: 30px; } .search-modal-content { height: 90vh; } h1 { font-size: 1.1rem; } }
 @media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .price-controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
 
-/* 三國格價與 iPhone 16 Pro 操作優化：保留原字體級別，只改善分組與觸控範圍 */
-.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:4px; margin:0 0 8px; border:1px solid var(--glass-border); border-radius:12px; background:var(--glass-item-bg); }
-.mode-switch button { min-height:44px; border:none; background:transparent; color:var(--text-muted); font-size:0.9rem; border-radius:9px; }
+/* 多區格價與 iPhone 16 Pro 操作優化：保留原字體級別，只改善分組與觸控範圍 */
+.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:4px; width:min(100%,300px); padding:2px; margin:0 auto 6px; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
+.mode-switch button { min-height:34px; padding:4px 6px; border:none; background:transparent; color:var(--text-muted); font-size:0.78rem; border-radius:7px; }
 .mode-switch button.active { background:var(--primary-color); color:white; box-shadow:0 2px 8px rgba(79,70,229,.22); }
 .currency-panel, .compare-control-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
 .control-card-title { font-weight:800; color:var(--text-heading); font-size:.9rem; margin-bottom:7px; display:flex; justify-content:space-between; align-items:center; }
@@ -214,29 +216,54 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .compare-card-title { font-size:.92rem; font-weight:850; color:var(--text-heading); line-height:1.35; margin-bottom:8px; }
 .compare-card-sub { font-size:.72rem; color:var(--text-muted); font-weight:600; margin-top:2px; }
 .compare-country-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
-.compare-price-box { position:relative; min-height:74px; border:1px solid var(--glass-border); border-radius:10px; padding:8px 4px 6px; text-align:center; background:var(--glass-item-bg); display:flex; flex-direction:column; justify-content:center; }
+.compare-price-box { position:relative; min-height:108px; border:1px solid var(--glass-border); border-radius:10px; padding:8px 4px 6px; text-align:center; background:var(--glass-item-bg); display:flex; flex-direction:column; justify-content:center; }
 .compare-price-box.cheapest { background:rgba(16,185,129,.11); border-color:rgba(16,185,129,.48); }
 .compare-country-name { font-size:.75rem; font-weight:800; color:var(--text-muted); margin-bottom:4px; }
 .compare-price { font-size:.9rem; font-weight:900; color:var(--text-heading); line-height:1.2; overflow-wrap:anywhere; }
 .cheapest-badge { display:inline-block; margin-top:4px; color:#047857; font-size:.68rem; font-weight:900; }
+.price-delta { margin-top:3px; color:#b45309; font-size:.66rem; font-weight:800; line-height:1.2; white-space:nowrap; }
+.price-delta.best { color:#047857; }
+.compare-vp { margin-top:5px; padding-top:4px; border-top:1px dashed var(--table-border); font-size:.66rem; font-weight:900; line-height:1.15; }
+.compare-vp.vp-same { color:var(--text-muted); }
+.compare-vp.vp-low { color:#2563eb; }
+.compare-vp.vp-mid { color:#d97706; }
+.compare-vp.vp-high { color:#e11d48; }
+.compare-vp.vp-unavailable { color:var(--text-muted); opacity:.72; }
+.vp-difference-warning { display:inline-block; margin-left:5px; padding:1px 5px; border-radius:5px; color:#be123c; background:rgba(244,63,94,.10); font-size:.68rem; font-weight:900; }
 .missing-price { color:var(--text-muted); font-size:.88rem; font-weight:800; }
+.swipe-hint { margin:-1px 3px 7px; color:var(--primary-color); font-size:.7rem; font-weight:800; text-align:right; opacity:.88; }
+.price-data-helper { display:flex; align-items:center; justify-content:space-between; gap:6px; margin:-2px 2px 7px; }
+.price-data-helper .swipe-hint { flex:1; margin:0; text-align:left; }
+.price-data-refresh { min-height:30px; padding:3px 8px; border-radius:7px; border:1px solid var(--glass-border); background:var(--glass-bg-solid); color:var(--primary-color); font-size:.7rem; font-weight:800; white-space:nowrap; }
+.price-data-refresh:disabled { opacity:.58; }
 .rate-panel { border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); margin-top:8px; overflow:hidden; }
 .rate-panel summary { list-style:none; cursor:pointer; padding:10px; font-weight:750; font-size:.82rem; color:var(--text-main); min-height:42px; display:flex; align-items:center; justify-content:space-between; }
 .rate-panel summary::-webkit-details-marker { display:none; }
 .rate-editor { padding:0 10px 10px; }
 .rate-input-row { display:grid; grid-template-columns:auto 1fr auto; gap:6px; align-items:center; margin-bottom:7px; font-size:.82rem; font-weight:700; }
 .rate-input-row input { min-height:40px; border-radius:8px; font-size:16px !important; padding:6px 8px; }
-.rate-save-btn { width:100%; min-height:42px; background:var(--primary-color); color:white; border:none; }
+.rate-actions { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.rate-save-btn, .rate-refresh-btn { width:100%; min-height:40px; padding:6px; border-radius:8px; font-size:.78rem; font-weight:800; }
+.rate-save-btn { background:var(--primary-color); color:white; border:none; }
+.rate-refresh-btn { background:var(--glass-bg-solid); color:var(--primary-color); border:1px solid var(--primary-color); }
+.rate-refresh-btn:disabled { opacity:.58; }
+.rate-update-status { margin-top:7px; color:var(--text-muted); font-size:.7rem; font-weight:700; }
+.rate-update-status.success { color:#047857; }
+.rate-update-status.error { color:#be123c; }
+.rate-update-status.loading { color:var(--primary-color); }
+.rate-editor a { color:var(--primary-color); }
 .single-section-label { color:var(--text-muted); font-size:.75rem; font-weight:800; letter-spacing:.2px; margin:10px 2px 5px; }
 @media screen and (max-width: 430px) {
   .container { padding:8px; }
   .font-ctrl-bar { min-height:44px; }
   #country-control .font-ctrl-btn { min-width:0; padding:6px 7px; }
   .compare-card { padding:9px 7px; }
-  .compare-price-box { min-height:76px; padding-left:2px; padding-right:2px; }
+  .compare-price-box { min-height:108px; padding-left:2px; padding-right:2px; }
+  .product-item-inner { align-items:flex-start; }
+  .product-item-actions { flex-wrap:wrap; justify-content:flex-end; max-width:148px; }
 }
 
-/* 多國擴充：國家及貨幣按鈕在 iPhone 上橫向捲動，避免壓縮原有字體。 */
+/* 多區擴充：地區及貨幣按鈕在 iPhone 上橫向捲動，避免壓縮原有字體。 */
 .country-buttons-scroll, .currency-buttons-scroll, .compare-sort-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .country-buttons-scroll::-webkit-scrollbar, .currency-buttons-scroll::-webkit-scrollbar, .compare-sort-scroll::-webkit-scrollbar { display:none; }
 #country-control { align-items:center; }

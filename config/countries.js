@@ -1,4 +1,4 @@
-/* 國家與貨幣總設定。新增國家時只需在此加一項設定，再建立對應 data 檔。 */
+/* 地區與貨幣總設定。新增地區時只需在此加一項設定，再建立對應 data 檔。 */
 window.HBL_COUNTRY_CONFIGS = {
   "HK": {
     "code": "HK",
@@ -11,6 +11,7 @@ window.HBL_COUNTRY_CONFIGS = {
     "decimals": 2,
     "defaultTier": "標準價",
     "supportsVP": true,
+    "hasVPData": true,
     "supportsFreight": true,
     "showSpecialShortcuts": true,
     "tiers": [
@@ -63,6 +64,7 @@ window.HBL_COUNTRY_CONFIGS = {
     "decimals": 0,
     "defaultTier": "建議零售價",
     "supportsVP": true,
+    "hasVPData": true,
     "supportsFreight": false,
     "showSpecialShortcuts": false,
     "tiers": [
@@ -119,6 +121,7 @@ window.HBL_COUNTRY_CONFIGS = {
     "decimals": 0,
     "defaultTier": "標準小売価格",
     "supportsVP": false,
+    "hasVPData": false,
     "supportsFreight": false,
     "showSpecialShortcuts": false,
     "tiers": [
@@ -159,6 +162,38 @@ window.HBL_COUNTRY_CONFIGS = {
       "42%": "42%",
       "50%": "50%"
     }
+  },
+  "TH": {
+    "code": "TH",
+    "name": "泰國",
+    "flag": "🇹🇭",
+    "dataFile": "./data/thailand.js",
+    "currency": "฿",
+    "currencyCode": "THB",
+    "locale": "th-TH",
+    "decimals": 2,
+    "defaultTier": "建議零售價",
+    "supportsVP": false,
+    "hasVPData": true,
+    "supportsFreight": false,
+    "showSpecialShortcuts": false,
+    "tiers": [
+      ["建議零售價", "建議零售價"],
+      ["15%", "15%"],
+      ["25%", "25%"],
+      ["35%", "35%"],
+      ["42%", "42%"],
+      ["50%", "50%"],
+      ["cost", "成本價（50%）"]
+    ],
+    "compareTiers": {
+      "retail": "建議零售價",
+      "15%": "15%",
+      "25%": "25%",
+      "35%": "35%",
+      "42%": "42%",
+      "50%": "50%"
+    }
   }
 };
 
@@ -175,13 +210,20 @@ window.HBL_CURRENCY_META = {
     "label": "台幣 TWD",
     "locale": "zh-TW",
     "decimals": 0,
-    "ratePerHKD": 4.04
+    "ratePerHKD": 4.060717
   },
   "JPY": {
     "symbol": "¥",
     "label": "日圓 JPY",
     "locale": "ja-JP",
     "decimals": 0,
-    "ratePerHKD": 20.33
+    "ratePerHKD": 20.312473
+  },
+  "THB": {
+    "symbol": "฿",
+    "label": "泰銖 THB",
+    "locale": "th-TH",
+    "decimals": 2,
+    "ratePerHKD": 4.184015
   }
 };

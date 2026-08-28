@@ -1,4 +1,7 @@
-/* 香港產品與價格資料。日後改價只需修改本檔案。 */
+/* 香港產品與價格資料。日後改價只需修改本檔案。
+ * App 顯示欄位：標準價、銅級、銀級、金級、58%、50%。
+ * retail_price 只保留作原價參考；只改 retail_price 不會改變以上等級。
+ */
 window.HBL_COUNTRY_DATA = window.HBL_COUNTRY_DATA || {};
 window.HBL_COUNTRY_DATA.HK = {
   updatedAt: '2026-08-28',

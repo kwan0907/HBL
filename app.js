@@ -4,6 +4,9 @@ const COMPARISON_GROUPS = window.HBL_COMPARISON_GROUPS || [];
 const ALL_COUNTRIES = Object.keys(COUNTRY_CONFIGS);
 const ALL_CURRENCIES = Object.keys(CURRENCY_META);
 const BASE_CURRENCY = 'HKD';
+const FX_API_URL = 'https://open.er-api.com/v6/latest/HKD';
+const FX_REFRESH_INTERVAL = 24 * 60 * 60 * 1000;
+const FX_LAST_UPDATED_KEY = 'calcExchangeRatesLastUpdated';
 const countryState = Object.fromEntries(ALL_COUNTRIES.map(code => [code, {
   selected: [], tier1: COUNTRY_CONFIGS[code].defaultTier, tier2: '', includeFreight: false
 }]));
@@ -26,16 +29,15 @@ let candidateStockNos = new Set();
 let currentStrategy = 'accurate';
 let vpWorker = null;
 
-function countryCountLabel() {
-  const chinese = { 2:'兩國', 3:'三國', 4:'四國', 5:'五國', 6:'六國' };
-  return chinese[ALL_COUNTRIES.length] || ALL_COUNTRIES.length + '國';
+function regionCountLabel() {
+  const chinese = { 1:'單區', 2:'兩區', 3:'三區', 4:'四區', 5:'五區', 6:'六區' };
+  return chinese[ALL_COUNTRIES.length] || ALL_COUNTRIES.length + '區';
 }
 
-function loadScript(src) {
+function loadScript(src, fresh = false) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    // 自動在檔案網址後方加上當下時間，例如：hong-kong.js?v=1724834700000
-    script.src = src + '?v=' + new Date().getTime(); 
+    script.src = fresh ? src + (src.includes('?') ? '&' : '?') + 'fresh=' + Date.now() : src;
     script.onload = resolve;
     script.onerror = () => reject(new Error('無法載入：' + src));
     document.head.appendChild(script);
@@ -45,8 +47,42 @@ function loadScript(src) {
 async function loadCountryDataFiles() {
   window.HBL_COUNTRY_DATA = window.HBL_COUNTRY_DATA || {};
   for (const code of ALL_COUNTRIES) {
-    if (!window.HBL_COUNTRY_DATA[code]) await loadScript(COUNTRY_CONFIGS[code].dataFile);
-    if (!Array.isArray(window.HBL_COUNTRY_DATA[code]?.products)) throw new Error(code + ' 國家資料格式不正確');
+    if (!window.HBL_COUNTRY_DATA[code]) await loadScript(COUNTRY_CONFIGS[code].dataFile, true);
+    if (!Array.isArray(window.HBL_COUNTRY_DATA[code]?.products)) throw new Error(code + ' 地區資料格式不正確');
+  }
+}
+
+async function reloadCountryPriceData() {
+  const button = document.getElementById('price-data-refresh');
+  const backup = { ...(window.HBL_COUNTRY_DATA || {}) };
+  if (button) { button.disabled = true; button.textContent = '更新中…'; }
+  try {
+    saveCurrentCountryState();
+    window.HBL_COUNTRY_DATA = {};
+    for (const code of ALL_COUNTRIES) {
+      await loadScript(COUNTRY_CONFIGS[code].dataFile, true);
+      if (!Array.isArray(window.HBL_COUNTRY_DATA[code]?.products)) throw new Error(code + ' 地區資料格式不正確');
+    }
+    hydrateCountryProducts(currentCountry);
+    restoreCountrySelection();
+    refreshCountryUi();
+    if (getCountryConfig().supportsFreight && includeFreight) toggleFreight(true, false);
+    else updateFreightButtons(false);
+    initCategories();
+    updateProductDisplay();
+    filterProducts();
+    renderComparison();
+    showToast('✅ 已重新載入各區最新價目');
+  } catch (error) {
+    console.error('重新載入價目失敗', error);
+    window.HBL_COUNTRY_DATA = backup;
+    hydrateCountryProducts(currentCountry);
+    restoreCountrySelection();
+    refreshCountryUi();
+    updateProductDisplay();
+    showToast('未能更新價目，已保留目前版本');
+  } finally {
+    if (button) { button.disabled = false; button.textContent = '🔄 更新價目'; }
   }
 }
 
@@ -67,8 +103,8 @@ function renderDynamicControls() {
   document.getElementById('rate-editor-fields').innerHTML = ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY).map(code =>
     '<div class="rate-input-row"><span>1 ' + BASE_CURRENCY + ' =</span><input id="rate-' + code.toLowerCase() + '" type="number" inputmode="decimal" step="0.0001"><span>' + code + '</span></div>'
   ).join('');
-  document.getElementById('mode-compare-btn').textContent = '🌍 ' + countryCountLabel() + '格價';
-  document.getElementById('compare-panel-title').textContent = '🌍 ' + countryCountLabel() + '產品格價';
+  document.getElementById('mode-compare-btn').textContent = '🌍 ' + regionCountLabel() + '格價';
+  document.getElementById('compare-panel-title').textContent = '🌍 ' + regionCountLabel() + '產品格價';
 }
 
 function getCountryConfig() { return COUNTRY_CONFIGS[currentCountry]; }
@@ -108,6 +144,41 @@ function formatConvertedPrice(amount, fromCountry = currentCountry, isPackage = 
   return formatCurrencyAmount(converted, targetCurrency, forceInteger);
 }
 
+function formatRateValue(value) {
+  return Number(value).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+}
+function formatRateTimestamp(timestamp) {
+  const date = new Date(Number(timestamp));
+  if (!Number.isFinite(date.getTime())) return '';
+  return date.toLocaleString('zh-HK', {
+    year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'
+  });
+}
+function setRateStatus(message, state = '') {
+  const status = document.getElementById('rate-update-status');
+  if (!status) return;
+  status.textContent = message;
+  status.className = 'rate-update-status' + (state ? ' ' + state : '');
+}
+function syncExchangeRateInputs() {
+  ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY).forEach(code => {
+    const input = document.getElementById('rate-' + code.toLowerCase());
+    if (input) input.value = formatRateValue(exchangeRates[code]);
+  });
+}
+function persistExchangeRates(updatedAt = Date.now()) {
+  try {
+    localStorage.setItem('calcExchangeRates', JSON.stringify(exchangeRates));
+    localStorage.setItem(FX_LAST_UPDATED_KEY, String(updatedAt));
+  } catch(e) {}
+}
+function redrawCurrencyPrices() {
+  refreshCurrencyUi();
+  updateProductDisplay();
+  filterProducts();
+  renderComparison();
+}
+
 function initCurrencySettings() {
   try {
     const savedRates = JSON.parse(localStorage.getItem('calcExchangeRates') || 'null');
@@ -120,11 +191,12 @@ function initCurrencySettings() {
     const savedCompare = localStorage.getItem('calcComparisonCurrency');
     if (ALL_CURRENCIES.includes(savedCompare)) comparisonCurrency = savedCompare;
   } catch(e) {}
-  ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY).forEach(code => {
-    const input = document.getElementById('rate-' + code.toLowerCase());
-    if (input) input.value = exchangeRates[code];
-  });
+  syncExchangeRateInputs();
   refreshCurrencyUi();
+  try {
+    const lastUpdated = Number(localStorage.getItem(FX_LAST_UPDATED_KEY));
+    if (lastUpdated > 0) setRateStatus('上次匯率更新：' + formatRateTimestamp(lastUpdated));
+  } catch(e) {}
 }
 function refreshCurrencyUi() {
   ['AUTO', ...ALL_CURRENCIES].forEach(code => {
@@ -142,7 +214,7 @@ function refreshCurrencyUi() {
     : '已統一換算為' + CURRENCY_META[singleCode].label + '；產品原始價格資料沒有改動。';
   document.getElementById('compare-currency-current').textContent = CURRENCY_META[comparisonCurrency].label;
   document.getElementById('rate-summary').textContent = ALL_CURRENCIES.map((code, index) =>
-    (index === 0 ? '1 ' + BASE_CURRENCY : Number(exchangeRates[code]).toFixed(4).replace(/0+$/,'').replace(/.$/,'') + ' ' + code)
+    (index === 0 ? '1 ' + BASE_CURRENCY : formatRateValue(exchangeRates[code]) + ' ' + code)
   ).join(' = ');
   refreshPackagePlanPrices();
 }
@@ -151,7 +223,7 @@ function setSingleCurrency(code) {
   singleCurrencyMode = code;
   try { localStorage.setItem('calcSingleCurrency', code); } catch(e) {}
   refreshCurrencyUi(); updateProductDisplay(); filterProducts();
-  showToast(code === 'AUTO' ? '已按國家顯示當地貨幣' : '全部價格已換算為' + CURRENCY_META[code].label);
+  showToast(code === 'AUTO' ? '已按地區顯示當地貨幣' : '全部價格已換算為' + CURRENCY_META[code].label);
 }
 function setComparisonCurrency(code) {
   if (!ALL_CURRENCIES.includes(code)) return;
@@ -167,9 +239,51 @@ function saveExchangeRates() {
     nextRates[code] = value;
   }
   exchangeRates = nextRates;
-  try { localStorage.setItem('calcExchangeRates', JSON.stringify(exchangeRates)); } catch(e) {}
-  refreshCurrencyUi(); updateProductDisplay(); filterProducts(); renderComparison();
+  const updatedAt = Date.now();
+  persistExchangeRates(updatedAt);
+  syncExchangeRateInputs(); redrawCurrencyPrices();
+  setRateStatus('手動匯率已儲存：' + formatRateTimestamp(updatedAt), 'success');
   showToast('匯率已更新，所有價格已重新換算');
+}
+async function refreshExchangeRatesFromApi(announce = true) {
+  const button = document.getElementById('rate-refresh-btn');
+  if (button) { button.disabled = true; button.textContent = '更新中…'; }
+  setRateStatus('正在取得最新參考匯率…', 'loading');
+  try {
+    const response = await fetch(FX_API_URL, { cache:'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    if (data?.result !== 'success' || data?.base_code !== BASE_CURRENCY || !data?.rates) throw new Error('匯率資料格式不正確');
+    const nextRates = { [BASE_CURRENCY]: 1 };
+    for (const code of ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY)) {
+      const rate = Number(data.rates[code]);
+      if (!(rate > 0)) throw new Error('缺少 ' + code + ' 匯率');
+      nextRates[code] = rate;
+    }
+    exchangeRates = nextRates;
+    const updatedAt = Number(data.time_last_update_unix) > 0
+      ? Number(data.time_last_update_unix) * 1000
+      : Date.now();
+    persistExchangeRates(updatedAt);
+    syncExchangeRateInputs(); redrawCurrencyPrices();
+    setRateStatus('自動匯率已更新：' + formatRateTimestamp(updatedAt), 'success');
+    if (announce) showToast('✅ 已取得最新匯率並重新格價');
+    return true;
+  } catch (error) {
+    console.warn('匯率自動更新失敗', error);
+    setRateStatus('自動更新失敗；目前保留原匯率，可手動輸入。', 'error');
+    if (announce) showToast('未能連線取得匯率，已保留原設定');
+    return false;
+  } finally {
+    if (button) { button.disabled = false; button.textContent = '🔄 取得最新匯率'; }
+  }
+}
+function maybeAutoRefreshExchangeRates() {
+  let lastUpdated = 0;
+  try { lastUpdated = Number(localStorage.getItem(FX_LAST_UPDATED_KEY)) || 0; } catch(e) {}
+  if (!lastUpdated || Date.now() - lastUpdated >= FX_REFRESH_INTERVAL) {
+    refreshExchangeRatesFromApi(false);
+  }
 }
 function refreshPackagePlanPrices() {
   document.querySelectorAll('.package-plan-btn').forEach(btn => {
@@ -190,10 +304,10 @@ function switchWorkspace(mode, announce = true) {
   document.getElementById('compare-workspace').style.display = mode === 'compare' ? 'block' : 'none';
   document.getElementById('mode-single-btn').classList.toggle('active', mode === 'single');
   document.getElementById('mode-compare-btn').classList.toggle('active', mode === 'compare');
-  document.getElementById('app-title').lastChild.textContent = mode === 'compare' ? 'HBL ' + countryCountLabel() + '產品格價' : 'HBL ' + getCountryConfig().name + '產品計算器';
+  document.getElementById('app-title').lastChild.textContent = mode === 'compare' ? 'HBL ' + regionCountLabel() + '產品格價' : 'HBL ' + getCountryConfig().name + '產品計算器';
   document.title = mode === 'compare' ? 'HBL ' + ALL_COUNTRIES.map(code => COUNTRY_CONFIGS[code].name).join('／') + '格價' : 'HBL ' + getCountryConfig().name + '產品計算器';
   if (mode === 'compare') renderComparison(); else updateProductDisplay();
-  if (announce) showToast(mode === 'compare' ? '已開啟' + countryCountLabel() + '格價' : '已返回單國計算');
+  if (announce) showToast(mode === 'compare' ? '已開啟' + regionCountLabel() + '格價' : '已返回單區計算');
 }
 function setCompareTier(tier) {
   if (!ALL_COUNTRIES.some(code => COUNTRY_CONFIGS[code].compareTiers?.[tier])) return;
@@ -226,6 +340,18 @@ function comparisonSearchText(group) {
     if (product) parts.push(product.stock_no, product.prod_name, product.prod_name_en);
     return parts;
   }, [group.label]).join(' ').toLowerCase();
+}
+function comparisonVp(data, country) {
+  if (!data || COUNTRY_CONFIGS[country]?.hasVPData === false) return null;
+  const vp = Number(data.product?.vp);
+  return Number.isFinite(vp) ? vp : null;
+}
+function comparisonVpClass(vp, minimum, maximum, differs) {
+  if (!Number.isFinite(vp)) return 'vp-unavailable';
+  if (!differs) return 'vp-same';
+  if (Math.abs(vp - minimum) < 0.01) return 'vp-low';
+  if (Math.abs(vp - maximum) < 0.01) return 'vp-high';
+  return 'vp-mid';
 }
 function renderComparison() {
   const container = document.getElementById('compare-results');
@@ -261,12 +387,27 @@ function renderComparison() {
     const prices = ALL_COUNTRIES.map(country => ({ country, data: comparisonPrice(group, country) }));
     const available = prices.filter(item => item.data && Number.isFinite(item.data.converted));
     const minimum = available.length ? Math.min(...available.map(item => item.data.converted)) : Infinity;
+    const maximum = available.length ? Math.max(...available.map(item => item.data.converted)) : -Infinity;
+    const spread = Number.isFinite(minimum) && Number.isFinite(maximum) ? maximum - minimum : null;
+    const vpValues = prices.map(({ country, data }) => comparisonVp(data, country)).filter(Number.isFinite);
+    const minimumVp = vpValues.length ? Math.min(...vpValues) : null;
+    const maximumVp = vpValues.length ? Math.max(...vpValues) : null;
+    const vpDiffers = vpValues.length > 1 && maximumVp - minimumVp > 0.01;
     const boxes = prices.map(({ country, data }) => {
-      if (!data) return '<div class="compare-price-box"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="missing-price">—</div></div>';
+      if (!data) return '<div class="compare-price-box"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="missing-price">—</div><div class="compare-vp vp-unavailable">VP —</div></div>';
       const cheapest = Math.abs(data.converted - minimum) < 0.01;
-      return '<div class="compare-price-box ' + (cheapest ? 'cheapest' : '') + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '') + '</div>';
+      const delta = Math.max(0, data.converted - minimum);
+      const vp = comparisonVp(data, country);
+      const vpClass = comparisonVpClass(vp, minimumVp, maximumVp, vpDiffers);
+      const vpText = Number.isFinite(vp) ? 'VP ' + vp.toFixed(2) : 'VP —';
+      const deltaHtml = cheapest
+        ? '<div class="price-delta best">最低價基準</div>'
+        : '<div class="price-delta">貴 +' + formatCurrencyAmount(delta, comparisonCurrency) + '</div>';
+      return '<div class="compare-price-box ' + (cheapest ? 'cheapest' : '') + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '') + deltaHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
     }).join('');
-    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">可比較 ' + available.length + ' 個國家／地區</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
+    const spreadText = Number.isFinite(spread) ? '・最高相差 ' + formatCurrencyAmount(spread, comparisonCurrency) : '';
+    const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';
+    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">可比較 ' + available.length + ' 個地區' + spreadText + vpWarning + '</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
   }).join('');
 }
 function updateTierSelectors() {
@@ -395,7 +536,7 @@ const getCopyCostStr = (price, days, servings) => {
 };
 
 function copyToClipboard() { if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可複製的產品'); return; } triggerHaptic('light'); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined); const hasProfit = cmp || hasPkgProfit; let modalHtml = `<div class="modal-overlay" id="copy-modal" style="display:flex; z-index: 2000;"><div class="modal"><div class="modal-title">📋 選擇複製資訊</div><div class="modal-content"><label class="copy-opt-label"><input type="checkbox" id="copy-opt-unitprice" checked> 單價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalprice" checked> 總價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-vp" checked> VP 分數</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數</label>`; if (hasProfit) modalHtml += `<label class="copy-opt-label"><input type="checkbox" id="copy-opt-profit" checked> 利潤</label>`; modalHtml += `</div><div class="modal-actions"><button onclick="triggerHaptic('light'); document.getElementById('copy-modal').remove()" style="padding: 8px 16px;">取消</button><button class="btn-primary" onclick="triggerHaptic('success'); executeCopy()" style="padding: 8px 16px;">確定複製</button></div></div></div>`; const oldModal = document.getElementById('copy-modal'); if (oldModal) oldModal.remove(); document.body.insertAdjacentHTML('beforeend', modalHtml); }
-function executeCopy() { const includeUnitPrice = document.getElementById('copy-opt-unitprice') ? document.getElementById('copy-opt-unitprice').checked : false; const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false; const includeVP = document.getElementById('copy-opt-vp') ? document.getElementById('copy-opt-vp').checked : false; const includeTotalVP = document.getElementById('copy-opt-totalvp') ? document.getElementById('copy-opt-totalvp').checked : false; const includeProfit = document.getElementById('copy-opt-profit') ? document.getElementById('copy-opt-profit').checked : false; const copyModal = document.getElementById('copy-modal'); if (copyModal) copyModal.remove(); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const now = new Date(); const locale = getCountryConfig().locale; const dateStr = now.toLocaleDateString(locale) + ' ' + now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }); let lines = ['📋 產品詳細計算', '國家／地區：' + getCountryConfig().flag + ' ' + getCountryConfig().name, '日期：' + dateStr, '等級：' + t1 + (cmp ? ' / ' + t2 : ''), '================================', '']; selectedProducts.forEach((p, i) => { const isPkg = p.type === 'package'; const price1 = p[t1], totalPrice1 = price1 * p.quantity, totalVP = p.vp * p.quantity; lines.push((i+1) + '. ' + p.prod_name + (isPkg ? '【套裝】' : '') + ' * ' + p.quantity); if (cmp) { const price2 = p[t2], totalPrice2 = price2 * p.quantity; let up, tp; if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; } else { up = Math.abs(price2 - price1); tp = up * p.quantity; } let parts1 = []; if (includeUnitPrice) parts1.push('單價：' + formatPrice(price1, isPkg) + getCopyCostStr(price1, p.days, p.servings)); if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  ')); let parts2 = []; if (includeUnitPrice) parts2.push('單價：' + formatPrice(price2, isPkg) + getCopyCostStr(price2, p.days, p.servings)); if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg)); if (parts2.length) lines.push('   ' + t2 + ' ' + parts2.join('  ')); if (includeProfit) { lines.push('   💰 利潤：' + formatProfit(up) + ' / 件 合計：' + formatProfit(tp)); } } else { let parts = []; if (includeUnitPrice) parts.push('單價：' + formatPrice(price1, isPkg) + getCopyCostStr(price1, p.days, p.servings)); if (includeTotalPrice) parts.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts.length) lines.push('   ' + parts.join('  ')); if (includeProfit && isPkg && p.fixedProfit !== undefined) { lines.push('   💰 固定利潤：' + formatProfit(p.fixedProfit) + ' / 件 合計：' + formatProfit(p.fixedProfit * p.quantity)); } } let vpParts = []; if (includeVP) vpParts.push('VP：' + p.vp.toFixed(2)); if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2)); if (vpParts.length) lines.push('   ' + vpParts.join('  ')); lines.push(''); }); const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0); const totalP1 = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0); const totalVP = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0); const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined); const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0); lines.push('================================', '📊 總計', '總數量：' + totalQty + ' 件'); if (includeTotalPrice) { lines.push('總金額（' + t1 + '）：' + formatPrice(totalP1, false)); if (cmp) { const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0); lines.push('總金額（' + t2 + '）：' + formatPrice(totalP2, false)); } } if (includeProfit && cmp) { const totalPr = selectedProducts.reduce((s, p) => { if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity; return s + Math.abs(p[t2] - p[t1]) * p.quantity; }, 0); lines.push('💰 總利潤：' + formatProfit(totalPr)); } if (includeTotalVP) { lines.push('總VP：' + totalVP.toFixed(2)); } if (includeProfit && pkgProds.length > 0) { lines.push('', '💰 套裝固定利潤'); pkgProds.forEach(p => lines.push('  ' + p.prod_name + ' * ' + p.quantity + '：' + formatProfit(p.fixedProfit * p.quantity))); lines.push('  套裝利潤合計：' + formatProfit(totalPkgPr)); } const text = lines.join('\n'); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => showToast('✅ 全資料已複製！')).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); } }
+function executeCopy() { const includeUnitPrice = document.getElementById('copy-opt-unitprice') ? document.getElementById('copy-opt-unitprice').checked : false; const includeTotalPrice = document.getElementById('copy-opt-totalprice') ? document.getElementById('copy-opt-totalprice').checked : false; const includeVP = document.getElementById('copy-opt-vp') ? document.getElementById('copy-opt-vp').checked : false; const includeTotalVP = document.getElementById('copy-opt-totalvp') ? document.getElementById('copy-opt-totalvp').checked : false; const includeProfit = document.getElementById('copy-opt-profit') ? document.getElementById('copy-opt-profit').checked : false; const copyModal = document.getElementById('copy-modal'); if (copyModal) copyModal.remove(); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const now = new Date(); const locale = getCountryConfig().locale; const dateStr = now.toLocaleDateString(locale) + ' ' + now.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }); let lines = ['📋 產品詳細計算', '地區：' + getCountryConfig().flag + ' ' + getCountryConfig().name, '日期：' + dateStr, '等級：' + t1 + (cmp ? ' / ' + t2 : ''), '================================', '']; selectedProducts.forEach((p, i) => { const isPkg = p.type === 'package'; const price1 = p[t1], totalPrice1 = price1 * p.quantity, totalVP = p.vp * p.quantity; lines.push((i+1) + '. ' + p.prod_name + (isPkg ? '【套裝】' : '') + ' * ' + p.quantity); if (cmp) { const price2 = p[t2], totalPrice2 = price2 * p.quantity; let up, tp; if (isPkg && p.fixedProfit !== undefined) { up = p.fixedProfit; tp = up * p.quantity; } else { up = Math.abs(price2 - price1); tp = up * p.quantity; } let parts1 = []; if (includeUnitPrice) parts1.push('單價：' + formatPrice(price1, isPkg) + getCopyCostStr(price1, p.days, p.servings)); if (includeTotalPrice) parts1.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts1.length) lines.push('   ' + t1 + ' ' + parts1.join('  ')); let parts2 = []; if (includeUnitPrice) parts2.push('單價：' + formatPrice(price2, isPkg) + getCopyCostStr(price2, p.days, p.servings)); if (includeTotalPrice) parts2.push('總價：' + formatPrice(totalPrice2, isPkg)); if (parts2.length) lines.push('   ' + t2 + ' ' + parts2.join('  ')); if (includeProfit) { lines.push('   💰 利潤：' + formatProfit(up) + ' / 件 合計：' + formatProfit(tp)); } } else { let parts = []; if (includeUnitPrice) parts.push('單價：' + formatPrice(price1, isPkg) + getCopyCostStr(price1, p.days, p.servings)); if (includeTotalPrice) parts.push('總價：' + formatPrice(totalPrice1, isPkg)); if (parts.length) lines.push('   ' + parts.join('  ')); if (includeProfit && isPkg && p.fixedProfit !== undefined) { lines.push('   💰 固定利潤：' + formatProfit(p.fixedProfit) + ' / 件 合計：' + formatProfit(p.fixedProfit * p.quantity)); } } let vpParts = []; if (includeVP) vpParts.push('VP：' + p.vp.toFixed(2)); if (includeTotalVP) vpParts.push('總VP：' + totalVP.toFixed(2)); if (vpParts.length) lines.push('   ' + vpParts.join('  ')); lines.push(''); }); const totalQty = selectedProducts.reduce((s, p) => s + p.quantity, 0); const totalP1 = selectedProducts.reduce((s, p) => s + p[t1] * p.quantity, 0); const totalVP = selectedProducts.reduce((s, p) => s + p.vp * p.quantity, 0); const pkgProds = selectedProducts.filter(p => p.type === 'package' && p.fixedProfit !== undefined); const totalPkgPr = pkgProds.reduce((s, p) => s + p.fixedProfit * p.quantity, 0); lines.push('================================', '📊 總計', '總數量：' + totalQty + ' 件'); if (includeTotalPrice) { lines.push('總金額（' + t1 + '）：' + formatPrice(totalP1, false)); if (cmp) { const totalP2 = selectedProducts.reduce((s, p) => s + p[t2] * p.quantity, 0); lines.push('總金額（' + t2 + '）：' + formatPrice(totalP2, false)); } } if (includeProfit && cmp) { const totalPr = selectedProducts.reduce((s, p) => { if (p.type === 'package' && p.fixedProfit !== undefined) return s + p.fixedProfit * p.quantity; return s + Math.abs(p[t2] - p[t1]) * p.quantity; }, 0); lines.push('💰 總利潤：' + formatProfit(totalPr)); } if (includeTotalVP) { lines.push('總VP：' + totalVP.toFixed(2)); } if (includeProfit && pkgProds.length > 0) { lines.push('', '💰 套裝固定利潤'); pkgProds.forEach(p => lines.push('  ' + p.prod_name + ' * ' + p.quantity + '：' + formatProfit(p.fixedProfit * p.quantity))); lines.push('  套裝利潤合計：' + formatProfit(totalPkgPr)); } const text = lines.join('\n'); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => showToast('✅ 全資料已複製！')).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); } }
 function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); showToast('✅ 成功複製！'); } catch (e) { showToast('複製失敗，請手動選取'); } document.body.removeChild(ta); }
 function copyCartSimple() { triggerHaptic('light'); if (selectedProducts.length === 0) { showToast('購物車是空的'); return; } const t1 = document.getElementById('pricing-tier1').value; let lines = ['🛒 購物車清單', '====================']; let tQty = 0, tPrice = 0, tVP = 0; selectedProducts.forEach(p => { const isPkg = p.type === 'package'; const pr = p[t1]; lines.push(`- ${p.prod_name}${isPkg ? ' (套裝)' : ''} * ${p.quantity}`); tQty += p.quantity; tPrice += pr * p.quantity; tVP += p.vp * p.quantity; }); lines.push('===================='); lines.push(`總數量: ${tQty} 件`); lines.push(`總VP分數: ${tVP.toFixed(2)}`); lines.push(`💰 總計價錢: ${formatPrice(tPrice, false)}`); const text = lines.join('\n'); if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(() => { triggerHaptic('success'); showToast('✅ 購物車已複製！'); }).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); } }
 
@@ -409,7 +550,40 @@ function saveCandidates() { try { localStorage.setItem('calcCandidates_' + curre
 function loadCandidates() { try { let saved = localStorage.getItem('calcCandidates_' + currentCountry); if (!saved && currentCountry === 'HK') saved = localStorage.getItem('calcCandidates'); candidateStockNos = saved ? new Set(JSON.parse(saved)) : new Set(); } catch(e) { candidateStockNos = new Set(); } updateCandidateCount(); }
 function updateCandidateCount() { const btn = document.getElementById('btn-vp-assistant'); if (btn) btn.innerHTML = `🎯 VP 推薦助手 (${candidateStockNos.size})`; }
 
-function filterProducts() { const searchText = document.getElementById('product-search').value.toLowerCase(); const t1 = document.getElementById('pricing-tier1').value; const productList = document.getElementById('product-list'); productList.innerHTML = ''; const filtered = productsData.filter(p => { const matchSearch = !searchText || p.stock_no.toLowerCase().includes(searchText) || p.prod_name.toLowerCase().includes(searchText) || p.prod_name_en.toLowerCase().includes(searchText); const matchCat = currentCategory === 'all' || p.category === currentCategory; return matchSearch && matchCat; }); filtered.sort((a, b) => a.prod_seq - b.prod_seq); filtered.forEach(product => { const item = document.createElement('div'); const isPkg = product.type === 'package'; item.className = 'product-item' + (isPkg ? ' product-item-package' : ''); const sel = selectedProducts.find(p => p.stock_no === product.stock_no); const badge = sel ? `<span class="selected-badge">✓ ${sel.quantity}</span>` : ''; const price = formatPrice(product[t1], isPkg); const isCand = candidateStockNos.has(product.stock_no); item.innerHTML = `<div class="product-item-inner"><div class="product-item-left">${badge}<strong>${product.stock_no}</strong> - ${product.prod_name}${isPkg ? ` <span style="color:var(--color-pkg);font-size:0.78em;">[套裝]</span>` : ''}</div><div style="display:flex; gap:6px; align-items:center;"><button class="btn-candidate ${isCand ? 'active' : ''}" onclick="event.stopPropagation(); toggleCandidate('${product.stock_no}')">${isCand ? '✓ 候選' : '🔖'}</button><div class="product-item-price">${price}</div></div></div>`; item.onclick = () => addProduct(product); productList.appendChild(item); }); if (filtered.length === 0) { const el = document.createElement('div'); el.className = 'product-item'; el.style.color = 'var(--text-muted)'; el.style.fontStyle = 'italic'; el.style.textAlign = 'center'; el.textContent = '沒有找到符合條件的產品'; productList.appendChild(el); } }
+function filterProducts() {
+  const searchText = document.getElementById('product-search').value.toLowerCase();
+  const t1 = document.getElementById('pricing-tier1').value;
+  const productList = document.getElementById('product-list');
+  productList.innerHTML = '';
+  const filtered = productsData.filter(p => {
+    const matchSearch = !searchText || p.stock_no.toLowerCase().includes(searchText) || p.prod_name.toLowerCase().includes(searchText) || p.prod_name_en.toLowerCase().includes(searchText);
+    const matchCat = currentCategory === 'all' || p.category === currentCategory;
+    return matchSearch && matchCat;
+  });
+  filtered.sort((a, b) => a.prod_seq - b.prod_seq);
+  filtered.forEach(product => {
+    const item = document.createElement('div');
+    const isPkg = product.type === 'package';
+    item.className = 'product-item' + (isPkg ? ' product-item-package' : '');
+    const sel = selectedProducts.find(p => p.stock_no === product.stock_no);
+    const badge = sel ? `<span class="selected-badge">✓ ${sel.quantity}</span>` : '';
+    const price = formatPrice(product[t1], isPkg);
+    const isCand = candidateStockNos.has(product.stock_no);
+    const vpText = getCountryConfig().hasVPData === false ? 'VP —' : 'VP ' + Number(product.vp || 0).toFixed(2);
+    item.innerHTML = `<div class="product-item-inner"><div class="product-item-left">${badge}<strong>${product.stock_no}</strong> - ${product.prod_name}${isPkg ? ` <span style="color:var(--color-pkg);font-size:0.78em;">[套裝]</span>` : ''}</div><div class="product-item-actions"><span class="product-item-vp">${vpText}</span><button class="btn-candidate ${isCand ? 'active' : ''}" onclick="event.stopPropagation(); toggleCandidate('${product.stock_no}')">${isCand ? '✓ 候選' : '🔖'}</button><div class="product-item-price">${price}</div></div></div>`;
+    item.onclick = () => addProduct(product);
+    productList.appendChild(item);
+  });
+  if (filtered.length === 0) {
+    const el = document.createElement('div');
+    el.className = 'product-item';
+    el.style.color = 'var(--text-muted)';
+    el.style.fontStyle = 'italic';
+    el.style.textAlign = 'center';
+    el.textContent = '沒有找到符合條件的產品';
+    productList.appendChild(el);
+  }
+}
 
 function addProduct(product) { triggerHaptic('medium'); const existing = selectedProducts.find(p => p.stock_no === product.stock_no); if (existing) { existing.quantity += 1; showToast(`${product.prod_name} * ${existing.quantity}`); } else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(product.stock_no); showToast(`已添加：${product.prod_name}`); } updateProductDisplay(); filterProducts(); setTimeout(() => newlyAddedStockNos.clear(), 400); }
 function addBigMealCombo() { triggerHaptic('light'); showConfirmDialog('確定要快捷添加「大餐四寶」到購物車嗎？', () => { triggerHaptic('success'); const stockNos = ["0079", "0210", "0111", "0130"]; let added = false; stockNos.forEach(stockNo => { const product = productsData.find(p => p.stock_no === stockNo); if (product) { const existing = selectedProducts.find(p => p.stock_no === stockNo); if (existing) { existing.quantity += 1; } else { selectedProducts.push({ ...product, quantity: 1 }); newlyAddedStockNos.add(stockNo); } added = true; } }); if (added) { updateProductDisplay(); showToast('🍽️ 已成功添加：大餐四寶 (4件獨立產品)'); setTimeout(() => newlyAddedStockNos.clear(), 400); } }); }
@@ -575,10 +749,11 @@ window.onload = async function () {
     initPWA(); initFontSize(); initCurrencySettings(); initCountry(); loadCandidates();
     initCategories(); initVpWorker(); switchView('table'); updateProductDisplay();
     switchWorkspace('single', false); renderComparison(); checkNewProductNotification();
+    maybeAutoRefreshExchangeRates();
     document.addEventListener('touchend', function (e) { const btn = e.target.closest('button'); if (btn) setTimeout(() => btn.blur(), 50); }, { passive:true });
   } catch (error) {
     console.error(error);
     document.getElementById('app-title').lastChild.textContent = 'HBL 資料載入失敗';
-    showToast('國家價格資料載入失敗，請檢查資料檔案');
+    showToast('地區價格資料載入失敗，請檢查資料檔案');
   }
 };

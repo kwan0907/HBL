@@ -1,4 +1,4 @@
-/* 同類產品對照表。只有需要跨國格價時才要加入產品編號。 */
+/* 同類產品對照表。只有需要跨區格價時才要加入產品編號。 */
 window.HBL_COMPARISON_GROUPS = [
   {
     "id": "f1-vanilla",
@@ -33,34 +33,39 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "F1 Select 精選植物配方－香草",
     "HK": "072K",
     "TW": "072K",
-    "JP": "083K"
+    "JP": "083K",
+    "TH": "072K"
   },
   {
     "id": "protein-powder",
     "label": "優質蛋白粉",
     "HK": "0242",
     "TW": "0242",
-    "JP": "171K"
+    "JP": "171K",
+    "TH": "171K"
   },
   {
     "id": "multivitamin",
     "label": "多種維他命／草維錠",
     "HK": "3115",
     "TW": "3122",
-    "JP": "3114"
+    "JP": "3114",
+    "TH": "3122"
   },
   {
     "id": "herbal-tea-original",
     "label": "草本濃縮速溶茶－原味",
     "HK": "0106",
     "TW": "0106",
-    "JP": "0106"
+    "JP": "0106",
+    "TH": "0106"
   },
   {
     "id": "aloe-mango",
     "label": "蘆薈飲－芒果味",
     "TW": "1065",
-    "JP": "1065"
+    "JP": "1065",
+    "TH": "1065"
   },
   {
     "id": "aloe-grape",
@@ -80,14 +85,16 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "營養纖維粉－蘋果味",
     "HK": "2864",
     "TW": "2864",
-    "JP": "2864"
+    "JP": "2864",
+    "TH": "2864"
   },
   {
     "id": "probiotic",
     "label": "益生菌",
     "HK": "1829",
     "TW": "1829",
-    "JP": "1829"
+    "JP": "1829",
+    "TH": "1829"
   },
   {
     "id": "niteworks",
@@ -101,7 +108,8 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "Cell-U-Loss 細喜／消脂片",
     "HK": "0111",
     "TW": "0111",
-    "JP": "0111"
+    "JP": "0111",
+    "TH": "0111"
   },
   {
     "id": "tri-shield",
@@ -115,14 +123,16 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "深海魚油 Herbalifeline",
     "HK": "0065",
     "TW": "0065",
-    "JP": "0065"
+    "JP": "0065",
+    "TH": "0065"
   },
   {
     "id": "calcium",
     "label": "複合鈣片 Xtra-Cal",
     "HK": "0565",
     "TW": "0565",
-    "JP": "0174"
+    "JP": "0174",
+    "TH": "0020"
   },
   {
     "id": "joint-support",
@@ -150,27 +160,31 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "CR7 運動補水飲",
     "HK": "1463",
     "TW": "1463",
-    "JP": "1463"
+    "JP": "1463",
+    "TH": "1463"
   },
   {
     "id": "h24-f1-sport",
     "label": "H24 Formula 1 Sport",
     "HK": "1457",
     "TW": "1457",
-    "JP": "1412"
+    "JP": "1412",
+    "TH": "1457"
   },
   {
     "id": "h24-rebuild",
     "label": "H24 Rebuild Strength",
     "HK": "1417",
     "TW": "1459",
-    "JP": "1459"
+    "JP": "1459",
+    "TH": "1459"
   },
   {
     "id": "protein-bar-vanilla",
     "label": "蛋白棒－香草杏仁",
     "HK": "0258",
-    "JP": "0258"
+    "JP": "0258",
+    "TH": "0258"
   },
   {
     "id": "protein-bar-citrus",
@@ -183,7 +197,46 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "蛋白冰咖啡－摩卡",
     "HK": "011K",
     "TW": "011K",
-    "JP": "011K"
+    "JP": "011K",
+    "TH": "011K"
+  },
+  {
+    "id": "coffee-latte",
+    "label": "蛋白冰咖啡－拿鐵",
+    "TW": "012K",
+    "JP": "012K",
+    "TH": "012K"
+  },
+  {
+    "id": "rose-guard",
+    "label": "露思抗氧化 Rose Guard",
+    "HK": "0139",
+    "TH": "0139"
+  },
+  {
+    "id": "vitamin-mask-moisturizing",
+    "label": "維他命面膜－保濕",
+    "HK": "111K",
+    "TW": "111K",
+    "TH": "111K"
+  },
+  {
+    "id": "tang-kuei",
+    "label": "當歸錠 Tang Kuei",
+    "TW": "0566",
+    "TH": "0566"
+  },
+  {
+    "id": "beta-glucan",
+    "label": "β-葡聚糖／倍他營養飲",
+    "TW": "0267",
+    "TH": "0267"
+  },
+  {
+    "id": "herbal-tea-honey-ginger",
+    "label": "草本茶－蜜薑",
+    "TW": "2121",
+    "TH": "2121"
   },
   {
     "id": "nrg",
@@ -260,21 +313,30 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "蘆薈滋潤沐浴露",
     "HK": "2561",
     "TW": "2561",
-    "JP": "2561"
+    "JP": "2561",
+    "TH": "2561"
   },
   {
     "id": "aloe-gel",
     "label": "蘆薈護膚凝露",
     "HK": "2562",
     "TW": "2562",
-    "JP": "2562"
+    "JP": "2562",
+    "TH": "2562"
   },
   {
     "id": "body-cream",
     "label": "蘆薈滋潤乳霜／身體霜",
     "HK": "2563",
     "TW": "2563",
-    "JP": "250K"
+    "JP": "250K",
+    "TH": "2563"
+  },
+  {
+    "id": "citrus-cleanser",
+    "label": "柑橘磨砂潔面乳",
+    "TW": "0766",
+    "TH": "0766"
   },
   {
     "id": "schizandra",
@@ -298,20 +360,35 @@ window.HBL_COMPARISON_GROUPS = [
     "id": "shaker",
     "label": "奶昔搖搖杯／Shaker 400ml",
     "TW": "8574",
-    "JP": "295A"
+    "JP": "295A",
+    "TH": "295A"
+  },
+  {
+    "id": "measuring-spoons",
+    "label": "白色量匙 10支",
+    "JP": "297A",
+    "TH": "297A"
+  },
+  {
+    "id": "tablet-crusher",
+    "label": "碎藥器",
+    "JP": "314A",
+    "TH": "314A"
   },
   {
     "id": "supervisor-fee",
     "label": "督導年費",
     "TW": "0909",
     "JP": "0909",
-    "HK": "0909"
+    "HK": "0909",
+    "TH": "0909"
   },
   {
     "id": "distributor-fee",
     "label": "會員／直銷商年費",
     "HK": "9909",
     "TW": "9909",
-    "JP": "9909"
+    "JP": "9909",
+    "TH": "9909"
   }
 ];

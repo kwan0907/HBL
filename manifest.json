@@ -1,6 +1,6 @@
 {
-  "name": "HBL 多國產品格價計算器",
-  "short_name": "HBL 多國格價",
+  "name": "HBL 多區產品格價計算器",
+  "short_name": "HBL 多區格價",
   "id": "./",
   "start_url": "./",
   "scope": "./",
