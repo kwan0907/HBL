@@ -5,7 +5,7 @@
 <link rel="preload" as="image" href="./logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20260828-layout-v8">
+<link rel="manifest" href="./manifest.json?v=20260828-compact-v9">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,7 +16,7 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20260828-layout-v8">
+<link rel="stylesheet" href="./styles.css?v=20260828-compact-v9">
 </head>
 <body>
 <div class="container">
@@ -32,12 +32,10 @@
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
 
-<div class="mode-freight-row">
-  <div class="mode-switch" aria-label="功能模式">
-    <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單區價格</button>
-    <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 四區價格</button>
-  </div>
-  <div class="freight-switch" id="freight-control" aria-label="運費版本">
+<div class="mode-freight-row" id="mode-freight-row" role="group" aria-label="價格模式及運費版本">
+  <button class="mode-block active" id="mode-single-btn" onclick="switchWorkspace('single')">🧮 單區價格</button>
+  <button class="mode-block" id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 四區價格</button>
+  <div class="freight-switch mode-block" id="freight-control" aria-label="運費版本">
     <span class="freight-inline-label">運費</span>
     <button class="font-ctrl-btn active" id="freight-normal" onclick="toggleFreight(false)">正常</button>
     <button class="font-ctrl-btn" id="freight-included" onclick="toggleFreight(true)">含運</button>
@@ -84,10 +82,7 @@
   </div>
 </div>
 <details class="package-plans-section compact-package-plans" id="hk-package-plans">
-  <summary class="package-plans-title">
-    <span>🏃 套裝計畫（價格不受等級影響）</span>
-    <span class="package-toggle-arrow">⌄</span>
-  </summary>
+  <summary class="package-plans-title"><span>🏃 套裝計畫（價格不受等級影響）</span><span class="package-toggle-arrow">⌄</span></summary>
   <div class="package-plans-grid">
     <button class="package-plan-btn" onclick="addPackagePlan('PKG1')"><div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">HK$1,369</span></div><div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 HK$553.5</span></div></button>
     <button class="package-plan-btn" onclick="addPackagePlan('PKG2')"><div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">HK$2,177</span></div><div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 HK$929</span></div></button>
@@ -95,8 +90,8 @@
     <button class="package-plan-btn" onclick="addPackagePlan('PKG4')"><div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">HK$9,998</span></div><div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 HK$3,188</span></div></button>
   </div>
 </details>
-<div class="shortcut-section" id="hk-big-meal-shortcut"
-  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)</button>
+<div class="shortcut-section" id="hk-big-meal-shortcut" style="margin-bottom: 10px;">
+  <button class="btn-add-product big-meal-shortcut-btn" onclick="addBigMealCombo()">🍽️ 快捷添加：大餐四寶（美纖、甲殼、消脂、抗脂）</button>
 </div>
 <div class="product-selection" style="display: flex; flex-direction: column; gap: 6px;">
   <button class="btn-add-product" onclick="triggerHaptic('light'); openSearchModal()">🔍 搜尋/管理候選產品</button>
@@ -256,8 +251,8 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20260828-layout-v8"></script>
-<script src="./config/comparison-map.js?v=20260828-layout-v8"></script>
-<script src="./app.js?v=20260828-layout-v8"></script>
+<script src="./config/countries.js?v=20260828-compact-v9"></script>
+<script src="./config/comparison-map.js?v=20260828-compact-v9"></script>
+<script src="./app.js?v=20260828-compact-v9"></script>
 </body>
 </html>

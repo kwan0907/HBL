@@ -559,7 +559,10 @@ function refreshCountryUi() {
 }
 function updateFreightVisibility() {
   const control = document.getElementById('freight-control');
-  if (control) control.style.display = currentWorkspace === 'single' && getCountryConfig().supportsFreight ? 'flex' : 'none';
+  const row = document.getElementById('mode-freight-row');
+  const visible = currentWorkspace === 'single' && getCountryConfig().supportsFreight;
+  if (control) control.style.display = visible ? 'flex' : 'none';
+  if (row) row.classList.toggle('freight-hidden', !visible);
 }
 function switchCountry(country, announce = true) {
   if (!COUNTRY_CONFIGS[country] || country === currentCountry) return;

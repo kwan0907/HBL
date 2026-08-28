@@ -85,11 +85,17 @@ select { -webkit-appearance: none; background-image: url("data:image/svg+xml;cha
 .btn-copy:hover { background: var(--copy-hover) !important; color: white !important; }
 .btn-add-product { width: 100%; padding: 10px; font-size: 0.95rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; border: none; background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
 .btn-add-product:hover { opacity: 0.9; color: white !important; }
-.btn-candidate { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: var(--glass-item-bg); color: var(--text-muted); border: 1px solid var(--glass-border); }
+.btn-candidate { padding:3px 6px; border-radius:6px; font-size:.7rem; font-weight:700; background:var(--glass-item-bg); color:var(--text-muted); border:1px solid var(--glass-border); white-space:nowrap; }
 .btn-candidate.active { background: var(--vp-assistant-color); color: white; border-color: var(--vp-assistant-hover); }
 .package-plans-section { margin-bottom: 8px; padding: 8px 10px; border-radius: 10px; background: var(--color-pkg-bg); border: 1px solid var(--color-pkg-border); }
 .package-plans-title { font-size: 0.85rem; font-weight: 700; color: var(--color-pkg); margin-bottom: 6px; }
 .package-plans-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.compact-package-plans { overflow:hidden; }
+.compact-package-plans > summary { display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; list-style:none; user-select:none; -webkit-tap-highlight-color:transparent; margin-bottom:0; }
+.compact-package-plans > summary::-webkit-details-marker { display:none; }
+.compact-package-plans .package-plans-grid { margin-top:8px; }
+.package-toggle-arrow { flex-shrink:0; font-size:1rem; transition:transform .2s ease; }
+.compact-package-plans[open] .package-toggle-arrow { transform:rotate(180deg); }
 .package-plan-btn { padding: 6px 8px; background: var(--color-pkg); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-align: left; display: flex; flex-direction: column; gap: 2px; font-weight: 600; box-shadow: 0 2px 4px rgba(124, 58, 237, 0.15); }
 .package-plan-btn:hover { background: #6d28d9 !important; color: white !important; }
 .package-plan-btn:active { background: #5b21b6 !important; color: white !important; transform: scale(0.98); }
@@ -173,15 +179,15 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .btn-bulk.add { border-color: var(--vp-assistant-color); color: var(--vp-assistant-color); }
 .btn-bulk.remove { border-color: var(--clear-text); color: var(--clear-text); }
 .btn-bulk:hover { opacity: 0.9; }
-.product-list-modal { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 10px; }
+.product-list-modal { overflow-y:auto; -webkit-overflow-scrolling:touch; flex:1; min-height:0; display:flex; flex-direction:column; padding:0 6px; }
 .product-list-modal::before { content: ''; flex: 1 1 0; }
-.product-item { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--table-border); background: transparent; transition: background 0.15s; font-weight: 600; border-radius: 8px; margin-top: 6px; }
+.product-item { min-height:42px; padding:6px 8px; cursor:pointer; border-bottom:1px solid var(--table-border); background:transparent; transition:background .15s; font-weight:600; border-radius:6px; margin-top:2px; line-height:1.2; }
 .product-item:hover { background: var(--table-row-hover); }
 .product-item-inner { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
-.product-item-left  { flex: 1; min-width: 0; }
-.product-item-actions { display:flex; gap:5px; align-items:center; flex-shrink:0; }
-.product-item-vp { font-size:.68em; color:var(--text-muted); font-weight:800; white-space:nowrap; }
-.product-item-price { font-size: 0.85em; color: var(--primary-color); font-weight: 700; background: var(--glass-item-bg); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0; }
+.product-item-left  { flex:1; min-width:0; font-size:.8rem; }
+.product-item-actions { display:flex; gap:3px; align-items:center; flex-shrink:0; }
+.product-item-vp { font-size:.64em; color:var(--text-muted); font-weight:800; white-space:nowrap; }
+.product-item-price { font-size:.76em; color:var(--primary-color); font-weight:700; background:var(--glass-item-bg); padding:2px 5px; border-radius:6px; border:1px solid var(--glass-border); flex-shrink:0; white-space:nowrap; }
 .selected-badge { display: inline-block; background: var(--primary-color); color: white; font-size: 0.68em; padding: 2px 6px; border-radius: 6px; margin-right: 4px; vertical-align: middle; white-space: nowrap; font-weight: 700; }
 .product-item-package { background: var(--color-pkg-bg); border-left: 3px solid var(--color-pkg); }
 .product-item-package:hover  { background: var(--color-pkg-border); }
@@ -200,13 +206,16 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
 
 /* 多區格價與 iPhone 16 Pro 操作優化：保留原字體級別，只改善分組與觸控範圍 */
-.mode-freight-row { display:flex; align-items:stretch; gap:5px; margin-bottom:6px; }
-.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:3px; flex:1 1 auto; min-width:0; padding:2px; margin:0; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
-.mode-switch button { min-height:34px; padding:4px 6px; border:none; background:transparent; color:var(--text-muted); font-size:0.78rem; border-radius:7px; }
-.mode-switch button.active { background:var(--primary-color); color:white; box-shadow:0 2px 8px rgba(79,70,229,.22); }
-.freight-switch { display:flex; align-items:center; gap:3px; flex:0 0 auto; padding:2px 3px; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
-.freight-inline-label { color:var(--primary-color); font-size:.7rem; font-weight:800; white-space:nowrap; }
-.freight-switch .font-ctrl-btn { min-width:36px; min-height:32px; padding:3px 5px; font-size:.72rem; }
+.mode-freight-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:stretch; gap:5px; margin-bottom:6px; }
+.mode-freight-row.freight-hidden { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.mode-block { min-width:0; min-height:38px; margin:0; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
+button.mode-block { padding:4px 3px; color:var(--text-muted); font-size:.76rem; }
+button.mode-block.active { background:var(--primary-color); color:white; border-color:var(--primary-color); box-shadow:0 2px 8px rgba(79,70,229,.22); }
+.freight-switch { display:flex; align-items:center; justify-content:center; gap:3px; padding:2px 3px; }
+.freight-inline-label { color:var(--primary-color); font-size:.66rem; font-weight:800; white-space:nowrap; }
+.freight-switch .font-ctrl-btn { flex:1 1 0; min-width:0; min-height:31px; padding:2px 3px; font-size:.68rem; }
+.shortcut-section { overflow:visible; }
+.big-meal-shortcut-btn { min-height:44px; padding:8px 10px !important; line-height:1.25; white-space:normal; color:white !important; background:linear-gradient(135deg,rgba(16,185,129,.95),rgba(5,150,105,.95)) !important; box-shadow:0 4px 10px rgba(16,185,129,.25) !important; font-size:.9rem !important; }
 .currency-panel, .compare-control-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
 .control-card-title { font-weight:800; color:var(--text-heading); font-size:.9rem; margin-bottom:7px; display:flex; justify-content:space-between; align-items:center; }
 .currency-segment { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
@@ -275,62 +284,27 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @media screen and (max-width: 430px) {
   .container { padding:8px; }
   .title-font-controls .font-ctrl-btn { min-width:29px; padding-left:4px; padding-right:4px; }
-  .freight-inline-label { display:none; }
-  .mode-switch button { padding-left:3px; padding-right:3px; font-size:.73rem; }
+  button.mode-block { font-size:.72rem; }
   .font-ctrl-bar { min-height:44px; }
-  #country-control .font-ctrl-btn { min-width:0; padding:6px 7px; }
+  #country-control .font-ctrl-btn { padding:5px 4px; }
   .compare-card { padding:9px 7px; }
   .compare-price-box { min-height:108px; padding-left:2px; padding-right:2px; }
-  .product-item-inner { align-items:flex-start; }
-  .product-item-actions { flex-wrap:wrap; justify-content:flex-end; max-width:148px; }
+  .product-item-inner { align-items:center; gap:4px; }
+  .product-item-actions { flex-wrap:nowrap; justify-content:flex-end; max-width:none; }
 }
 
 /* 多區擴充：地區及貨幣按鈕在 iPhone 上橫向捲動，避免壓縮原有字體。 */
 .country-buttons-scroll, .currency-buttons-scroll, .compare-sort-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .country-buttons-scroll::-webkit-scrollbar, .currency-buttons-scroll::-webkit-scrollbar, .compare-sort-scroll::-webkit-scrollbar { display:none; }
-#country-control { align-items:center; }
+#country-control { align-items:center; padding:5px 6px; }
+#country-control > .font-ctrl-label { flex:0 0 auto; padding-right:2px; }
 #country-buttons { flex:1; justify-content:flex-start; min-width:0; padding-bottom:2px; }
-#country-buttons .font-ctrl-btn { flex:1 0 88px; }
+#country-buttons .font-ctrl-btn { flex:0 0 72px; min-width:72px; padding:5px 4px; }
 .currency-buttons-scroll, .compare-sort-scroll { display:flex; gap:5px; width:100%; padding-bottom:2px; }
 .currency-buttons-scroll button, .compare-sort-scroll button { flex:1 0 96px; }
 .compare-country-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px; }
 .compare-country-grid { grid-template-columns:repeat(var(--country-count, 3), minmax(94px, 1fr)); min-width:calc(var(--country-count, 3) * 94px + (var(--country-count, 3) - 1) * 5px); }
 @media screen and (max-width:430px) {
-  #country-buttons .font-ctrl-btn { min-width:88px; padding:6px 7px; }
+  #country-buttons .font-ctrl-btn { min-width:72px; padding:5px 4px; }
   .currency-buttons-scroll button, .compare-sort-scroll button { min-width:96px; }
-}
-
-/* 香港套裝計畫折疊收納 */
-.compact-package-plans {
-  overflow: hidden;
-}
-
-.compact-package-plans > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  margin-bottom: 0;
-}
-
-.compact-package-plans > summary::-webkit-details-marker {
-  display: none;
-}
-
-.compact-package-plans .package-plans-grid {
-  margin-top: 8px;
-}
-
-.package-toggle-arrow {
-  flex-shrink: 0;
-  font-size: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.compact-package-plans[open] .package-toggle-arrow {
-  transform: rotate(180deg);
 }
