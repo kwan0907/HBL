@@ -299,3 +299,38 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   #country-buttons .font-ctrl-btn { min-width:88px; padding:6px 7px; }
   .currency-buttons-scroll button, .compare-sort-scroll button { min-width:96px; }
 }
+
+/* 香港套裝計畫折疊收納 */
+.compact-package-plans {
+  overflow: hidden;
+}
+
+.compact-package-plans > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  margin-bottom: 0;
+}
+
+.compact-package-plans > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compact-package-plans .package-plans-grid {
+  margin-top: 8px;
+}
+
+.package-toggle-arrow {
+  flex-shrink: 0;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.compact-package-plans[open] .package-toggle-arrow {
+  transform: rotate(180deg);
+}
