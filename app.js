@@ -34,7 +34,8 @@ function countryCountLabel() {
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = src;
+    // 自動在檔案網址後方加上當下時間，例如：hong-kong.js?v=1724834700000
+    script.src = src + '?v=' + new Date().getTime(); 
     script.onload = resolve;
     script.onerror = () => reject(new Error('無法載入：' + src));
     document.head.appendChild(script);
