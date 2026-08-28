@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="preload" as="image" href="./logo.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HBL 多國產品格價計算器</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="HBL 多國格價">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="./logo.svg">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="container">
+<h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 8px;">HBL 多國產品計算器</h1>
+<div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
+  <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
+</div>
+
+<!-- 字體控制列 -->
+<div class="font-ctrl-bar">
+  <span class="font-ctrl-label">🔠 字體</span>
+  <div class="font-ctrl-btns">
+    <button class="font-ctrl-btn" id="font-decrease-btn" onclick="changeFontSize(-1)">A－</button>
+    <span id="font-size-display">標準</span>
+    <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)">A＋</button>
+  </div>
+</div>
+
+<div class="mode-switch" aria-label="功能模式">
+  <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單國計算</button>
+  <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 多國格價</button>
+</div>
+
+<div id="single-country-workspace">
+<!-- 國家／地區切換列 -->
+<div class="font-ctrl-bar" id="country-control" style="margin-bottom: 6px;">
+  <span class="font-ctrl-label">🌏 國家／地區</span>
+  <div class="font-ctrl-btns country-buttons-scroll" id="country-buttons"></div>
+</div>
+
+<div class="currency-panel" id="single-currency-panel">
+  <div class="control-card-title"><span>💱 顯示貨幣</span><span id="single-currency-current"></span></div>
+  <div class="currency-segment currency-buttons-scroll" id="single-currency-buttons"></div>
+  <div class="currency-note" id="single-currency-note">自動模式會按香港、台灣或日本顯示當地貨幣。</div>
+</div>
+
+<!-- 運費版本切換列 -->
+<div class="font-ctrl-bar" id="freight-control" style="margin-bottom: 6px;">
+  <span class="font-ctrl-label">💲 運費版本</span>
+  <div class="font-ctrl-btns">
+    <button class="font-ctrl-btn active" id="freight-normal" onclick="toggleFreight(false)">正常價</button>
+    <button class="font-ctrl-btn" id="freight-included" onclick="toggleFreight(true)">含運費價</button>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="tier-select">
+    <div class="price-controls">
+      <div class="price-control">
+        <label for="pricing-tier1">價格等級 1:</label>
+        <select id="pricing-tier1" onchange="triggerHaptic('light'); updatePricing()">
+          
+        </select>
+      </div>
+      <div class="price-control">
+        <label for="pricing-tier2">價格等級 2 (可選):</label>
+        <select id="pricing-tier2" onchange="triggerHaptic('light'); updatePricing()">
+          <option value="">不使用</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn-clear" onclick="confirmClearSelection()">清空選擇</button>
+    <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製全資料</button>
+  </div>
+</div>
+<div class="package-plans-section" id="hk-package-plans">
+  <div class="package-plans-title">🏃 套裝計畫（價格不受等級影響）</div>
+  <div class="package-plans-grid">
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG1')"><div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">HK$1,369</span></div><div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 HK$553.5</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG2')"><div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">HK$2,177</span></div><div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 HK$929</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG3')"><div class="plan-row1"><span class="plan-name">運動VIP計畫</span><span class="plan-price">HK$6,996</span></div><div class="plan-row2"><span class="plan-vp">347.9 VP</span><span class="plan-profit">💰 利潤 HK$2,338</span></div></button>
+    <button class="package-plan-btn" onclick="addPackagePlan('PKG4')"><div class="plan-row1"><span class="plan-name">運動VVIP計畫</span><span class="plan-price">HK$9,998</span></div><div class="plan-row2"><span class="plan-vp">501.45 VP</span><span class="plan-profit">💰 利潤 HK$3,188</span></div></button>
+  </div>
+</div>
+<div class="shortcut-section" id="hk-big-meal-shortcut" style="margin-bottom: 10px;">
+  <button class="btn-add-product" style="background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(5,150,105,0.95)); box-shadow: 0 4px 10px rgba(16,185,129,0.25); font-size: 0.9rem;" onclick="addBigMealCombo()">🍽️ 快捷添加：大餐四寶 (美纖、甲殼、消脂、抗脂)</button>
+</div>
+<div class="product-selection" style="display: flex; flex-direction: column; gap: 6px;">
+  <button class="btn-add-product" onclick="triggerHaptic('light'); openSearchModal()">🔍 搜尋/管理候選產品</button>
+  <button id="btn-vp-assistant" class="btn-add-product" style="background: linear-gradient(135deg, var(--vp-assistant-color), var(--vp-assistant-hover)); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);" onclick="openVpAssistantModal()">🎯 VP 推薦助手 (0)</button>
+</div>
+<div class="view-toggle">
+  <button id="table-view-btn" class="active" onclick="switchView('table')">表格視圖</button>
+  <button id="card-view-btn" onclick="switchView('card')">卡片視圖</button>
+  <button id="cart-view-btn" onclick="switchView('cart')">🛒 購物車</button>
+</div>
+<div id="table-container" class="table-container"><table id="selected-products"><thead id="product-table-head"></thead><tbody id="product-table-body"></tbody></table></div>
+<div id="product-cards" class="product-cards" style="display:none;"></div>
+<div id="cart-container" class="cart-container" style="display:none;">
+  <div id="cart-view-content" class="cart-scroll-area"></div>
+  <div id="cart-summary-section" class="cart-summary">
+    <div class="cart-summary-top-row">
+      <div>總產品數量: <span id="cart-total-qty" class="cart-summary-val">0</span></div>
+      <div>總VP分數: <span id="cart-total-vp" class="cart-summary-val">0.00</span></div>
+    </div>
+    <div class="cart-summary-bottom-row">
+      <div class="cart-summary-total">💰 <span id="cart-total-price">HK$0.00</span></div>
+      <button class="btn-copy-cart" onclick="copyCartSimple()">📋 複製購物車</button>
+    </div>
+  </div>
+</div>
+<div class="summary" id="summary"></div>
+</div>
+
+<div id="compare-workspace">
+  <div class="compare-control-card">
+    <div class="control-card-title"><span id="compare-panel-title">🌍 多國產品格價</span><span id="compare-result-count"></span></div>
+    <div class="compare-toolbar-row">
+      <div>
+        <label for="compare-tier">比較價格等級</label>
+        <select id="compare-tier" onchange="setCompareTier(this.value)">
+          <option value="retail">建議／標準零售價</option>
+          <option value="15%">15% 等級</option>
+          <option value="25%">25% 等級</option>
+          <option value="35%">35% 等級</option>
+          <option value="42%">42% 等級</option>
+          <option value="50%">50% 等級</option>
+        </select>
+      </div>
+      <div>
+        <label for="compare-search">搜尋同類產品</label>
+        <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
+      </div>
+    </div>
+    <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
+    <div class="currency-segment currency-buttons-scroll" id="compare-currency-buttons"></div>
+    <details class="rate-panel">
+      <summary><span>⚙️ 參考匯率設定</span><span id="rate-summary">1 HKD = 4.04 TWD = 20.33 JPY</span></summary>
+      <div class="rate-editor">
+        <div id="rate-editor-fields"></div>
+        <button class="rate-save-btn" onclick="saveExchangeRates()">儲存並重新格價</button>
+        <div class="compare-note">預設為 2026-08-28 中間參考價；實際付款匯率及手續費可能不同，可以在此手動更新。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="compare-control-card">
+    <div class="control-card-title"><span>↕️ 按國家價格排序</span><span id="compare-sort-label">香港・由低至高</span></div>
+    <div class="compare-sort-grid compare-sort-scroll" id="compare-sort-buttons"></div>
+    <div class="compare-note">綠色「最平」按已選匯率及同一價格等級計算。只比較價目表的單件售價；各地容量、包裝與稅費可能不同。</div>
+  </div>
+
+  <div class="compare-results-meta"><span id="compare-meta-left"></span><span>最平價格已標示</span></div>
+  <div id="compare-results"></div>
+</div>
+</div>
+
+<div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="search-modal-content" onclick="event.stopPropagation()">
+    <div class="search-modal-handle"></div>
+    <div id="product-list" class="product-list-modal"></div>
+    <div class="search-modal-cats" id="category-tabs"></div>
+    <div class="search-modal-bulk-actions">
+      <button class="btn-bulk add" onclick="bulkAddCandidates()">☑️ 全選當前為候選</button>
+      <button class="btn-bulk remove" onclick="bulkRemoveCandidates()">✖️ 移除當前候選</button>
+    </div>
+    <div class="search-modal-bar">
+      <div class="search-modal-input-wrap">
+        <input type="text" id="product-search" placeholder="搜尋產品編號或名稱..." oninput="filterProducts(); updateClearBtn()" autocomplete="off">
+        <button id="search-clear-btn" onclick="triggerHaptic('light'); clearSearch()" tabindex="-1">✕</button>
+      </div>
+      <button class="btn-search-close" onclick="triggerHaptic('light'); closeSearchModal()">完成</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="vp-assistant-modal">
+  <div class="modal" style="width: 340px;">
+    <div class="modal-title">🎯 智能 VP 推薦助手</div>
+    <div style="margin-bottom: 10px;">
+      <label style="display:block; margin-bottom:4px; font-weight:700; font-size:0.85rem; color:var(--vp-assistant-color);">輸入目標 VP 分數:</label>
+      <input type="number" id="target-vp-input" placeholder="例如: 50" style="width: 100%; font-size: 16px; border-color: var(--vp-assistant-color);" oninput="triggerHaptic('light')">
+    </div>
+    <div style="margin-bottom: 12px;">
+      <label style="display:block; margin-bottom:6px; font-weight:700; font-size:0.85rem; color:var(--text-muted);">推薦策略:</label>
+      <div class="vp-strategy-group">
+        <div class="vp-strategy-opt active" data-strategy="accurate" onclick="selectStrategy(this)">🎯最精準</div>
+        <div class="vp-strategy-opt" data-strategy="cheapest" onclick="selectStrategy(this)">💰最省錢</div>
+        <div class="vp-strategy-opt" data-strategy="fewest" onclick="selectStrategy(this)">📦最少件</div>
+      </div>
+    </div>
+    <div id="vp-assistant-results" style="max-height: 40vh; overflow-y: auto; margin-bottom: 12px; padding-right: 4px;"></div>
+    <div class="modal-actions">
+      <button onclick="triggerHaptic('light'); closeVpAssistantModal()">關閉</button>
+      <button class="btn-primary" onclick="triggerHaptic('light'); calculateVpRecommendations()" style="background: var(--vp-assistant-color);">計算推薦</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-title">確認操作</div>
+    <div class="modal-content" id="confirm-message" style="margin-bottom:12px; text-align:center; color:var(--text-main); font-weight: 600;"></div>
+    <div class="modal-actions">
+      <button onclick="triggerHaptic('light'); hideConfirmDialog()">取消</button>
+      <button class="btn-danger" id="confirm-action-btn" style="padding: 6px 14px;">確定</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="pwa-info-modal">
+  <div class="modal">
+    <div class="modal-title">📲 安裝到主畫面</div>
+    <div class="modal-content" id="pwa-info-content" style="white-space:pre-line;line-height:1.6;font-size:0.9rem;margin-bottom:12px; color:var(--text-main); font-weight: 500;"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="triggerHaptic('light'); document.getElementById('pwa-info-modal').style.display='none'">好的</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="new-product-modal" style="z-index: 2500;">
+  <div class="modal" style="text-align: center;">
+    <div class="modal-title" style="color: var(--primary-color); font-size: 1.25rem; margin-bottom: 12px;">🎉 新產品上架</div>
+    <div class="modal-content" style="font-size: 1.05rem; color: var(--text-heading); font-weight: 700; margin-bottom:12px; line-height: 1.6;">
+      Night Mode 已上線<br>Relaxation Tea 系統已更新
+    </div>
+    <div class="modal-actions" style="justify-content: center; margin-top: 16px;">
+      <button class="btn-primary" onclick="triggerHaptic('light'); closeNewProductModal()" style="width: 100%; padding: 10px; font-size: 1rem; border-radius: 10px;">我知道了</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast-message"></div>
+
+
+<script src="./config/countries.js"></script>
+<script src="./config/comparison-map.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
