@@ -83,8 +83,11 @@
     <button class="btn-copy" onclick="copyToClipboard()">📋 一鍵複製全資料</button>
   </div>
 </div>
-<div class="package-plans-section" id="hk-package-plans">
-  <div class="package-plans-title">🏃 套裝計畫（價格不受等級影響）</div>
+<details class="package-plans-section compact-package-plans" id="hk-package-plans">
+  <summary class="package-plans-title">
+    <span>🏃 套裝計畫（價格不受等級影響）</span>
+    <span class="package-toggle-arrow">⌄</span>
+  </summary>
   <div class="package-plans-grid">
     <button class="package-plan-btn" onclick="addPackagePlan('PKG1')"><div class="plan-row1"><span class="plan-name">慢跑計畫</span><span class="plan-price">HK$1,369</span></div><div class="plan-row2"><span class="plan-vp">61.85 VP</span><span class="plan-profit">💰 利潤 HK$553.5</span></div></button>
     <button class="package-plan-btn" onclick="addPackagePlan('PKG2')"><div class="plan-row1"><span class="plan-name">快跑計畫</span><span class="plan-price">HK$2,177</span></div><div class="plan-row2"><span class="plan-vp">107.25 VP</span><span class="plan-profit">💰 利潤 HK$929</span></div></button>
