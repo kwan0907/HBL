@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
   <link rel="preload" as="image" href="./logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HBL 香港／台灣產品計算器</title>
+<title>HBL 香港／台灣／日本三國格價計算器</title>
 
 <link rel="manifest" href="./manifest.json" crossorigin="use-credentials">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="HBL 產品計算器">
+<meta name="apple-mobile-web-app-title" content="HBL 三國格價">
 <link rel="apple-touch-icon" sizes="180x180" href="./logo.svg">
 <link rel="apple-touch-icon" sizes="167x167" href="./logo.svg">
 <link rel="apple-touch-icon" sizes="152x152" href="./logo.svg">
@@ -213,6 +213,51 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 @keyframes spin { to { transform: rotate(360deg); } }
 @media screen and (max-width: 480px) { .qty-btn { width: 20px; height: 22px; font-size: 12px; } .qty-input { width: 24px; height: 22px; margin: 0; } .cart-qty-input { width: 30px; } .search-modal-content { height: 90vh; } h1 { font-size: 1.1rem; } }
 @media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .price-controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
+
+/* 三國格價與 iPhone 16 Pro 操作優化：保留原字體級別，只改善分組與觸控範圍 */
+.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:4px; margin:0 0 8px; border:1px solid var(--glass-border); border-radius:12px; background:var(--glass-item-bg); }
+.mode-switch button { min-height:44px; border:none; background:transparent; color:var(--text-muted); font-size:0.9rem; border-radius:9px; }
+.mode-switch button.active { background:var(--primary-color); color:white; box-shadow:0 2px 8px rgba(79,70,229,.22); }
+.currency-panel, .compare-control-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
+.control-card-title { font-weight:800; color:var(--text-heading); font-size:.9rem; margin-bottom:7px; display:flex; justify-content:space-between; align-items:center; }
+.currency-segment { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
+.currency-segment.three { grid-template-columns:repeat(3,1fr); }
+.currency-segment button, .compare-sort-grid button { min-height:42px; padding:6px 4px; font-size:.82rem; border-radius:9px; white-space:nowrap; }
+.currency-segment button.active, .compare-sort-grid button.active { background:var(--primary-color); color:white; border-color:var(--primary-color); }
+.currency-note, .compare-note { font-size:.78rem; color:var(--text-muted); line-height:1.45; margin-top:7px; }
+#compare-workspace { display:none; }
+.compare-search { font-size:16px !important; min-height:44px; border-radius:10px; padding:9px 11px; }
+.compare-toolbar-row { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:8px; }
+.compare-toolbar-row label { display:block; font-size:.78rem; color:var(--text-muted); font-weight:700; margin-bottom:4px; }
+.compare-toolbar-row select { min-height:44px; border-radius:10px; font-size:.88rem; padding:8px 28px 8px 9px; }
+.compare-sort-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.compare-results-meta { display:flex; justify-content:space-between; gap:6px; color:var(--text-muted); font-size:.78rem; font-weight:700; margin:8px 2px; }
+.compare-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
+.compare-card-title { font-size:.92rem; font-weight:850; color:var(--text-heading); line-height:1.35; margin-bottom:8px; }
+.compare-card-sub { font-size:.72rem; color:var(--text-muted); font-weight:600; margin-top:2px; }
+.compare-country-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+.compare-price-box { position:relative; min-height:74px; border:1px solid var(--glass-border); border-radius:10px; padding:8px 4px 6px; text-align:center; background:var(--glass-item-bg); display:flex; flex-direction:column; justify-content:center; }
+.compare-price-box.cheapest { background:rgba(16,185,129,.11); border-color:rgba(16,185,129,.48); }
+.compare-country-name { font-size:.75rem; font-weight:800; color:var(--text-muted); margin-bottom:4px; }
+.compare-price { font-size:.9rem; font-weight:900; color:var(--text-heading); line-height:1.2; overflow-wrap:anywhere; }
+.cheapest-badge { display:inline-block; margin-top:4px; color:#047857; font-size:.68rem; font-weight:900; }
+.missing-price { color:var(--text-muted); font-size:.88rem; font-weight:800; }
+.rate-panel { border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); margin-top:8px; overflow:hidden; }
+.rate-panel summary { list-style:none; cursor:pointer; padding:10px; font-weight:750; font-size:.82rem; color:var(--text-main); min-height:42px; display:flex; align-items:center; justify-content:space-between; }
+.rate-panel summary::-webkit-details-marker { display:none; }
+.rate-editor { padding:0 10px 10px; }
+.rate-input-row { display:grid; grid-template-columns:auto 1fr auto; gap:6px; align-items:center; margin-bottom:7px; font-size:.82rem; font-weight:700; }
+.rate-input-row input { min-height:40px; border-radius:8px; font-size:16px !important; padding:6px 8px; }
+.rate-save-btn { width:100%; min-height:42px; background:var(--primary-color); color:white; border:none; }
+.single-section-label { color:var(--text-muted); font-size:.75rem; font-weight:800; letter-spacing:.2px; margin:10px 2px 5px; }
+@media screen and (max-width: 430px) {
+  .container { padding:8px; }
+  .font-ctrl-bar { min-height:44px; }
+  #country-control .font-ctrl-btn { min-width:0; padding:6px 7px; }
+  .compare-card { padding:9px 7px; }
+  .compare-price-box { min-height:76px; padding-left:2px; padding-right:2px; }
+}
+
 </style>
 </head>
 <body>
@@ -232,13 +277,31 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 
+<div class="mode-switch" aria-label="功能模式">
+  <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單國計算</button>
+  <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 三國格價</button>
+</div>
+
+<div id="single-country-workspace">
 <!-- 國家／地區切換列 -->
 <div class="font-ctrl-bar" id="country-control" style="margin-bottom: 6px;">
   <span class="font-ctrl-label">🌏 國家／地區</span>
   <div class="font-ctrl-btns">
     <button class="font-ctrl-btn active" id="country-hk" onclick="switchCountry('HK')">🇭🇰 香港</button>
     <button class="font-ctrl-btn" id="country-tw" onclick="switchCountry('TW')">🇹🇼 台灣</button>
+    <button class="font-ctrl-btn" id="country-jp" onclick="switchCountry('JP')">🇯🇵 日本</button>
   </div>
+</div>
+
+<div class="currency-panel" id="single-currency-panel">
+  <div class="control-card-title"><span>💱 顯示貨幣</span><span id="single-currency-current"></span></div>
+  <div class="currency-segment">
+    <button id="single-currency-auto" class="active" onclick="setSingleCurrency('AUTO')">自動／當地</button>
+    <button id="single-currency-hkd" onclick="setSingleCurrency('HKD')">港幣 HKD</button>
+    <button id="single-currency-twd" onclick="setSingleCurrency('TWD')">台幣 TWD</button>
+    <button id="single-currency-jpy" onclick="setSingleCurrency('JPY')">日圓 JPY</button>
+  </div>
+  <div class="currency-note" id="single-currency-note">自動模式會按香港、台灣或日本顯示當地貨幣。</div>
 </div>
 
 <!-- 運費版本切換列 -->
@@ -309,6 +372,58 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
   </div>
 </div>
 <div class="summary" id="summary"></div>
+</div>
+
+<div id="compare-workspace">
+  <div class="compare-control-card">
+    <div class="control-card-title"><span>🌍 三國產品格價</span><span id="compare-result-count"></span></div>
+    <div class="compare-toolbar-row">
+      <div>
+        <label for="compare-tier">比較價格等級</label>
+        <select id="compare-tier" onchange="setCompareTier(this.value)">
+          <option value="retail">建議／標準零售價</option>
+          <option value="15%">15% 等級</option>
+          <option value="25%">25% 等級</option>
+          <option value="35%">35% 等級</option>
+          <option value="42%">42% 等級</option>
+          <option value="50%">50% 等級</option>
+        </select>
+      </div>
+      <div>
+        <label for="compare-search">搜尋同類產品</label>
+        <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
+      </div>
+    </div>
+    <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
+    <div class="currency-segment three">
+      <button id="compare-currency-hkd" class="active" onclick="setComparisonCurrency('HKD')">港幣 HKD</button>
+      <button id="compare-currency-twd" onclick="setComparisonCurrency('TWD')">台幣 TWD</button>
+      <button id="compare-currency-jpy" onclick="setComparisonCurrency('JPY')">日圓 JPY</button>
+    </div>
+    <details class="rate-panel">
+      <summary><span>⚙️ 參考匯率設定</span><span id="rate-summary">1 HKD = 4.04 TWD = 20.33 JPY</span></summary>
+      <div class="rate-editor">
+        <div class="rate-input-row"><span>1 HKD =</span><input id="rate-twd" type="number" inputmode="decimal" step="0.0001" value="4.04"><span>TWD</span></div>
+        <div class="rate-input-row"><span>1 HKD =</span><input id="rate-jpy" type="number" inputmode="decimal" step="0.0001" value="20.33"><span>JPY</span></div>
+        <button class="rate-save-btn" onclick="saveExchangeRates()">儲存並重新格價</button>
+        <div class="compare-note">預設為 2026-08-28 中間參考價；實際付款匯率及手續費可能不同，可以在此手動更新。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="compare-control-card">
+    <div class="control-card-title"><span>↕️ 按國家價格排序</span><span id="compare-sort-label">香港・由低至高</span></div>
+    <div class="compare-sort-grid">
+      <button id="compare-sort-hk" class="active" onclick="sortComparison('HK')">🇭🇰 香港 ↑</button>
+      <button id="compare-sort-tw" onclick="sortComparison('TW')">🇹🇼 台灣 ↕</button>
+      <button id="compare-sort-jp" onclick="sortComparison('JP')">🇯🇵 日本 ↕</button>
+    </div>
+    <div class="compare-note">綠色「最平」按已選匯率及同一價格等級計算。只比較價目表的單件售價；各地容量、包裝與稅費可能不同。</div>
+  </div>
+
+  <div class="compare-results-meta"><span id="compare-meta-left"></span><span>最平價格已標示</span></div>
+  <div id="compare-results"></div>
+</div>
 </div>
 
 <div id="search-modal-overlay" class="search-modal-overlay" onclick="handleOverlayClick(event)">
@@ -3060,9 +3175,2848 @@ const taiwanProductsData = [
   }
 ];
 
+const japanProductsData = [
+  {
+    "stock_no": "215K",
+    "prod_name": "フォーミュラ 1 プレーン",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Plain",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 10,
+    "prod_seq": 10
+  },
+  {
+    "stock_no": "085K",
+    "prod_name": "フォーミュラ 1 バニラ Non GMO",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Vanilla (Non-GMO)",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 20,
+    "prod_seq": 20
+  },
+  {
+    "stock_no": "088K",
+    "prod_name": "フォーミュラ 1 チョコレート",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Chocolate",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 30,
+    "prod_seq": 30
+  },
+  {
+    "stock_no": "090K",
+    "prod_name": "フォーミュラ 1 ストロベリー",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Strawberry",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 40,
+    "prod_seq": 40
+  },
+  {
+    "stock_no": "091K",
+    "prod_name": "フォーミュラ 1 トロピカルフルーツ",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Tropical Fruit",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 50,
+    "prod_seq": 50
+  },
+  {
+    "stock_no": "086K",
+    "prod_name": "フォーミュラ 1 クッキー＆クリーム",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Cookies & Cream",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 60,
+    "prod_seq": 60
+  },
+  {
+    "stock_no": "087K",
+    "prod_name": "フォーミュラ 1 オレンジクリーム",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Orange Cream",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 70,
+    "prod_seq": 70
+  },
+  {
+    "stock_no": "174K",
+    "prod_name": "フォーミュラ 1 バナナキャラメル",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Banana Caramel",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 80,
+    "prod_seq": 80
+  },
+  {
+    "stock_no": "438K",
+    "prod_name": "フォーミュラ 1 ほうじ茶",
+    "prod_name_en": "Formula 1 Protein Drink Mix - Hojicha",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7096,
+    "標準小売価格": 7096,
+    "15%": 6119,
+    "25%": 5466,
+    "35%": 4815,
+    "42%": 4358,
+    "50%": 3838,
+    "cost": 3838,
+    "標準價": 7096,
+    "銅級": 6119,
+    "銀級": 5466,
+    "金級": 4815,
+    "58%": 4358,
+    "note": "參與折扣",
+    "fav": 90,
+    "prod_seq": 90
+  },
+  {
+    "stock_no": "083K",
+    "prod_name": "フォーミュラ 1 セレクト バニラ",
+    "prod_name_en": "Formula 1 Select - Vanilla",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8727,
+    "標準小売価格": 8727,
+    "15%": 7525,
+    "25%": 6723,
+    "35%": 5921,
+    "42%": 5360,
+    "50%": 4719,
+    "cost": 4719,
+    "標準價": 8727,
+    "銅級": 7525,
+    "銀級": 6723,
+    "金級": 5921,
+    "58%": 5360,
+    "note": "參與折扣",
+    "fav": 100,
+    "prod_seq": 100
+  },
+  {
+    "stock_no": "3114",
+    "prod_name": "フォーミュラ 2 ハーバルブレンドアドバンス",
+    "prod_name_en": "Formula 2 Multivitamin Complex Advanced",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 3413,
+    "標準小売価格": 3413,
+    "15%": 2943,
+    "25%": 2629,
+    "35%": 2316,
+    "42%": 2096,
+    "50%": 1846,
+    "cost": 1846,
+    "標準價": 3413,
+    "銅級": 2943,
+    "銀級": 2629,
+    "金級": 2316,
+    "58%": 2096,
+    "note": "參與折扣",
+    "fav": 110,
+    "prod_seq": 110
+  },
+  {
+    "stock_no": "3122",
+    "prod_name": "フォーミュラ 3 ビタミン・ミネラルアドバンス",
+    "prod_name_en": "Formula 3 Cell Activator Advanced",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 3573,
+    "標準小売価格": 3573,
+    "15%": 3081,
+    "25%": 2752,
+    "35%": 2424,
+    "42%": 2195,
+    "50%": 1932,
+    "cost": 1932,
+    "標準價": 3573,
+    "銅級": 3081,
+    "銀級": 2752,
+    "金級": 2424,
+    "58%": 2195,
+    "note": "參與折扣",
+    "fav": 120,
+    "prod_seq": 120
+  },
+  {
+    "stock_no": "0077",
+    "prod_name": "トータル スリム",
+    "prod_name_en": "Total Control",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 11641,
+    "標準小売価格": 11641,
+    "15%": 10037,
+    "25%": 8967,
+    "35%": 7898,
+    "42%": 7149,
+    "50%": 6294,
+    "cost": 6294,
+    "標準價": 11641,
+    "銅級": 10037,
+    "銀級": 8967,
+    "金級": 7898,
+    "58%": 7149,
+    "note": "參與折扣",
+    "fav": 130,
+    "prod_seq": 130
+  },
+  {
+    "stock_no": "171K",
+    "prod_name": "パフォーマンス プロテイン パウダー",
+    "prod_name_en": "Performance Protein Powder",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 4849,
+    "標準小売価格": 4849,
+    "15%": 4180,
+    "25%": 3736,
+    "35%": 3289,
+    "42%": 2978,
+    "50%": 2622,
+    "cost": 2622,
+    "標準價": 4849,
+    "銅級": 4180,
+    "銀級": 3736,
+    "金級": 3289,
+    "58%": 2978,
+    "note": "參與折扣",
+    "fav": 140,
+    "prod_seq": 140
+  },
+  {
+    "stock_no": "0258",
+    "prod_name": "プロテインバー バニラアーモンド味 14 本入",
+    "prod_name_en": "Protein Bar - Vanilla Almond (14 bars/box)",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 3114,
+    "標準小売価格": 3114,
+    "15%": 2857,
+    "25%": 2685,
+    "35%": 2514,
+    "42%": 2394,
+    "50%": 2256,
+    "cost": 2256,
+    "標準價": 3114,
+    "銅級": 2857,
+    "銀級": 2685,
+    "金級": 2514,
+    "58%": 2394,
+    "note": "參與折扣",
+    "fav": 150,
+    "prod_seq": 150
+  },
+  {
+    "stock_no": "0260",
+    "prod_name": "プロテインバー シトラスレモン味 14 本入",
+    "prod_name_en": "Protein Bar - Citrus Lemon (14 bars/box)",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 3114,
+    "標準小売価格": 3114,
+    "15%": 2857,
+    "25%": 2685,
+    "35%": 2514,
+    "42%": 2394,
+    "50%": 2256,
+    "cost": 2256,
+    "標準價": 3114,
+    "銅級": 2857,
+    "銀級": 2685,
+    "金級": 2514,
+    "58%": 2394,
+    "note": "參與折扣",
+    "fav": 160,
+    "prod_seq": 160
+  },
+  {
+    "stock_no": "011K",
+    "prod_name": "プロテインアイスコーヒー モカ",
+    "prod_name_en": "Protein Iced Coffee - Mocha",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7093,
+    "標準小売価格": 7093,
+    "15%": 6260,
+    "25%": 5705,
+    "35%": 5150,
+    "42%": 4762,
+    "50%": 4318,
+    "cost": 4318,
+    "標準價": 7093,
+    "銅級": 6260,
+    "銀級": 5705,
+    "金級": 5150,
+    "58%": 4762,
+    "note": "參與折扣",
+    "fav": 170,
+    "prod_seq": 170
+  },
+  {
+    "stock_no": "012K",
+    "prod_name": "プロテインアイスコーヒー カフェラテ",
+    "prod_name_en": "Protein Iced Coffee - Cafe Latte",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7093,
+    "標準小売価格": 7093,
+    "15%": 6260,
+    "25%": 5705,
+    "35%": 5150,
+    "42%": 4762,
+    "50%": 4318,
+    "cost": 4318,
+    "標準價": 7093,
+    "銅級": 6260,
+    "銀級": 5705,
+    "金級": 5150,
+    "58%": 4762,
+    "note": "參與折扣",
+    "fav": 180,
+    "prod_seq": 180
+  },
+  {
+    "stock_no": "0106",
+    "prod_name": "ハーバルティーコンセントレート オリジナル",
+    "prod_name_en": "Herbal Tea Concentrate - Original",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8008,
+    "標準小売価格": 8008,
+    "15%": 6904,
+    "25%": 6169,
+    "35%": 5433,
+    "42%": 4918,
+    "50%": 4330,
+    "cost": 4330,
+    "標準價": 8008,
+    "銅級": 6904,
+    "銀級": 6169,
+    "金級": 5433,
+    "58%": 4918,
+    "note": "參與折扣",
+    "fav": 190,
+    "prod_seq": 190
+  },
+  {
+    "stock_no": "0188",
+    "prod_name": "ハーバルティーコンセントレート レモン",
+    "prod_name_en": "Herbal Tea Concentrate - Lemon",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8008,
+    "標準小売価格": 8008,
+    "15%": 6904,
+    "25%": 6169,
+    "35%": 5433,
+    "42%": 4918,
+    "50%": 4330,
+    "cost": 4330,
+    "標準價": 8008,
+    "銅級": 6904,
+    "銀級": 6169,
+    "金級": 5433,
+    "58%": 4918,
+    "note": "參與折扣",
+    "fav": 200,
+    "prod_seq": 200
+  },
+  {
+    "stock_no": "0759",
+    "prod_name": "ハーバルティーコンセントレート アップルカモミール",
+    "prod_name_en": "Herbal Tea Concentrate - Apple Chamomile",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8008,
+    "標準小売価格": 8008,
+    "15%": 6904,
+    "25%": 6169,
+    "35%": 5433,
+    "42%": 4918,
+    "50%": 4330,
+    "cost": 4330,
+    "標準價": 8008,
+    "銅級": 6904,
+    "銀級": 6169,
+    "金級": 5433,
+    "58%": 4918,
+    "note": "參與折扣",
+    "fav": 210,
+    "prod_seq": 210
+  },
+  {
+    "stock_no": "0103",
+    "prod_name": "ファイバーボンド",
+    "prod_name_en": "Fiberbond",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7314,
+    "標準小売価格": 7314,
+    "15%": 6306,
+    "25%": 5635,
+    "35%": 4962,
+    "42%": 4492,
+    "50%": 3954,
+    "cost": 3954,
+    "標準價": 7314,
+    "銅級": 6306,
+    "銀級": 5635,
+    "金級": 4962,
+    "58%": 4492,
+    "note": "參與折扣",
+    "fav": 220,
+    "prod_seq": 220
+  },
+  {
+    "stock_no": "0111",
+    "prod_name": "セルロス",
+    "prod_name_en": "Cell-U-Loss",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6663,
+    "標準小売価格": 6663,
+    "15%": 5745,
+    "25%": 5133,
+    "35%": 4520,
+    "42%": 4092,
+    "50%": 3602,
+    "cost": 3602,
+    "標準價": 6663,
+    "銅級": 5745,
+    "銀級": 5133,
+    "金級": 4520,
+    "58%": 4092,
+    "note": "參與折扣",
+    "fav": 230,
+    "prod_seq": 230
+  },
+  {
+    "stock_no": "0080",
+    "prod_name": "トリプルヘルスドリンク 10 本 / 箱",
+    "prod_name_en": "Triple Health Drink (10 bottles/box)",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6945,
+    "標準小売価格": 6945,
+    "15%": 6033,
+    "25%": 5427,
+    "35%": 4818,
+    "42%": 4394,
+    "50%": 3908,
+    "cost": 3908,
+    "標準價": 6945,
+    "銅級": 6033,
+    "銀級": 5427,
+    "金級": 4818,
+    "58%": 4394,
+    "note": "參與折扣",
+    "fav": 240,
+    "prod_seq": 240
+  },
+  {
+    "stock_no": "0100",
+    "prod_name": "トリシールドプラス",
+    "prod_name_en": "Tri-Shield Plus",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 12783,
+    "標準小売価格": 12783,
+    "15%": 11022,
+    "25%": 9848,
+    "35%": 8673,
+    "42%": 7851,
+    "50%": 6911,
+    "cost": 6911,
+    "標準價": 12783,
+    "銅級": 11022,
+    "銀級": 9848,
+    "金級": 8673,
+    "58%": 7851,
+    "note": "參與折扣",
+    "fav": 250,
+    "prod_seq": 250
+  },
+  {
+    "stock_no": "1158",
+    "prod_name": "ナイトワークス",
+    "prod_name_en": "NiteWorks",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 13285,
+    "標準小売価格": 13285,
+    "15%": 11454,
+    "25%": 10234,
+    "35%": 9014,
+    "42%": 8159,
+    "50%": 7183,
+    "cost": 7183,
+    "標準價": 13285,
+    "銅級": 11454,
+    "銀級": 10234,
+    "金級": 9014,
+    "58%": 8159,
+    "note": "參與折扣",
+    "fav": 260,
+    "prod_seq": 260
+  },
+  {
+    "stock_no": "0065",
+    "prod_name": "ハーバライフライン",
+    "prod_name_en": "Herbalifeline",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 10197,
+    "標準小売価格": 10197,
+    "15%": 8792,
+    "25%": 7856,
+    "35%": 6918,
+    "42%": 6263,
+    "50%": 5513,
+    "cost": 5513,
+    "標準價": 10197,
+    "銅級": 8792,
+    "銀級": 7856,
+    "金級": 6918,
+    "58%": 6263,
+    "note": "參與折扣",
+    "fav": 270,
+    "prod_seq": 270
+  },
+  {
+    "stock_no": "0555",
+    "prod_name": "ハーバフレックス アドバンス",
+    "prod_name_en": "Herbaliflex Advanced",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8506,
+    "標準小売価格": 8506,
+    "15%": 7334,
+    "25%": 6552,
+    "35%": 5770,
+    "42%": 5224,
+    "50%": 4599,
+    "cost": 4599,
+    "標準價": 8506,
+    "銅級": 7334,
+    "銀級": 6552,
+    "金級": 5770,
+    "58%": 5224,
+    "note": "參與折扣",
+    "fav": 280,
+    "prod_seq": 280
+  },
+  {
+    "stock_no": "0174",
+    "prod_name": "エクストラカル",
+    "prod_name_en": "Xtra-Cal",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2987,
+    "標準小売価格": 2987,
+    "15%": 2576,
+    "25%": 2301,
+    "35%": 2027,
+    "42%": 1835,
+    "50%": 1615,
+    "cost": 1615,
+    "標準價": 2987,
+    "銅級": 2576,
+    "銀級": 2301,
+    "金級": 2027,
+    "58%": 1835,
+    "note": "參與折扣",
+    "fav": 290,
+    "prod_seq": 290
+  },
+  {
+    "stock_no": "3170",
+    "prod_name": "SA コラーゲン リニュー＜美容飲料＞",
+    "prod_name_en": "Collagen Renew Beauty Drink",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6945,
+    "標準小売価格": 6945,
+    "15%": 6029,
+    "25%": 5419,
+    "35%": 4808,
+    "42%": 4380,
+    "50%": 3892,
+    "cost": 3892,
+    "標準價": 6945,
+    "銅級": 6029,
+    "銀級": 5419,
+    "金級": 4808,
+    "58%": 4380,
+    "note": "參與折扣",
+    "fav": 300,
+    "prod_seq": 300
+  },
+  {
+    "stock_no": "1394",
+    "prod_name": "ハーバルガーデン",
+    "prod_name_en": "Herbal Garden",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 9677,
+    "標準小売価格": 9677,
+    "15%": 8343,
+    "25%": 7454,
+    "35%": 6566,
+    "42%": 5943,
+    "50%": 5233,
+    "cost": 5233,
+    "標準價": 9677,
+    "銅級": 8343,
+    "銀級": 7454,
+    "金級": 6566,
+    "58%": 5943,
+    "note": "參與折扣",
+    "fav": 310,
+    "prod_seq": 310
+  },
+  {
+    "stock_no": "127K",
+    "prod_name": "Woman's Choice ウーマンズチョイス",
+    "prod_name_en": "Woman's Choice",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 5049,
+    "標準小売価格": 5049,
+    "15%": 4380,
+    "25%": 3936,
+    "35%": 3489,
+    "42%": 3177,
+    "50%": 2821,
+    "cost": 2821,
+    "標準價": 5049,
+    "銅級": 4380,
+    "銀級": 3936,
+    "金級": 3489,
+    "58%": 3177,
+    "note": "參與折扣",
+    "fav": 320,
+    "prod_seq": 320
+  },
+  {
+    "stock_no": "266K",
+    "prod_name": "Beauty Ceramides ビューティーセラミド",
+    "prod_name_en": "Beauty Ceramides",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7773,
+    "標準小売価格": 7773,
+    "15%": 6702,
+    "25%": 5988,
+    "35%": 5274,
+    "42%": 4774,
+    "50%": 4203,
+    "cost": 4203,
+    "標準價": 7773,
+    "銅級": 6702,
+    "銀級": 5988,
+    "金級": 5274,
+    "58%": 4774,
+    "note": "參與折扣",
+    "fav": 330,
+    "prod_seq": 330
+  },
+  {
+    "stock_no": "1065",
+    "prod_name": "ハーバルアロエドリンク マンゴー味",
+    "prod_name_en": "Herbal Aloe Drink - Mango",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 5365,
+    "標準小売価格": 5365,
+    "15%": 4625,
+    "25%": 4133,
+    "35%": 3639,
+    "42%": 3295,
+    "50%": 2900,
+    "cost": 2900,
+    "標準價": 5365,
+    "銅級": 4625,
+    "銀級": 4133,
+    "金級": 3639,
+    "58%": 3295,
+    "note": "參與折扣",
+    "fav": 340,
+    "prod_seq": 340
+  },
+  {
+    "stock_no": "1610",
+    "prod_name": "ハーバルアロエドリンク グレープ味",
+    "prod_name_en": "Herbal Aloe Drink - Grape",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 5365,
+    "標準小売価格": 5365,
+    "15%": 4625,
+    "25%": 4133,
+    "35%": 3639,
+    "42%": 3295,
+    "50%": 2900,
+    "cost": 2900,
+    "標準價": 5365,
+    "銅級": 4625,
+    "銀級": 4133,
+    "金級": 3639,
+    "58%": 3295,
+    "note": "參與折扣",
+    "fav": 350,
+    "prod_seq": 350
+  },
+  {
+    "stock_no": "2631",
+    "prod_name": "ハーバルアロエドリンク マンダリン味",
+    "prod_name_en": "Herbal Aloe Drink - Mandarin",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 5365,
+    "標準小売価格": 5365,
+    "15%": 4625,
+    "25%": 4133,
+    "35%": 3639,
+    "42%": 3295,
+    "50%": 2900,
+    "cost": 2900,
+    "標準價": 5365,
+    "銅級": 4625,
+    "銀級": 4133,
+    "金級": 3639,
+    "58%": 3295,
+    "note": "參與折扣",
+    "fav": 360,
+    "prod_seq": 360
+  },
+  {
+    "stock_no": "1829",
+    "prod_name": "シンプル プロバイオティクス",
+    "prod_name_en": "Simple Probiotics",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 7112,
+    "標準小売価格": 7112,
+    "15%": 6132,
+    "25%": 5479,
+    "35%": 4826,
+    "42%": 4368,
+    "50%": 3845,
+    "cost": 3845,
+    "標準價": 7112,
+    "銅級": 6132,
+    "銀級": 5479,
+    "金級": 4826,
+    "58%": 4368,
+    "note": "參與折扣",
+    "fav": 370,
+    "prod_seq": 370
+  },
+  {
+    "stock_no": "2864",
+    "prod_name": "アクティブファイバーコンプレックス ふじりんご味",
+    "prod_name_en": "Active Fiber Complex - Fuji Apple",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8788,
+    "標準小売価格": 8788,
+    "15%": 7577,
+    "25%": 6769,
+    "35%": 5962,
+    "42%": 5397,
+    "50%": 4751,
+    "cost": 4751,
+    "標準價": 8788,
+    "銅級": 7577,
+    "銀級": 6769,
+    "金級": 5962,
+    "58%": 5397,
+    "note": "參與折扣",
+    "fav": 380,
+    "prod_seq": 380
+  },
+  {
+    "stock_no": "0124",
+    "prod_name": "エヌ・アール・ジー",
+    "prod_name_en": "NRG (Nature's Raw Guarana Tea)",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6197,
+    "標準小売価格": 6197,
+    "15%": 5343,
+    "25%": 4774,
+    "35%": 4204,
+    "42%": 3806,
+    "50%": 3351,
+    "cost": 3351,
+    "標準價": 6197,
+    "銅級": 5343,
+    "銀級": 4774,
+    "金級": 4204,
+    "58%": 3806,
+    "note": "參與折扣",
+    "fav": 390,
+    "prod_seq": 390
+  },
+  {
+    "stock_no": "105K",
+    "prod_name": "リフトオフ",
+    "prod_name_en": "Liftoff",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 3522,
+    "標準小売価格": 3522,
+    "15%": 3045,
+    "25%": 2726,
+    "35%": 2407,
+    "42%": 2185,
+    "50%": 1930,
+    "cost": 1930,
+    "標準價": 3522,
+    "銅級": 3045,
+    "銀級": 2726,
+    "金級": 2407,
+    "58%": 2185,
+    "note": "參與折扣",
+    "fav": 400,
+    "prod_seq": 400
+  },
+  {
+    "stock_no": "0T00",
+    "prod_name": "【軽快サポート】アクティブセット",
+    "prod_name_en": "Active Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 11493,
+    "標準小売価格": 11493,
+    "15%": 9909,
+    "25%": 8853,
+    "35%": 7797,
+    "42%": 7059,
+    "50%": 6214,
+    "cost": 6214,
+    "標準價": 11493,
+    "銅級": 9909,
+    "銀級": 8853,
+    "金級": 7797,
+    "58%": 7059,
+    "note": "套組，參與折扣",
+    "fav": 410,
+    "prod_seq": 410
+  },
+  {
+    "stock_no": "0T01",
+    "prod_name": "【健康力サポート】ヘルシーセット",
+    "prod_name_en": "Healthy Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 16622,
+    "標準小売価格": 16622,
+    "15%": 14378,
+    "25%": 12881,
+    "35%": 11384,
+    "42%": 10336,
+    "50%": 9140,
+    "cost": 9140,
+    "標準價": 16622,
+    "銅級": 14378,
+    "銀級": 12881,
+    "金級": 11384,
+    "58%": 10336,
+    "note": "套組，參與折扣",
+    "fav": 420,
+    "prod_seq": 420
+  },
+  {
+    "stock_no": "3T10",
+    "prod_name": "健康力サポート プロモーションセット",
+    "prod_name_en": "Healthy Support Promotion Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 16622,
+    "標準小売価格": 16622,
+    "15%": 14378,
+    "25%": 12881,
+    "35%": 11384,
+    "42%": 10336,
+    "50%": 9140,
+    "cost": 9140,
+    "標準價": 16622,
+    "銅級": 14378,
+    "銀級": 12881,
+    "金級": 11384,
+    "58%": 10336,
+    "note": "促銷套組，參與折扣",
+    "fav": 430,
+    "prod_seq": 430
+  },
+  {
+    "stock_no": "0T02",
+    "prod_name": "【美容サポート】ビューティセット",
+    "prod_name_en": "Beauty Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 18240,
+    "標準小売価格": 18240,
+    "15%": 15775,
+    "25%": 14133,
+    "35%": 12489,
+    "42%": 11339,
+    "50%": 10024,
+    "cost": 10024,
+    "標準價": 18240,
+    "銅級": 15775,
+    "銀級": 14133,
+    "金級": 12489,
+    "58%": 11339,
+    "note": "套組，參與折扣",
+    "fav": 440,
+    "prod_seq": 440
+  },
+  {
+    "stock_no": "0T03",
+    "prod_name": "【女性サポート】ウーマンセット",
+    "prod_name_en": "Women's Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 17832,
+    "標準小売価格": 17832,
+    "15%": 15402,
+    "25%": 13782,
+    "35%": 12162,
+    "42%": 11028,
+    "50%": 9732,
+    "cost": 9732,
+    "標準價": 17832,
+    "銅級": 15402,
+    "銀級": 13782,
+    "金級": 12162,
+    "58%": 11028,
+    "note": "套組，參與折扣",
+    "fav": 450,
+    "prod_seq": 450
+  },
+  {
+    "stock_no": "0T04",
+    "prod_name": "【快調サポート】バランスセット",
+    "prod_name_en": "Balance Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 21265,
+    "標準小売価格": 21265,
+    "15%": 18334,
+    "25%": 16380,
+    "35%": 14426,
+    "42%": 13059,
+    "50%": 11496,
+    "cost": 11496,
+    "標準價": 21265,
+    "銅級": 18334,
+    "銀級": 16380,
+    "金級": 14426,
+    "58%": 13059,
+    "note": "套組，參與折扣",
+    "fav": 460,
+    "prod_seq": 460
+  },
+  {
+    "stock_no": "4290",
+    "prod_name": "ライフサポートセット",
+    "prod_name_en": "Life Support Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 36265,
+    "標準小売価格": 36265,
+    "15%": 31268,
+    "25%": 27936,
+    "35%": 24604,
+    "42%": 22271,
+    "50%": 19607,
+    "cost": 19607,
+    "標準價": 36265,
+    "銅級": 31268,
+    "銀級": 27936,
+    "金級": 24604,
+    "58%": 22271,
+    "note": "套組，參與折扣",
+    "fav": 470,
+    "prod_seq": 470
+  },
+  {
+    "stock_no": "4T47",
+    "prod_name": "フォーミュラ 1 ほうじ茶発売記念セット",
+    "prod_name_en": "Formula 1 Hojicha Launch Promotion Set",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 21287,
+    "標準小売価格": 21287,
+    "15%": 18354,
+    "25%": 16399,
+    "35%": 14443,
+    "42%": 13075,
+    "50%": 11511,
+    "cost": 11511,
+    "標準價": 21287,
+    "銅級": 18354,
+    "銀級": 16399,
+    "金級": 14443,
+    "58%": 13075,
+    "note": "紀念套組，參與折扣",
+    "fav": 480,
+    "prod_seq": 480
+  },
+  {
+    "stock_no": "1412",
+    "prod_name": "ハーバライフ 24 フォーミュラ 1 スポーツ",
+    "prod_name_en": "Herbalife24 Formula 1 Sport",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 13321,
+    "標準小売価格": 13321,
+    "15%": 11674,
+    "25%": 10577,
+    "35%": 9478,
+    "42%": 8709,
+    "50%": 7831,
+    "cost": 7831,
+    "標準價": 13321,
+    "銅級": 11674,
+    "銀級": 10577,
+    "金級": 9478,
+    "58%": 8709,
+    "note": "H24 運動營養，參與折扣",
+    "fav": 490,
+    "prod_seq": 490
+  },
+  {
+    "stock_no": "1459",
+    "prod_name": "ハーバライフ 24 リビルドストレングス チョコレート",
+    "prod_name_en": "Herbalife24 Rebuild Strength - Chocolate",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 13904,
+    "標準小売価格": 13904,
+    "15%": 12217,
+    "25%": 11093,
+    "35%": 9968,
+    "42%": 9181,
+    "50%": 8282,
+    "cost": 8282,
+    "標準價": 13904,
+    "銅級": 12217,
+    "銀級": 11093,
+    "金級": 9968,
+    "58%": 9181,
+    "note": "H24 運動營養，參與折扣",
+    "fav": 500,
+    "prod_seq": 500
+  },
+  {
+    "stock_no": "305K",
+    "prod_name": "ハーバライフ 24 リビルドストレングス ストロベリーショートケーキ",
+    "prod_name_en": "Herbalife24 Rebuild Strength - Strawberry Shortcake",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 14635,
+    "標準小売価格": 14635,
+    "15%": 12948,
+    "25%": 11824,
+    "35%": 10699,
+    "42%": 9912,
+    "50%": 9013,
+    "cost": 9013,
+    "標準價": 14635,
+    "銅級": 12948,
+    "銀級": 11824,
+    "金級": 10699,
+    "58%": 9912,
+    "note": "H24 運動營養，參與折扣",
+    "fav": 510,
+    "prod_seq": 510
+  },
+  {
+    "stock_no": "1463",
+    "prod_name": "ハーバライフ 24 CR7 ドライブ",
+    "prod_name_en": "Herbalife24 CR7 Drive",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6908,
+    "標準小売価格": 6908,
+    "15%": 6016,
+    "25%": 5421,
+    "35%": 4827,
+    "42%": 4410,
+    "50%": 3935,
+    "cost": 3935,
+    "標準價": 6908,
+    "銅級": 6016,
+    "銀級": 5421,
+    "金級": 4827,
+    "58%": 4410,
+    "note": "H24 運動營養，參與折扣",
+    "fav": 520,
+    "prod_seq": 520
+  },
+  {
+    "stock_no": "024K",
+    "prod_name": "ハーバライフ 24 BCAA",
+    "prod_name_en": "Herbalife24 BCAA",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 10530,
+    "標準小売価格": 10530,
+    "15%": 9171,
+    "25%": 8265,
+    "35%": 7359,
+    "42%": 6725,
+    "50%": 6000,
+    "cost": 6000,
+    "標準價": 10530,
+    "銅級": 9171,
+    "銀級": 8265,
+    "金級": 7359,
+    "58%": 6725,
+    "note": "H24 運動營養，參與折扣",
+    "fav": 530,
+    "prod_seq": 530
+  },
+  {
+    "stock_no": "112K",
+    "prod_name": "ビタダーマ ルーセントマスク",
+    "prod_name_en": "Vitaderma Lucent Mask (25g×5 sheets)",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 4059,
+    "標準小売価格": 4059,
+    "15%": 3525,
+    "25%": 3170,
+    "35%": 2815,
+    "42%": 2566,
+    "50%": 2281,
+    "cost": 2281,
+    "標準價": 4059,
+    "銅級": 3525,
+    "銀級": 3170,
+    "金級": 2815,
+    "58%": 2566,
+    "note": "護膚，參與折扣",
+    "fav": 540,
+    "prod_seq": 540
+  },
+  {
+    "stock_no": "0765",
+    "prod_name": "SKIN モイスチャーリッチクレンザー",
+    "prod_name_en": "SKIN Moisture Rich Cleanser",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 5482,
+    "標準小売価格": 5482,
+    "15%": 4726,
+    "25%": 4224,
+    "35%": 3720,
+    "42%": 3367,
+    "50%": 2964,
+    "cost": 2964,
+    "標準價": 5482,
+    "銅級": 4726,
+    "銀級": 4224,
+    "金級": 3720,
+    "58%": 3367,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 550,
+    "prod_seq": 550
+  },
+  {
+    "stock_no": "0891",
+    "prod_name": "SKIN コンディショニングトナー 150ml",
+    "prod_name_en": "SKIN Skin Conditioning Toner 150ml",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 10602,
+    "標準小売価格": 10602,
+    "15%": 9141,
+    "25%": 8167,
+    "35%": 7193,
+    "42%": 6511,
+    "50%": 5732,
+    "cost": 5732,
+    "標準價": 10602,
+    "銅級": 9141,
+    "銀級": 8167,
+    "金級": 7193,
+    "58%": 6511,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 560,
+    "prod_seq": 560
+  },
+  {
+    "stock_no": "0768",
+    "prod_name": "SKIN エッセンシャルセラム",
+    "prod_name_en": "SKIN Essential Serum",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 12337,
+    "標準小売価格": 12337,
+    "15%": 10637,
+    "25%": 9503,
+    "35%": 8370,
+    "42%": 7577,
+    "50%": 6671,
+    "cost": 6671,
+    "標準價": 12337,
+    "銅級": 10637,
+    "銀級": 9503,
+    "金級": 8370,
+    "58%": 7577,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 570,
+    "prod_seq": 570
+  },
+  {
+    "stock_no": "0769",
+    "prod_name": "SKIN デイリーグロウモイスチャライザー",
+    "prod_name_en": "SKIN Daily Glow Moisturizer (Day)",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 9294,
+    "標準小売価格": 9294,
+    "15%": 8014,
+    "25%": 7160,
+    "35%": 6305,
+    "42%": 5708,
+    "50%": 5025,
+    "cost": 5025,
+    "標準價": 9294,
+    "銅級": 8014,
+    "銀級": 7160,
+    "金級": 6305,
+    "58%": 5708,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 580,
+    "prod_seq": 580
+  },
+  {
+    "stock_no": "0899",
+    "prod_name": "SKIN プロテクティブモイスチャライザー SPF30",
+    "prod_name_en": "SKIN Protective Moisturizer SPF 30/PA+++",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 9294,
+    "標準小売価格": 9294,
+    "15%": 8014,
+    "25%": 7160,
+    "35%": 6305,
+    "42%": 5708,
+    "50%": 5025,
+    "cost": 5025,
+    "標準價": 9294,
+    "銅級": 8014,
+    "銀級": 7160,
+    "金級": 6305,
+    "58%": 5708,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 590,
+    "prod_seq": 590
+  },
+  {
+    "stock_no": "0774",
+    "prod_name": "SKIN リプレニッシングナイトクリーム",
+    "prod_name_en": "SKIN Replenishing Night Cream",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 9294,
+    "標準小売価格": 9294,
+    "15%": 8014,
+    "25%": 7160,
+    "35%": 6305,
+    "42%": 5708,
+    "50%": 5025,
+    "cost": 5025,
+    "標準價": 9294,
+    "銅級": 8014,
+    "銀級": 7160,
+    "金級": 6305,
+    "58%": 5708,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 600,
+    "prod_seq": 600
+  },
+  {
+    "stock_no": "0770",
+    "prod_name": "SKIN ファーミングアイジェル",
+    "prod_name_en": "SKIN Firming Eye Gel (Day)",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8622,
+    "標準小売価格": 8622,
+    "15%": 7434,
+    "25%": 6642,
+    "35%": 5850,
+    "42%": 5296,
+    "50%": 4662,
+    "cost": 4662,
+    "標準價": 8622,
+    "銅級": 7434,
+    "銀級": 6642,
+    "金級": 5850,
+    "58%": 5296,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 610,
+    "prod_seq": 610
+  },
+  {
+    "stock_no": "0771",
+    "prod_name": "SKIN ハイドレーティングアイクリーム",
+    "prod_name_en": "SKIN Hydrating Eye Cream (Night)",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8622,
+    "標準小売価格": 8622,
+    "15%": 7434,
+    "25%": 6642,
+    "35%": 5850,
+    "42%": 5296,
+    "50%": 4662,
+    "cost": 4662,
+    "標準價": 8622,
+    "銅級": 7434,
+    "銀級": 6642,
+    "金級": 5850,
+    "58%": 5296,
+    "note": "SKIN 護膚系列，參與折扣",
+    "fav": 620,
+    "prod_seq": 620
+  },
+  {
+    "stock_no": "2561",
+    "prod_name": "ハンド＆ボディ ウォッシュ",
+    "prod_name_en": "Hand & Body Wash",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2457,
+    "標準小売価格": 2457,
+    "15%": 2118,
+    "25%": 1893,
+    "35%": 1667,
+    "42%": 1509,
+    "50%": 1328,
+    "cost": 1328,
+    "標準價": 2457,
+    "銅級": 2118,
+    "銀級": 1893,
+    "金級": 1667,
+    "58%": 1509,
+    "note": "身體護理，參與折扣",
+    "fav": 630,
+    "prod_seq": 630
+  },
+  {
+    "stock_no": "2562",
+    "prod_name": "モイスチャライジングジェル",
+    "prod_name_en": "Moisturizing Gel",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2457,
+    "標準小売価格": 2457,
+    "15%": 2118,
+    "25%": 1893,
+    "35%": 1667,
+    "42%": 1509,
+    "50%": 1328,
+    "cost": 1328,
+    "標準價": 2457,
+    "銅級": 2118,
+    "銀級": 1893,
+    "金級": 1667,
+    "58%": 1509,
+    "note": "身體護理，參與折扣",
+    "fav": 640,
+    "prod_seq": 640
+  },
+  {
+    "stock_no": "250K",
+    "prod_name": "ハンド＆ボディ クリーム",
+    "prod_name_en": "Hand & Body Cream",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2457,
+    "標準小売価格": 2457,
+    "15%": 2118,
+    "25%": 1893,
+    "35%": 1667,
+    "42%": 1509,
+    "50%": 1328,
+    "cost": 1328,
+    "標準價": 2457,
+    "銅級": 2118,
+    "銀級": 1893,
+    "金級": 1667,
+    "58%": 1509,
+    "note": "身體護理，參與折扣",
+    "fav": 650,
+    "prod_seq": 650
+  },
+  {
+    "stock_no": "4T21",
+    "prod_name": "SKIN スターターセット※数量限定",
+    "prod_name_en": "SKIN Starter Set (Limited Quantity)",
+    "category": "外在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 37029,
+    "標準小売価格": 37029,
+    "15%": 32517,
+    "25%": 29054,
+    "35%": 25589,
+    "42%": 23163,
+    "50%": 20391,
+    "cost": 20391,
+    "標準價": 37029,
+    "銅級": 32517,
+    "銀級": 29054,
+    "金級": 25589,
+    "58%": 23163,
+    "note": "SKIN 套組，參與折扣",
+    "fav": 660,
+    "prod_seq": 660
+  },
+  {
+    "stock_no": "299A",
+    "prod_name": "タブレットボックス (小) 透明グリーン 10 個",
+    "prod_name_en": "Tablet Box (Small) - Clear Green, 10 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2236,
+    "標準小売価格": 2236,
+    "15%": 2236,
+    "25%": 2236,
+    "35%": 2236,
+    "42%": 2236,
+    "50%": 2236,
+    "cost": 2236,
+    "標準價": 2236,
+    "銅級": 2236,
+    "銀級": 2236,
+    "金級": 2236,
+    "58%": 2236,
+    "note": "周邊工具，不參與折扣",
+    "fav": 670,
+    "prod_seq": 670
+  },
+  {
+    "stock_no": "305A",
+    "prod_name": "タブレットボックス (中) 透明グリーン 5 個",
+    "prod_name_en": "Tablet Box (Medium) - Clear Green, 5 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1195,
+    "標準小売価格": 1195,
+    "15%": 1195,
+    "25%": 1195,
+    "35%": 1195,
+    "42%": 1195,
+    "50%": 1195,
+    "cost": 1195,
+    "標準價": 1195,
+    "銅級": 1195,
+    "銀級": 1195,
+    "金級": 1195,
+    "58%": 1195,
+    "note": "周邊工具，不參與折扣",
+    "fav": 680,
+    "prod_seq": 680
+  },
+  {
+    "stock_no": "314A",
+    "prod_name": "タブレットクラッシャー",
+    "prod_name_en": "Tablet Crusher",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 484,
+    "標準小売価格": 484,
+    "15%": 484,
+    "25%": 484,
+    "35%": 484,
+    "42%": 484,
+    "50%": 484,
+    "cost": 484,
+    "標準價": 484,
+    "銅級": 484,
+    "銀級": 484,
+    "金級": 484,
+    "58%": 484,
+    "note": "周邊工具，不參與折扣",
+    "fav": 690,
+    "prod_seq": 690
+  },
+  {
+    "stock_no": "706A",
+    "prod_name": "フォーミュラ 1 携帯用ケース",
+    "prod_name_en": "Formula 1 Portable Case",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 142,
+    "標準小売価格": 142,
+    "15%": 142,
+    "25%": 142,
+    "35%": 142,
+    "42%": 142,
+    "50%": 142,
+    "cost": 142,
+    "標準價": 142,
+    "銅級": 142,
+    "銀級": 142,
+    "金級": 142,
+    "58%": 142,
+    "note": "周邊工具，不參與折扣",
+    "fav": 700,
+    "prod_seq": 700
+  },
+  {
+    "stock_no": "3M16",
+    "prod_name": "フォーミュラ 1 携帯容器 ディスペンサー",
+    "prod_name_en": "Formula 1 Portable Dispenser",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 213,
+    "標準小売価格": 213,
+    "15%": 213,
+    "25%": 213,
+    "35%": 213,
+    "42%": 213,
+    "50%": 213,
+    "cost": 213,
+    "標準價": 213,
+    "銅級": 213,
+    "銀級": 213,
+    "金級": 213,
+    "58%": 213,
+    "note": "周邊工具，不參與折扣",
+    "fav": 710,
+    "prod_seq": 710
+  },
+  {
+    "stock_no": "295A",
+    "prod_name": "シェーカー 400ml",
+    "prod_name_en": "Shaker Bottle 400ml",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 371,
+    "標準小売価格": 371,
+    "15%": 371,
+    "25%": 371,
+    "35%": 371,
+    "42%": 371,
+    "50%": 371,
+    "cost": 371,
+    "標準價": 371,
+    "銅級": 371,
+    "銀級": 371,
+    "金級": 371,
+    "58%": 371,
+    "note": "周邊工具，不參與折扣",
+    "fav": 720,
+    "prod_seq": 720
+  },
+  {
+    "stock_no": "296A",
+    "prod_name": "シェーカー 5 個セット 400ml",
+    "prod_name_en": "Shaker Bottle 5-pack 400ml",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1791,
+    "標準小売価格": 1791,
+    "15%": 1791,
+    "25%": 1791,
+    "35%": 1791,
+    "42%": 1791,
+    "50%": 1791,
+    "cost": 1791,
+    "標準價": 1791,
+    "銅級": 1791,
+    "銀級": 1791,
+    "金級": 1791,
+    "58%": 1791,
+    "note": "周邊工具，不參與折扣",
+    "fav": 730,
+    "prod_seq": 730
+  },
+  {
+    "stock_no": "838M",
+    "prod_name": "H24 桃田選手オリジナルシェーカー",
+    "prod_name_en": "H24 Momota Original Shaker",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2603,
+    "標準小売価格": 2603,
+    "15%": 2603,
+    "25%": 2603,
+    "35%": 2603,
+    "42%": 2603,
+    "50%": 2603,
+    "cost": 2603,
+    "標準價": 2603,
+    "銅級": 2603,
+    "銀級": 2603,
+    "金級": 2603,
+    "58%": 2603,
+    "note": "聯名周邊，不參與折扣",
+    "fav": 740,
+    "prod_seq": 740
+  },
+  {
+    "stock_no": "297A",
+    "prod_name": "計量スプーン 10 本",
+    "prod_name_en": "Measuring Spoon, 10 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1492,
+    "標準小売価格": 1492,
+    "15%": 1492,
+    "25%": 1492,
+    "35%": 1492,
+    "42%": 1492,
+    "50%": 1492,
+    "cost": 1492,
+    "標準價": 1492,
+    "銅級": 1492,
+    "銀級": 1492,
+    "金級": 1492,
+    "58%": 1492,
+    "note": "周邊工具，不參與折扣",
+    "fav": 750,
+    "prod_seq": 750
+  },
+  {
+    "stock_no": "8504",
+    "prod_name": "「I Love Herbalife」ボタン 10 個",
+    "prod_name_en": "\"I Love Herbalife\" Button, 10 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1492,
+    "標準小売価格": 1492,
+    "15%": 1492,
+    "25%": 1492,
+    "35%": 1492,
+    "42%": 1492,
+    "50%": 1492,
+    "cost": 1492,
+    "標準價": 1492,
+    "銅級": 1492,
+    "銀級": 1492,
+    "金級": 1492,
+    "58%": 1492,
+    "note": "促銷品，不參與折扣",
+    "fav": 760,
+    "prod_seq": 760
+  },
+  {
+    "stock_no": "8531",
+    "prod_name": "「やせたい？」ボタン 10 個",
+    "prod_name_en": "\"Want to Lose Weight?\" Button, 10 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1492,
+    "標準小売価格": 1492,
+    "15%": 1492,
+    "25%": 1492,
+    "35%": 1492,
+    "42%": 1492,
+    "50%": 1492,
+    "cost": 1492,
+    "標準價": 1492,
+    "銅級": 1492,
+    "銀級": 1492,
+    "金級": 1492,
+    "58%": 1492,
+    "note": "促銷品，不參與折扣",
+    "fav": 770,
+    "prod_seq": 770
+  },
+  {
+    "stock_no": "8501",
+    "prod_name": "「Lose Weight Now」ボタン 10 個",
+    "prod_name_en": "\"Lose Weight Now\" Button, 10 pcs",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1492,
+    "標準小売価格": 1492,
+    "15%": 1492,
+    "25%": 1492,
+    "35%": 1492,
+    "42%": 1492,
+    "50%": 1492,
+    "cost": 1492,
+    "標準價": 1492,
+    "銅級": 1492,
+    "銀級": 1492,
+    "金級": 1492,
+    "58%": 1492,
+    "note": "促銷品，不參與折扣",
+    "fav": 780,
+    "prod_seq": 780
+  },
+  {
+    "stock_no": "310A",
+    "prod_name": "「I LOVE Herbalife」マグネットピン 5 個 グリーン",
+    "prod_name_en": "\"I LOVE Herbalife\" Magnet Pin, 5 pcs - Green",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2999,
+    "標準小売価格": 2999,
+    "15%": 2999,
+    "25%": 2999,
+    "35%": 2999,
+    "42%": 2999,
+    "50%": 2999,
+    "cost": 2999,
+    "標準價": 2999,
+    "銅級": 2999,
+    "銀級": 2999,
+    "金級": 2999,
+    "58%": 2999,
+    "note": "促銷品，不參與折扣",
+    "fav": 790,
+    "prod_seq": 790
+  },
+  {
+    "stock_no": "5B44",
+    "prod_name": "「I Love Herbalife」New ロゴ マグネットピン 5 個",
+    "prod_name_en": "\"I Love Herbalife\" (New Logo) Magnet Pin, 5 pcs - White",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 334,
+    "標準小売価格": 334,
+    "15%": 334,
+    "25%": 334,
+    "35%": 334,
+    "42%": 334,
+    "50%": 334,
+    "cost": 334,
+    "標準價": 334,
+    "銅級": 334,
+    "銀級": 334,
+    "金級": 334,
+    "58%": 334,
+    "note": "促銷品，不參與折扣",
+    "fav": 800,
+    "prod_seq": 800
+  },
+  {
+    "stock_no": "183A",
+    "prod_name": "3 日間チャレンジパック",
+    "prod_name_en": "3-Day Challenge Pack",
+    "category": "內在營養",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2137,
+    "標準小売価格": 2137,
+    "15%": 2137,
+    "25%": 2137,
+    "35%": 2137,
+    "42%": 2137,
+    "50%": 2137,
+    "cost": 2137,
+    "標準價": 2137,
+    "銅級": 2137,
+    "銀級": 2137,
+    "金級": 2137,
+    "58%": 2137,
+    "note": "體驗套組，不參與折扣",
+    "fav": 810,
+    "prod_seq": 810
+  },
+  {
+    "stock_no": "113M",
+    "prod_name": "ファブリックメジャーテープ",
+    "prod_name_en": "Fabric Measuring Tape",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 76,
+    "標準小売価格": 76,
+    "15%": 76,
+    "25%": 76,
+    "35%": 76,
+    "42%": 76,
+    "50%": 76,
+    "cost": 76,
+    "標準價": 76,
+    "銅級": 76,
+    "銀級": 76,
+    "金級": 76,
+    "58%": 76,
+    "note": "周邊工具，不參與折扣",
+    "fav": 820,
+    "prod_seq": 820
+  },
+  {
+    "stock_no": "7909",
+    "prod_name": "製品カタログ 1 部 A5",
+    "prod_name_en": "Product Catalog - A5 (1 copy)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 201,
+    "標準小売価格": 201,
+    "15%": 201,
+    "25%": 201,
+    "35%": 201,
+    "42%": 201,
+    "50%": 201,
+    "cost": 201,
+    "標準價": 201,
+    "銅級": 201,
+    "銀級": 201,
+    "金級": 201,
+    "58%": 201,
+    "note": "宣發物料，不參與折扣",
+    "fav": 830,
+    "prod_seq": 830
+  },
+  {
+    "stock_no": "7910",
+    "prod_name": "製品カタログ 10 部 A5",
+    "prod_name_en": "Product Catalog - A5 (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1608,
+    "標準小売価格": 1608,
+    "15%": 1608,
+    "25%": 1608,
+    "35%": 1608,
+    "42%": 1608,
+    "50%": 1608,
+    "cost": 1608,
+    "標準價": 1608,
+    "銅級": 1608,
+    "銀級": 1608,
+    "金級": 1608,
+    "58%": 1608,
+    "note": "宣發物料，不參與折扣",
+    "fav": 840,
+    "prod_seq": 840
+  },
+  {
+    "stock_no": "N353",
+    "prod_name": "ハーバライフ 24 ミニ冊子 1 部",
+    "prod_name_en": "Herbalife24 Mini Booklet (1 copy)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 135,
+    "標準小売価格": 135,
+    "15%": 135,
+    "25%": 135,
+    "35%": 135,
+    "42%": 135,
+    "50%": 135,
+    "cost": 135,
+    "標準價": 135,
+    "銅級": 135,
+    "銀級": 135,
+    "金級": 135,
+    "58%": 135,
+    "note": "宣發物料，不參與折扣",
+    "fav": 850,
+    "prod_seq": 850
+  },
+  {
+    "stock_no": "N354",
+    "prod_name": "ハーバライフ 24 ミニ冊子 3 部",
+    "prod_name_en": "Herbalife24 Mini Booklet (3 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 362,
+    "標準小売価格": 362,
+    "15%": 362,
+    "25%": 362,
+    "35%": 362,
+    "42%": 362,
+    "50%": 362,
+    "cost": 362,
+    "標準價": 362,
+    "銅級": 362,
+    "銀級": 362,
+    "金級": 362,
+    "58%": 362,
+    "note": "宣發物料，不參與折扣",
+    "fav": 860,
+    "prod_seq": 860
+  },
+  {
+    "stock_no": "N188",
+    "prod_name": "ライフサポート リーフレット 10 部",
+    "prod_name_en": "Life Support Leaflet (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 334,
+    "標準小売価格": 334,
+    "15%": 334,
+    "25%": 334,
+    "35%": 334,
+    "42%": 334,
+    "50%": 334,
+    "cost": 334,
+    "標準價": 334,
+    "銅級": 334,
+    "銀級": 334,
+    "金級": 334,
+    "58%": 334,
+    "note": "宣發物料，不參與折扣",
+    "fav": 870,
+    "prod_seq": 870
+  },
+  {
+    "stock_no": "N189",
+    "prod_name": "栄養哲学 フライヤー 10 部",
+    "prod_name_en": "Herbalife Nutrition Philosophy Flyer (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 270,
+    "標準小売価格": 270,
+    "15%": 270,
+    "25%": 270,
+    "35%": 270,
+    "42%": 270,
+    "50%": 270,
+    "cost": 270,
+    "標準價": 270,
+    "銅級": 270,
+    "銀級": 270,
+    "金級": 270,
+    "58%": 270,
+    "note": "宣發物料，不參與折扣",
+    "fav": 880,
+    "prod_seq": 880
+  },
+  {
+    "stock_no": "531N",
+    "prod_name": "ヘルシーブレックファスト リーフレット",
+    "prod_name_en": "Healthy Breakfast Leaflet (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 334,
+    "標準小売価格": 334,
+    "15%": 334,
+    "25%": 334,
+    "35%": 334,
+    "42%": 334,
+    "50%": 334,
+    "cost": 334,
+    "標準價": 334,
+    "銅級": 334,
+    "銀級": 334,
+    "金級": 334,
+    "58%": 334,
+    "note": "宣發物料，不參與折扣",
+    "fav": 890,
+    "prod_seq": 890
+  },
+  {
+    "stock_no": "7N08",
+    "prod_name": "フォーミュラ 1 リーフレット 10 部",
+    "prod_name_en": "Formula 1 Leaflet (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 378,
+    "標準小売価格": 378,
+    "15%": 378,
+    "25%": 378,
+    "35%": 378,
+    "42%": 378,
+    "50%": 378,
+    "cost": 378,
+    "標準價": 378,
+    "銅級": 378,
+    "銀級": 378,
+    "金級": 378,
+    "58%": 378,
+    "note": "宣發物料，不參與折扣",
+    "fav": 900,
+    "prod_seq": 900
+  },
+  {
+    "stock_no": "9N34",
+    "prod_name": "ヘルシーエイジング ビジネスツール",
+    "prod_name_en": "Healthy Aging Business Tool Set",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 378,
+    "標準小売価格": 378,
+    "15%": 378,
+    "25%": 378,
+    "35%": 378,
+    "42%": 378,
+    "50%": 378,
+    "cost": 378,
+    "標準價": 378,
+    "銅級": 378,
+    "銀級": 378,
+    "金級": 378,
+    "58%": 378,
+    "note": "宣發物料，不參與折扣",
+    "fav": 910,
+    "prod_seq": 910
+  },
+  {
+    "stock_no": "492L",
+    "prod_name": "概要書面 1 部",
+    "prod_name_en": "Summary Document (1 copy)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 135,
+    "標準小売価格": 135,
+    "15%": 135,
+    "25%": 135,
+    "35%": 135,
+    "42%": 135,
+    "50%": 135,
+    "cost": 135,
+    "標準價": 135,
+    "銅級": 135,
+    "銀級": 135,
+    "金級": 135,
+    "58%": 135,
+    "note": "宣發物料，不參與折扣",
+    "fav": 920,
+    "prod_seq": 920
+  },
+  {
+    "stock_no": "493L",
+    "prod_name": "概要書面 10 部",
+    "prod_name_en": "Summary Document (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1099,
+    "標準小売価格": 1099,
+    "15%": 1099,
+    "25%": 1099,
+    "35%": 1099,
+    "42%": 1099,
+    "50%": 1099,
+    "cost": 1099,
+    "標準價": 1099,
+    "銅級": 1099,
+    "銀級": 1099,
+    "金級": 1099,
+    "58%": 1099,
+    "note": "宣發物料，不參與折扣",
+    "fav": 930,
+    "prod_seq": 930
+  },
+  {
+    "stock_no": "62N8",
+    "prod_name": "卸売価格表＆注文方法 1 部",
+    "prod_name_en": "Wholesale Price List & Order Guide (1 copy)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 110,
+    "標準小売価格": 110,
+    "15%": 110,
+    "25%": 110,
+    "35%": 110,
+    "42%": 110,
+    "50%": 110,
+    "cost": 110,
+    "標準價": 110,
+    "銅級": 110,
+    "銀級": 110,
+    "金級": 110,
+    "58%": 110,
+    "note": "宣發物料，不參與折扣",
+    "fav": 940,
+    "prod_seq": 940
+  },
+  {
+    "stock_no": "62N9",
+    "prod_name": "卸売価格表＆注文方法 10 部",
+    "prod_name_en": "Wholesale Price List & Order Guide (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1045,
+    "標準小売価格": 1045,
+    "15%": 1045,
+    "25%": 1045,
+    "35%": 1045,
+    "42%": 1045,
+    "50%": 1045,
+    "cost": 1045,
+    "標準價": 1045,
+    "銅級": 1045,
+    "銀級": 1045,
+    "金級": 1045,
+    "58%": 1045,
+    "note": "宣發物料，不參與折扣",
+    "fav": 950,
+    "prod_seq": 950
+  },
+  {
+    "stock_no": "63N0",
+    "prod_name": "プレミアムカスタマー価格表 1 部",
+    "prod_name_en": "Preferred Customer Price List & Order Guide (1 copy)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 99,
+    "標準小売価格": 99,
+    "15%": 99,
+    "25%": 99,
+    "35%": 99,
+    "42%": 99,
+    "50%": 99,
+    "cost": 99,
+    "標準價": 99,
+    "銅級": 99,
+    "銀級": 99,
+    "金級": 99,
+    "58%": 99,
+    "note": "宣發物料，不參與折扣",
+    "fav": 960,
+    "prod_seq": 960
+  },
+  {
+    "stock_no": "63N1",
+    "prod_name": "プレミアムカスタマー価格表 10 部",
+    "prod_name_en": "Preferred Customer Price List & Order Guide (10 copies)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 935,
+    "標準小売価格": 935,
+    "15%": 935,
+    "25%": 935,
+    "35%": 935,
+    "42%": 935,
+    "50%": 935,
+    "cost": 935,
+    "標準價": 935,
+    "銅級": 935,
+    "銀級": 935,
+    "金級": 935,
+    "58%": 935,
+    "note": "宣發物料，不參與折扣",
+    "fav": 970,
+    "prod_seq": 970
+  },
+  {
+    "stock_no": "936S",
+    "prod_name": "お客様注文書 10 セット",
+    "prod_name_en": "Customer Order Form (10 sets)",
+    "category": "文宣品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 546,
+    "標準小売価格": 546,
+    "15%": 546,
+    "25%": 546,
+    "35%": 546,
+    "42%": 546,
+    "50%": 546,
+    "cost": 546,
+    "標準價": 546,
+    "銅級": 546,
+    "銀級": 546,
+    "金級": 546,
+    "58%": 546,
+    "note": "表單物料，不參與折扣",
+    "fav": 980,
+    "prod_seq": 980
+  },
+  {
+    "stock_no": "H258",
+    "prod_name": "ビジネスメンバーパック",
+    "prod_name_en": "Herbalife Nutrition Business Member Pack",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 6856,
+    "標準小売価格": 6856,
+    "15%": 6856,
+    "25%": 6856,
+    "35%": 6856,
+    "42%": 6856,
+    "50%": 6856,
+    "cost": 6856,
+    "標準價": 6856,
+    "銅級": 6856,
+    "銀級": 6856,
+    "金級": 6856,
+    "58%": 6856,
+    "note": "入會套組，不參與折扣",
+    "fav": 990,
+    "prod_seq": 990
+  },
+  {
+    "stock_no": "H260",
+    "prod_name": "プレミアムカスタマーパック",
+    "prod_name_en": "Herbalife Nutrition Preferred Customer Pack",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 2324,
+    "標準小売価格": 2324,
+    "15%": 2324,
+    "25%": 2324,
+    "35%": 2324,
+    "42%": 2324,
+    "50%": 2324,
+    "cost": 2324,
+    "標準價": 2324,
+    "銅級": 2324,
+    "銀級": 2324,
+    "金級": 2324,
+    "58%": 2324,
+    "note": "入會套組，不參與折扣",
+    "fav": 1000,
+    "prod_seq": 1000
+  },
+  {
+    "stock_no": "JPCV",
+    "prod_name": "コンバージョンパック",
+    "prod_name_en": "Herbalife Nutrition Conversion Pack",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 4532,
+    "標準小売価格": 4532,
+    "15%": 4532,
+    "25%": 4532,
+    "35%": 4532,
+    "42%": 4532,
+    "50%": 4532,
+    "cost": 4532,
+    "標準價": 4532,
+    "銅級": 4532,
+    "銀級": 4532,
+    "金級": 4532,
+    "58%": 4532,
+    "note": "轉換套組，無 SKU，不參與折扣",
+    "fav": 1010,
+    "prod_seq": 1010
+  },
+  {
+    "stock_no": "4C47",
+    "prod_name": "X 型スタンドバナー",
+    "prod_name_en": "X-Stand Banner (Herbalife Logo)",
+    "category": "輔銷品",
+    "type": "",
+    "vp": 0,
+    "retail_price": 17996,
+    "標準小売価格": 17996,
+    "15%": 17996,
+    "25%": 17996,
+    "35%": 17996,
+    "42%": 17996,
+    "50%": 17996,
+    "cost": 17996,
+    "標準價": 17996,
+    "銅級": 17996,
+    "銀級": 17996,
+    "金級": 17996,
+    "58%": 17996,
+    "note": "展示物料，不參與折扣",
+    "fav": 1020,
+    "prod_seq": 1020
+  },
+  {
+    "stock_no": "0909",
+    "prod_name": "スーパーバイザー年間登録更新料",
+    "prod_name_en": "Supervisor Annual Renewal Fee",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 8979,
+    "標準小売価格": 8979,
+    "15%": 8979,
+    "25%": 8979,
+    "35%": 8979,
+    "42%": 8979,
+    "50%": 8979,
+    "cost": 8979,
+    "標準價": 8979,
+    "銅級": 8979,
+    "銀級": 8979,
+    "金級": 8979,
+    "58%": 8979,
+    "note": "年費，不參與折扣",
+    "fav": 1030,
+    "prod_seq": 1030
+  },
+  {
+    "stock_no": "9909",
+    "prod_name": "ディストリビューター年間登録更新料",
+    "prod_name_en": "Distributor Annual Renewal Fee",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1317,
+    "標準小売価格": 1317,
+    "15%": 1317,
+    "25%": 1317,
+    "35%": 1317,
+    "42%": 1317,
+    "50%": 1317,
+    "cost": 1317,
+    "標準價": 1317,
+    "銅級": 1317,
+    "銀級": 1317,
+    "金級": 1317,
+    "58%": 1317,
+    "note": "年費，不參與折扣",
+    "fav": 1040,
+    "prod_seq": 1040
+  },
+  {
+    "stock_no": "N990",
+    "prod_name": "プレミアムカスタマー年間登録更新料",
+    "prod_name_en": "Preferred Customer Annual Renewal Fee",
+    "category": "其他",
+    "type": "",
+    "vp": 0,
+    "retail_price": 1317,
+    "標準小売価格": 1317,
+    "15%": 1317,
+    "25%": 1317,
+    "35%": 1317,
+    "42%": 1317,
+    "50%": 1317,
+    "cost": 1317,
+    "標準價": 1317,
+    "銅級": 1317,
+    "銀級": 1317,
+    "金級": 1317,
+    "58%": 1317,
+    "note": "年費，不參與折扣",
+    "fav": 1050,
+    "prod_seq": 1050
+  }
+];
+
+const COMPARISON_GROUPS = [
+  {
+    "id": "f1-vanilla",
+    "label": "F1 營養蛋白飲－香草",
+    "HK": "0141",
+    "TW": "2770",
+    "JP": "085K"
+  },
+  {
+    "id": "f1-chocolate",
+    "label": "F1 營養蛋白飲－朱古力",
+    "HK": "0142",
+    "TW": "2771",
+    "JP": "088K"
+  },
+  {
+    "id": "f1-strawberry",
+    "label": "F1 營養蛋白飲－草莓",
+    "HK": "0143",
+    "TW": "2772",
+    "JP": "090K"
+  },
+  {
+    "id": "f1-cookies",
+    "label": "F1 營養蛋白飲－曲奇忌廉",
+    "HK": "0146",
+    "TW": "0271",
+    "JP": "086K"
+  },
+  {
+    "id": "f1-select",
+    "label": "F1 Select 精選植物配方－香草",
+    "HK": "072K",
+    "TW": "072K",
+    "JP": "083K"
+  },
+  {
+    "id": "protein-powder",
+    "label": "優質蛋白粉",
+    "HK": "0242",
+    "TW": "0242",
+    "JP": "171K"
+  },
+  {
+    "id": "multivitamin",
+    "label": "多種維他命／草維錠",
+    "HK": "3115",
+    "TW": "3122",
+    "JP": "3114"
+  },
+  {
+    "id": "herbal-tea-original",
+    "label": "草本濃縮速溶茶－原味",
+    "HK": "0106",
+    "TW": "0106",
+    "JP": "0106"
+  },
+  {
+    "id": "aloe-mango",
+    "label": "蘆薈飲－芒果味",
+    "TW": "1065",
+    "JP": "1065"
+  },
+  {
+    "id": "aloe-grape",
+    "label": "蘆薈飲－葡萄味",
+    "HK": "1610",
+    "TW": "1610",
+    "JP": "1610"
+  },
+  {
+    "id": "aloe-mandarin",
+    "label": "蘆薈飲－柑橘／橘子味",
+    "HK": "2631",
+    "JP": "2631"
+  },
+  {
+    "id": "fiber-apple",
+    "label": "營養纖維粉－蘋果味",
+    "HK": "2864",
+    "TW": "2864",
+    "JP": "2864"
+  },
+  {
+    "id": "probiotic",
+    "label": "益生菌",
+    "HK": "1829",
+    "TW": "1829",
+    "JP": "1829"
+  },
+  {
+    "id": "niteworks",
+    "label": "夜寧新 Niteworks",
+    "HK": "0036",
+    "TW": "0036",
+    "JP": "1158"
+  },
+  {
+    "id": "cell-u-loss",
+    "label": "Cell-U-Loss 細喜／消脂片",
+    "HK": "0111",
+    "TW": "0111",
+    "JP": "0111"
+  },
+  {
+    "id": "tri-shield",
+    "label": "南極磷蝦油 Tri-Shield",
+    "HK": "0100",
+    "TW": "0100",
+    "JP": "0100"
+  },
+  {
+    "id": "fish-oil",
+    "label": "深海魚油 Herbalifeline",
+    "HK": "0065",
+    "TW": "0065",
+    "JP": "0065"
+  },
+  {
+    "id": "calcium",
+    "label": "複合鈣片 Xtra-Cal",
+    "HK": "0565",
+    "TW": "0565",
+    "JP": "0174"
+  },
+  {
+    "id": "joint-support",
+    "label": "關節營養／Herbaliflex",
+    "HK": "1000",
+    "TW": "1000",
+    "JP": "0555"
+  },
+  {
+    "id": "collagen",
+    "label": "膠原蛋白美妍飲",
+    "HK": "0056",
+    "TW": "0056",
+    "JP": "3170"
+  },
+  {
+    "id": "womans-choice",
+    "label": "女士之選 Woman's Choice",
+    "HK": "1061",
+    "TW": "127K",
+    "JP": "127K"
+  },
+  {
+    "id": "cr7",
+    "label": "CR7 運動補水飲",
+    "HK": "1463",
+    "TW": "1463",
+    "JP": "1463"
+  },
+  {
+    "id": "h24-f1-sport",
+    "label": "H24 Formula 1 Sport",
+    "HK": "1457",
+    "TW": "1457",
+    "JP": "1412"
+  },
+  {
+    "id": "h24-rebuild",
+    "label": "H24 Rebuild Strength",
+    "HK": "1417",
+    "TW": "1459",
+    "JP": "1459"
+  },
+  {
+    "id": "protein-bar-vanilla",
+    "label": "蛋白棒－香草杏仁",
+    "HK": "0258",
+    "JP": "0258"
+  },
+  {
+    "id": "protein-bar-citrus",
+    "label": "蛋白棒－柑橘檸檬",
+    "TW": "0260",
+    "JP": "0260"
+  },
+  {
+    "id": "coffee-mocha",
+    "label": "蛋白冰咖啡－摩卡",
+    "HK": "011K",
+    "TW": "011K",
+    "JP": "011K"
+  },
+  {
+    "id": "nrg",
+    "label": "NRG 瓜拿那茶",
+    "HK": "0102",
+    "TW": "0102",
+    "JP": "0124"
+  },
+  {
+    "id": "liftoff",
+    "label": "Liftoff 活力發泡飲",
+    "HK": "2871",
+    "TW": "3152",
+    "JP": "105K"
+  },
+  {
+    "id": "cleanser",
+    "label": "SKIN 潔面乳",
+    "HK": "0765",
+    "TW": "0765",
+    "JP": "0765"
+  },
+  {
+    "id": "toner",
+    "label": "SKIN 草本化妝水／爽膚水 150ml",
+    "HK": "0891",
+    "TW": "0891",
+    "JP": "0891"
+  },
+  {
+    "id": "serum",
+    "label": "SKIN 精華霜／精華液",
+    "HK": "0768",
+    "TW": "0768",
+    "JP": "0768"
+  },
+  {
+    "id": "day-moisturizer",
+    "label": "SKIN 日間保濕乳液",
+    "HK": "0769",
+    "TW": "0769",
+    "JP": "0769"
+  },
+  {
+    "id": "sunscreen",
+    "label": "SKIN 防曬乳液 SPF30",
+    "HK": "0899",
+    "TW": "0899",
+    "JP": "0899"
+  },
+  {
+    "id": "night-cream",
+    "label": "SKIN 賦活晚霜",
+    "HK": "0774",
+    "TW": "0774",
+    "JP": "0774"
+  },
+  {
+    "id": "eye-gel",
+    "label": "SKIN 緊緻眼部啫喱",
+    "HK": "0770",
+    "TW": "0770",
+    "JP": "0770"
+  },
+  {
+    "id": "eye-cream",
+    "label": "SKIN 保濕眼霜",
+    "HK": "0771",
+    "TW": "0771",
+    "JP": "0771"
+  },
+  {
+    "id": "body-wash",
+    "label": "蘆薈滋潤沐浴露",
+    "HK": "2561",
+    "TW": "2561",
+    "JP": "2561"
+  },
+  {
+    "id": "aloe-gel",
+    "label": "蘆薈護膚凝露",
+    "HK": "2562",
+    "TW": "2562",
+    "JP": "2562"
+  },
+  {
+    "id": "body-cream",
+    "label": "蘆薈滋潤乳霜／身體霜",
+    "HK": "2563",
+    "TW": "2563",
+    "JP": "250K"
+  },
+  {
+    "id": "schizandra",
+    "label": "五味子 Schizandra Plus",
+    "HK": "0022",
+    "TW": "0022"
+  },
+  {
+    "id": "relaxation-tea",
+    "label": "輕鬆茶 Relaxation Tea",
+    "HK": "044K",
+    "TW": "044K"
+  },
+  {
+    "id": "garden",
+    "label": "蔬果營養／Herbal Garden",
+    "TW": "3272",
+    "JP": "1394"
+  },
+  {
+    "id": "shaker",
+    "label": "奶昔搖搖杯／Shaker 400ml",
+    "TW": "8574",
+    "JP": "295A"
+  },
+  {
+    "id": "supervisor-fee",
+    "label": "督導年費",
+    "TW": "0909",
+    "JP": "0909"
+  },
+  {
+    "id": "distributor-fee",
+    "label": "會員／直銷商年費",
+    "HK": "9909",
+    "TW": "9909",
+    "JP": "9909"
+  }
+];
+
 const COUNTRY_CONFIGS = {
   HK: {
-    name: '香港', flag: '🇭🇰', currency: 'HK$', locale: 'zh-HK', decimals: 2,
+    name: '香港', flag: '🇭🇰', currency: 'HK$', currencyCode: 'HKD', locale: 'zh-HK', decimals: 2,
     defaultTier: '標準價',
     tiers: [
       ['標準價', '標準價'], ['銅級', '銅級'], ['銀級', '銀級'], ['金級', '金級'],
@@ -3070,32 +6024,268 @@ const COUNTRY_CONFIGS = {
     ]
   },
   TW: {
-    name: '台灣', flag: '🇹🇼', currency: 'NT$', locale: 'zh-TW', decimals: 0,
+    name: '台灣', flag: '🇹🇼', currency: 'NT$', currencyCode: 'TWD', locale: 'zh-TW', decimals: 0,
     defaultTier: '建議零售價',
     tiers: [
       ['建議零售價', '建議零售價（含稅）'], ['未稅價格', '未稅價格'], ['15%', '15%'],
       ['25%', '25%'], ['35%', '35%'], ['42%', '42%'], ['50%', '50%'],
       ['cost', '成本價（50%）']
     ]
+  },
+  JP: {
+    name: '日本', flag: '🇯🇵', currency: '¥', currencyCode: 'JPY', locale: 'ja-JP', decimals: 0,
+    defaultTier: '標準小売価格',
+    tiers: [
+      ['標準小売価格', '標準小売価格'], ['15%', '15%'], ['25%', '25%'],
+      ['35%', '35%'], ['42%', '42%'], ['50%', '50%'], ['cost', '成本價（50%）']
+    ]
   }
 };
 
 const countryState = {
   HK: { selected: [], tier1: '標準價', tier2: '', includeFreight: false },
-  TW: { selected: [], tier1: '建議零售價', tier2: '', includeFreight: false }
+  TW: { selected: [], tier1: '建議零售價', tier2: '', includeFreight: false },
+  JP: { selected: [], tier1: '標準小売価格', tier2: '', includeFreight: false }
 };
 
 let currentCountry = 'HK';
 let productsData = JSON.parse(JSON.stringify(hongKongProductsData));
 let originalProductsData = JSON.parse(JSON.stringify(productsData));
 let includeFreight = false;
+let currentWorkspace = 'single';
+let singleCurrencyMode = 'AUTO';
+let comparisonCurrency = 'HKD';
+let comparisonTier = 'retail';
+let comparisonSort = { country: 'HK', direction: 'asc' };
+let exchangeRates = { HKD: 1, TWD: 4.04, JPY: 20.33 };
+
+const CURRENCY_META = {
+  HKD: { symbol: 'HK$', label: '港幣 HKD', locale: 'zh-HK', decimals: 2 },
+  TWD: { symbol: 'NT$', label: '台幣 TWD', locale: 'zh-TW', decimals: 0 },
+  JPY: { symbol: '¥', label: '日圓 JPY', locale: 'ja-JP', decimals: 0 }
+};
+
+const COMPARE_TIER_KEYS = {
+  retail: { HK: '標準價', TW: '建議零售價', JP: '標準小売価格' },
+  '15%': { HK: '銅級', TW: '15%', JP: '15%' },
+  '25%': { HK: '銀級', TW: '25%', JP: '25%' },
+  '35%': { HK: '金級', TW: '35%', JP: '35%' },
+  '42%': { HK: '58%', TW: '42%', JP: '42%' },
+  '50%': { HK: '50%', TW: '50%', JP: '50%' }
+};
 
 function getCountryConfig() { return COUNTRY_CONFIGS[currentCountry]; }
 
+function getCountryProducts(country) {
+  if (country === 'TW') return taiwanProductsData;
+  if (country === 'JP') return japanProductsData;
+  return hongKongProductsData;
+}
+
 function hydrateCountryProducts(country) {
-  const source = country === 'TW' ? taiwanProductsData : hongKongProductsData;
-  productsData = JSON.parse(JSON.stringify(source));
+  productsData = JSON.parse(JSON.stringify(getCountryProducts(country)));
   originalProductsData = JSON.parse(JSON.stringify(productsData));
+}
+
+
+function getSingleDisplayCurrency() {
+  return singleCurrencyMode === 'AUTO' ? getCountryConfig().currencyCode : singleCurrencyMode;
+}
+
+function convertCurrency(amount, fromCountry, targetCurrency) {
+  const sourceCode = COUNTRY_CONFIGS[fromCountry]?.currencyCode || fromCountry;
+  const sourceRate = exchangeRates[sourceCode];
+  const targetRate = exchangeRates[targetCurrency];
+  if (!Number.isFinite(Number(amount)) || !sourceRate || !targetRate) return null;
+  return (Number(amount) / sourceRate) * targetRate;
+}
+
+function formatCurrencyAmount(amount, currencyCode, forceInteger = false) {
+  const meta = CURRENCY_META[currencyCode];
+  const value = Number(amount);
+  if (!meta || !Number.isFinite(value)) return '—';
+  const decimals = forceInteger ? 0 : meta.decimals;
+  return meta.symbol + value.toLocaleString(meta.locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+function formatConvertedPrice(amount, fromCountry = currentCountry, isPackage = false, targetCurrency = getSingleDisplayCurrency()) {
+  const converted = convertCurrency(amount, fromCountry, targetCurrency);
+  const forceInteger = isPackage && fromCountry === 'HK' && targetCurrency === 'HKD';
+  return formatCurrencyAmount(converted, targetCurrency, forceInteger);
+}
+
+function initCurrencySettings() {
+  try {
+    const savedRates = JSON.parse(localStorage.getItem('calcExchangeRates') || 'null');
+    if (savedRates && Number(savedRates.TWD) > 0 && Number(savedRates.JPY) > 0) {
+      exchangeRates = { HKD: 1, TWD: Number(savedRates.TWD), JPY: Number(savedRates.JPY) };
+    }
+    const savedSingle = localStorage.getItem('calcSingleCurrency');
+    if (['AUTO','HKD','TWD','JPY'].includes(savedSingle)) singleCurrencyMode = savedSingle;
+    const savedCompare = localStorage.getItem('calcComparisonCurrency');
+    if (['HKD','TWD','JPY'].includes(savedCompare)) comparisonCurrency = savedCompare;
+  } catch(e) {}
+  document.getElementById('rate-twd').value = exchangeRates.TWD;
+  document.getElementById('rate-jpy').value = exchangeRates.JPY;
+  refreshCurrencyUi();
+}
+
+function refreshCurrencyUi() {
+  ['AUTO','HKD','TWD','JPY'].forEach(code => {
+    const btn = document.getElementById('single-currency-' + code.toLowerCase());
+    if (btn) btn.classList.toggle('active', singleCurrencyMode === code);
+  });
+  ['HKD','TWD','JPY'].forEach(code => {
+    const btn = document.getElementById('compare-currency-' + code.toLowerCase());
+    if (btn) btn.classList.toggle('active', comparisonCurrency === code);
+  });
+  const singleCode = getSingleDisplayCurrency();
+  document.getElementById('single-currency-current').textContent = CURRENCY_META[singleCode].label;
+  document.getElementById('single-currency-note').textContent = singleCurrencyMode === 'AUTO'
+    ? `自動模式：${getCountryConfig().flag} ${getCountryConfig().name}產品顯示${CURRENCY_META[singleCode].label}。`
+    : `已統一換算為${CURRENCY_META[singleCode].label}；產品原始價格資料沒有改動。`;
+  document.getElementById('compare-currency-current').textContent = CURRENCY_META[comparisonCurrency].label;
+  document.getElementById('rate-summary').textContent = `1 HKD = ${exchangeRates.TWD.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')} TWD = ${exchangeRates.JPY.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')} JPY`;
+  refreshPackagePlanPrices();
+}
+
+function setSingleCurrency(code) {
+  if (!['AUTO','HKD','TWD','JPY'].includes(code)) return;
+  singleCurrencyMode = code;
+  try { localStorage.setItem('calcSingleCurrency', code); } catch(e) {}
+  refreshCurrencyUi();
+  updateProductDisplay();
+  filterProducts();
+  showToast(code === 'AUTO' ? '已按國家顯示當地貨幣' : '全部價格已換算為' + CURRENCY_META[code].label);
+}
+
+function setComparisonCurrency(code) {
+  if (!['HKD','TWD','JPY'].includes(code)) return;
+  comparisonCurrency = code;
+  try { localStorage.setItem('calcComparisonCurrency', code); } catch(e) {}
+  refreshCurrencyUi();
+  renderComparison();
+}
+
+function saveExchangeRates() {
+  const twd = Number(document.getElementById('rate-twd').value);
+  const jpy = Number(document.getElementById('rate-jpy').value);
+  if (!(twd > 0) || !(jpy > 0)) { showToast('請輸入有效匯率'); return; }
+  exchangeRates = { HKD: 1, TWD: twd, JPY: jpy };
+  try { localStorage.setItem('calcExchangeRates', JSON.stringify(exchangeRates)); } catch(e) {}
+  refreshCurrencyUi();
+  updateProductDisplay();
+  filterProducts();
+  renderComparison();
+  showToast('匯率已更新，所有價格已重新換算');
+}
+
+function refreshPackagePlanPrices() {
+  document.querySelectorAll('.package-plan-btn').forEach(btn => {
+    const match = (btn.getAttribute('onclick') || '').match(/'([^']+)'/);
+    if (!match) return;
+    const product = hongKongProductsData.find(p => p.stock_no === match[1]);
+    if (!product) return;
+    const priceEl = btn.querySelector('.plan-price');
+    const profitEl = btn.querySelector('.plan-profit');
+    if (priceEl) priceEl.textContent = formatConvertedPrice(product.標準價, 'HK', true);
+    if (profitEl) profitEl.textContent = '💰 利潤 ' + formatConvertedPrice(product.fixedProfit, 'HK', false);
+  });
+}
+
+function switchWorkspace(mode, announce = true) {
+  if (!['single','compare'].includes(mode)) return;
+  currentWorkspace = mode;
+  document.getElementById('single-country-workspace').style.display = mode === 'single' ? 'block' : 'none';
+  document.getElementById('compare-workspace').style.display = mode === 'compare' ? 'block' : 'none';
+  document.getElementById('mode-single-btn').classList.toggle('active', mode === 'single');
+  document.getElementById('mode-compare-btn').classList.toggle('active', mode === 'compare');
+  document.getElementById('app-title').lastChild.textContent = mode === 'compare' ? 'HBL 三國產品格價' : `HBL ${getCountryConfig().name}產品計算器`;
+  document.title = mode === 'compare' ? 'HBL 香港／台灣／日本三國格價' : `HBL ${getCountryConfig().name}產品計算器`;
+  if (mode === 'compare') renderComparison(); else updateProductDisplay();
+  if (announce) showToast(mode === 'compare' ? '已開啟三國格價' : '已返回單國計算');
+}
+
+function setCompareTier(tier) {
+  if (!COMPARE_TIER_KEYS[tier]) return;
+  comparisonTier = tier;
+  renderComparison();
+}
+
+function sortComparison(country) {
+  if (!['HK','TW','JP'].includes(country)) return;
+  if (comparisonSort.country === country) comparisonSort.direction = comparisonSort.direction === 'asc' ? 'desc' : 'asc';
+  else comparisonSort = { country, direction: 'asc' };
+  renderComparison();
+}
+
+function comparisonProduct(group, country) {
+  const stockNo = group[country];
+  if (!stockNo) return null;
+  return getCountryProducts(country).find(p => p.stock_no === stockNo) || null;
+}
+
+function comparisonPrice(group, country) {
+  const product = comparisonProduct(group, country);
+  if (!product) return null;
+  const key = COMPARE_TIER_KEYS[comparisonTier][country];
+  const nativePrice = Number(product[key]);
+  if (!Number.isFinite(nativePrice)) return null;
+  const converted = convertCurrency(nativePrice, country, comparisonCurrency);
+  return { product, nativePrice, converted };
+}
+
+function comparisonSearchText(group) {
+  return ['HK','TW','JP'].reduce((parts, country) => {
+    const product = comparisonProduct(group, country);
+    if (product) parts.push(product.stock_no, product.prod_name, product.prod_name_en);
+    return parts;
+  }, [group.label]).join(' ').toLowerCase();
+}
+
+function renderComparison() {
+  const container = document.getElementById('compare-results');
+  if (!container) return;
+  const query = (document.getElementById('compare-search').value || '').trim().toLowerCase();
+  let groups = COMPARISON_GROUPS.filter(group => !query || comparisonSearchText(group).includes(query));
+  const sortCountry = comparisonSort.country;
+  groups.sort((a, b) => {
+    const pa = comparisonPrice(a, sortCountry)?.converted;
+    const pb = comparisonPrice(b, sortCountry)?.converted;
+    if (!Number.isFinite(pa) && !Number.isFinite(pb)) return a.label.localeCompare(b.label, 'zh-Hant');
+    if (!Number.isFinite(pa)) return 1;
+    if (!Number.isFinite(pb)) return -1;
+    return comparisonSort.direction === 'asc' ? pa - pb : pb - pa;
+  });
+
+  ['HK','TW','JP'].forEach(country => {
+    const btn = document.getElementById('compare-sort-' + country.toLowerCase());
+    const active = comparisonSort.country === country;
+    btn.classList.toggle('active', active);
+    const arrow = active ? (comparisonSort.direction === 'asc' ? '↑' : '↓') : '↕';
+    btn.textContent = COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + ' ' + arrow;
+  });
+  document.getElementById('compare-sort-label').textContent = COUNTRY_CONFIGS[sortCountry].name + '・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低');
+  document.getElementById('compare-result-count').textContent = groups.length + ' 項';
+  document.getElementById('compare-meta-left').textContent = `${comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級'}・${CURRENCY_META[comparisonCurrency].label}`;
+
+  if (groups.length === 0) {
+    container.innerHTML = '<div class="compare-card" style="text-align:center;color:var(--text-muted);padding:22px;">沒有找到符合的同類產品</div>';
+    return;
+  }
+
+  container.innerHTML = groups.map(group => {
+    const prices = ['HK','TW','JP'].map(country => ({ country, data: comparisonPrice(group, country) }));
+    const available = prices.filter(item => item.data && Number.isFinite(item.data.converted));
+    const minimum = available.length ? Math.min(...available.map(item => item.data.converted)) : Infinity;
+    const boxes = prices.map(({ country, data }) => {
+      if (!data) return `<div class="compare-price-box"><div class="compare-country-name">${COUNTRY_CONFIGS[country].flag} ${COUNTRY_CONFIGS[country].name}</div><div class="missing-price">—</div></div>`;
+      const cheapest = Math.abs(data.converted - minimum) < 0.01;
+      return `<div class="compare-price-box ${cheapest ? 'cheapest' : ''}"><div class="compare-country-name">${COUNTRY_CONFIGS[country].flag} ${COUNTRY_CONFIGS[country].name}</div><div class="compare-price">${formatCurrencyAmount(data.converted, comparisonCurrency)}</div>${cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : ''}</div>`;
+    }).join('');
+    const countryCount = available.length;
+    return `<div class="compare-card"><div class="compare-card-title">${group.label}<div class="compare-card-sub">可比較 ${countryCount} 個國家／地區</div></div><div class="compare-country-grid">${boxes}</div></div>`;
+  }).join('');
 }
 
 function updateTierSelectors() {
@@ -3129,12 +6319,15 @@ function refreshCountryUi() {
   const config = getCountryConfig();
   document.getElementById('country-hk').classList.toggle('active', currentCountry === 'HK');
   document.getElementById('country-tw').classList.toggle('active', currentCountry === 'TW');
-  document.getElementById('app-title').lastChild.textContent = `HBL ${config.name}產品計算器`;
-  document.title = `HBL ${config.name}產品計算器`;
+  document.getElementById('country-jp').classList.toggle('active', currentCountry === 'JP');
+  if (currentWorkspace === 'single') document.getElementById('app-title').lastChild.textContent = `HBL ${config.name}產品計算器`;
+  if (currentWorkspace === 'single') document.title = `HBL ${config.name}產品計算器`;
   document.getElementById('freight-control').style.display = currentCountry === 'HK' ? 'flex' : 'none';
   document.getElementById('hk-package-plans').style.display = currentCountry === 'HK' ? 'block' : 'none';
   document.getElementById('hk-big-meal-shortcut').style.display = currentCountry === 'HK' ? 'block' : 'none';
+  document.getElementById('btn-vp-assistant').style.display = currentCountry === 'JP' ? 'none' : 'flex';
   updateTierSelectors();
+  refreshCurrencyUi();
 }
 
 function switchCountry(country, announce = true) {
@@ -3240,26 +6433,24 @@ function handleOverlayClick(e) { if (e.target === document.getElementById('searc
 function updateClearBtn() { const val = document.getElementById('product-search').value; document.getElementById('search-clear-btn').classList.toggle('visible', !!val); }
 function clearSearch() { document.getElementById('product-search').value = ''; updateClearBtn(); filterProducts(); scrollListToTop(); document.getElementById('product-search').focus(); }
 
-function formatPrice(price, isPackage) { const config = getCountryConfig(); const value = Number(price) || 0; const decimals = isPackage && currentCountry === 'HK' ? 0 : config.decimals; return config.currency + value.toLocaleString(config.locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }); }
-function formatProfit(profit) { const config = getCountryConfig(); const value = Number(profit) || 0; const digits = config.decimals === 0 ? 0 : (Number.isInteger(value) ? 0 : 1); return config.currency + value.toLocaleString(config.locale, { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
+function formatPrice(price, isPackage) { return formatConvertedPrice(price, currentCountry, isPackage); }
+function formatProfit(profit) { return formatConvertedPrice(profit, currentCountry, false); }
 
 // 新增：取得日/次成本 HTML 字串的函數
 function getCostHtml(price, days, servings) {
   if (!days || !servings) return '';
-  const dCost = (price / days).toFixed(1);
-  const sCost = (price / servings).toFixed(1);
-  if (days === servings) {
-    return `<div style="font-size:0.75em;color:var(--text-muted);margin-top:2px;font-weight:600;">日/次:${getCountryConfig().currency}${dCost}</div>`;
-  }
-  return `<div style="font-size:0.75em;color:var(--text-muted);margin-top:2px;font-weight:600;">日:${getCountryConfig().currency}${dCost} | 次:${getCountryConfig().currency}${sCost}</div>`;
+  const dCost = formatPrice(price / days, false);
+  const sCost = formatPrice(price / servings, false);
+  if (days === servings) return `<div style="font-size:0.75em;color:var(--text-muted);margin-top:2px;font-weight:600;">日/次:${dCost}</div>`;
+  return `<div style="font-size:0.75em;color:var(--text-muted);margin-top:2px;font-weight:600;">日:${dCost} | 次:${sCost}</div>`;
 }
 
 // 新增：取得複製專用的成本字串
 const getCopyCostStr = (price, days, servings) => {
   if (!days || !servings) return '';
-  const d = (price / days).toFixed(1);
-  const s = (price / servings).toFixed(1);
-  return days === servings ? ` (日/次:${getCountryConfig().currency}${d})` : ` (日:${getCountryConfig().currency}${d}/次:${getCountryConfig().currency}${s})`;
+  const d = formatPrice(price / days, false);
+  const s = formatPrice(price / servings, false);
+  return days === servings ? ` (日/次:${d})` : ` (日:${d}/次:${s})`;
 };
 
 function copyToClipboard() { if (selectedProducts.length === 0) { triggerHaptic('medium'); showToast('沒有可複製的產品'); return; } triggerHaptic('light'); const t1 = document.getElementById('pricing-tier1').value; const t2 = document.getElementById('pricing-tier2').value; const cmp = t2 && t1 !== t2; const hasPkgProfit = selectedProducts.some(p => p.type === 'package' && p.fixedProfit !== undefined); const hasProfit = cmp || hasPkgProfit; let modalHtml = `<div class="modal-overlay" id="copy-modal" style="display:flex; z-index: 2000;"><div class="modal"><div class="modal-title">📋 選擇複製資訊</div><div class="modal-content"><label class="copy-opt-label"><input type="checkbox" id="copy-opt-unitprice" checked> 單價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalprice" checked> 總價</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-vp" checked> VP 分數</label><label class="copy-opt-label"><input type="checkbox" id="copy-opt-totalvp" checked> 總 VP 分數</label>`; if (hasProfit) modalHtml += `<label class="copy-opt-label"><input type="checkbox" id="copy-opt-profit" checked> 利潤</label>`; modalHtml += `</div><div class="modal-actions"><button onclick="triggerHaptic('light'); document.getElementById('copy-modal').remove()" style="padding: 8px 16px;">取消</button><button class="btn-primary" onclick="triggerHaptic('success'); executeCopy()" style="padding: 8px 16px;">確定複製</button></div></div></div>`; const oldModal = document.getElementById('copy-modal'); if (oldModal) oldModal.remove(); document.body.insertAdjacentHTML('beforeend', modalHtml); }
@@ -3377,6 +6568,7 @@ function initVpWorker() {
 }
 
 function calculateVpRecommendations() {
+  if (currentCountry === 'JP') { showToast('日本價目表沒有 VP 資料，已停用 VP 推薦'); return; }
   const targetVP = parseFloat(document.getElementById('target-vp-input').value);
   if (isNaN(targetVP) || targetVP <= 0) { showToast('請輸入有效的 VP 分數'); return; }
   if (candidateStockNos.size === 0) { showToast('請先在搜尋頁面用 🔖 選擇候選產品'); return; }
@@ -3436,12 +6628,15 @@ function checkNewProductNotification() { if (!localStorage.getItem('seen_new_pro
 window.onload = function () {
   initPWA();
   initFontSize();
+  initCurrencySettings();
   initCountry();
   loadCandidates();
   initCategories();
   initVpWorker();
   switchView('table');
   updateProductDisplay();
+  switchWorkspace('single', false);
+  renderComparison();
   checkNewProductNotification();
   document.addEventListener('touchend', function (e) { const btn = e.target.closest('button'); if (btn) setTimeout(() => btn.blur(), 50); }, { passive: true });
 };
