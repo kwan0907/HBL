@@ -19,6 +19,7 @@ let currentWorkspace = 'single';
 let singleCurrencyMode = 'AUTO';
 let comparisonCurrency = BASE_CURRENCY;
 let comparisonTier = 'retail';
+let comparisonCategory = 'internal';
 let comparisonSort = { mode:'country', country: currentCountry, direction:'asc' };
 let exchangeRates = Object.fromEntries(ALL_CURRENCIES.map(code => [code, Number(CURRENCY_META[code].ratePerHKD) || 1]));
 let selectedProducts = [];
@@ -105,7 +106,7 @@ function renderDynamicControls() {
   document.getElementById('rate-editor-fields').innerHTML = ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY).map(code =>
     '<div class="rate-input-row"><span>1 ' + BASE_CURRENCY + ' =</span><input id="rate-' + code.toLowerCase() + '" type="number" inputmode="decimal" step="0.0001"><span>' + code + '</span></div>'
   ).join('');
-  document.getElementById('mode-compare-btn').textContent = '🌍 ' + regionCountLabel() + '格價';
+  document.getElementById('mode-compare-btn').textContent = '🌍 ' + regionCountLabel() + '價格';
   document.getElementById('compare-panel-title').textContent = '🌍 ' + regionCountLabel() + '產品格價';
 }
 
@@ -306,6 +307,7 @@ function switchWorkspace(mode, announce = true) {
   document.getElementById('compare-workspace').style.display = mode === 'compare' ? 'block' : 'none';
   document.getElementById('mode-single-btn').classList.toggle('active', mode === 'single');
   document.getElementById('mode-compare-btn').classList.toggle('active', mode === 'compare');
+  updateFreightVisibility();
   document.getElementById('app-title').lastChild.textContent = mode === 'compare' ? 'HBL ' + regionCountLabel() + '產品格價' : 'HBL ' + getCountryConfig().name + '產品計算器';
   document.title = mode === 'compare' ? 'HBL ' + ALL_COUNTRIES.map(code => COUNTRY_CONFIGS[code].name).join('／') + '格價' : 'HBL ' + getCountryConfig().name + '產品計算器';
   if (mode === 'compare') renderComparison(); else updateProductDisplay();
@@ -314,6 +316,11 @@ function switchWorkspace(mode, announce = true) {
 function setCompareTier(tier) {
   if (!ALL_COUNTRIES.some(code => COUNTRY_CONFIGS[code].compareTiers?.[tier])) return;
   comparisonTier = tier; renderComparison();
+}
+function setComparisonCategory(category) {
+  if (!['internal','external','tools'].includes(category)) return;
+  comparisonCategory = category;
+  renderComparison();
 }
 function sortComparison(country) {
   if (!ALL_COUNTRIES.includes(country)) return;
@@ -356,6 +363,21 @@ function comparisonSearchText(group) {
     if (product) parts.push(product.stock_no, product.prod_name, product.prod_name_en);
     return parts;
   }, [group.label]).join(' ').toLowerCase();
+}
+function normalizeComparisonCategory(category) {
+  const value = String(category || '');
+  if (value.includes('外')) return 'external';
+  if (value.includes('內') || value.includes('内') || value.includes('套裝')) return 'internal';
+  return 'tools';
+}
+function comparisonGroupCategory(group) {
+  const categories = ALL_COUNTRIES
+    .map(country => comparisonProduct(group, country)?.category)
+    .filter(Boolean)
+    .map(normalizeComparisonCategory);
+  if (categories.includes('internal')) return 'internal';
+  if (categories.includes('external')) return 'external';
+  return 'tools';
 }
 function allComparisonGroups() {
   const groups = COMPARISON_GROUPS.map(group => ({ ...group }));
@@ -406,7 +428,10 @@ function renderComparison() {
   const query = (search?.value || '').trim().toLowerCase();
   const referenceCountry = comparisonReferenceCountry();
   const referenceConfig = COUNTRY_CONFIGS[referenceCountry];
-  let groups = allComparisonGroups().filter(group => !query || comparisonSearchText(group).includes(query));
+  let groups = allComparisonGroups().filter(group =>
+    comparisonGroupCategory(group) === comparisonCategory &&
+    (!query || comparisonSearchText(group).includes(query))
+  );
   const sortCountry = comparisonSort.country;
   groups.sort((a, b) => {
     if (comparisonSort.mode === 'difference') {
@@ -442,7 +467,8 @@ function renderComparison() {
     ? '相對' + referenceConfig.name + '・可節省差價・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低')
     : COUNTRY_CONFIGS[sortCountry].name + '價格・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低');
   document.getElementById('compare-result-count').textContent = groups.length + ' 項';
-  document.getElementById('compare-meta-left').textContent = (comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級') + '・' + CURRENCY_META[comparisonCurrency].label + '・基準 ' + referenceConfig.flag + ' ' + referenceConfig.name;
+  const categoryLabel = { internal:'內用', external:'外用', tools:'工具' }[comparisonCategory];
+  document.getElementById('compare-meta-left').textContent = categoryLabel + '・' + (comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級') + '・' + CURRENCY_META[comparisonCurrency].label + '・基準 ' + referenceConfig.flag + ' ' + referenceConfig.name;
   if (groups.length === 0) {
     container.innerHTML = '<div class="compare-card" style="text-align:center;color:var(--text-muted);padding:22px;">沒有找到符合的產品</div>';
     return;
@@ -525,11 +551,15 @@ function refreshCountryUi() {
   });
   if (currentWorkspace === 'single') document.getElementById('app-title').lastChild.textContent = 'HBL ' + config.name + '產品計算器';
   if (currentWorkspace === 'single') document.title = 'HBL ' + config.name + '產品計算器';
-  document.getElementById('freight-control').style.display = config.supportsFreight ? 'flex' : 'none';
+  updateFreightVisibility();
   document.getElementById('hk-package-plans').style.display = config.showSpecialShortcuts ? 'block' : 'none';
   document.getElementById('hk-big-meal-shortcut').style.display = config.showSpecialShortcuts ? 'block' : 'none';
   document.getElementById('btn-vp-assistant').style.display = config.supportsVP ? 'flex' : 'none';
   updateTierSelectors(); refreshCurrencyUi();
+}
+function updateFreightVisibility() {
+  const control = document.getElementById('freight-control');
+  if (control) control.style.display = currentWorkspace === 'single' && getCountryConfig().supportsFreight ? 'flex' : 'none';
 }
 function switchCountry(country, announce = true) {
   if (!COUNTRY_CONFIGS[country] || country === currentCountry) return;

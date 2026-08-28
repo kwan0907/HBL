@@ -5,7 +5,7 @@
 <link rel="preload" as="image" href="./logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20260828-reference-v7">
+<link rel="manifest" href="./manifest.json?v=20260828-layout-v8">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,28 +16,32 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20260828-reference-v7">
+<link rel="stylesheet" href="./styles.css?v=20260828-layout-v8">
 </head>
 <body>
 <div class="container">
-<h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 8px;">HBL 多區產品計算器</h1>
+<div class="title-row">
+  <h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 6px;">HBL 多區產品計算器</h1>
+  <div class="title-font-controls" aria-label="字體大小">
+    <button class="font-ctrl-btn" id="font-decrease-btn" onclick="changeFontSize(-1)" aria-label="縮小字體">A－</button>
+    <span id="font-size-display">標準</span>
+    <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)" aria-label="放大字體">A＋</button>
+  </div>
+</div>
 <div id="pwa-install-wrap" class="pwa-install-wrap" style="display:none; text-align:center;">
   <button class="pwa-install-btn" onclick="handlePwaInstall()">📲 安裝到主畫面</button>
 </div>
 
-<!-- 字體控制列 -->
-<div class="font-ctrl-bar">
-  <span class="font-ctrl-label">🔠 字體</span>
-  <div class="font-ctrl-btns">
-    <button class="font-ctrl-btn" id="font-decrease-btn" onclick="changeFontSize(-1)">A－</button>
-    <span id="font-size-display">標準</span>
-    <button class="font-ctrl-btn" id="font-increase-btn" onclick="changeFontSize(1)">A＋</button>
+<div class="mode-freight-row">
+  <div class="mode-switch" aria-label="功能模式">
+    <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單區價格</button>
+    <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 四區價格</button>
   </div>
-</div>
-
-<div class="mode-switch" aria-label="功能模式">
-  <button id="mode-single-btn" class="active" onclick="switchWorkspace('single')">🧮 單區計算</button>
-  <button id="mode-compare-btn" onclick="switchWorkspace('compare')">🌍 多區格價</button>
+  <div class="freight-switch" id="freight-control" aria-label="運費版本">
+    <span class="freight-inline-label">運費</span>
+    <button class="font-ctrl-btn active" id="freight-normal" onclick="toggleFreight(false)">正常</button>
+    <button class="font-ctrl-btn" id="freight-included" onclick="toggleFreight(true)">含運</button>
+  </div>
 </div>
 
 <div id="single-country-workspace">
@@ -57,26 +61,17 @@
   <div class="currency-note" id="single-currency-note">自動模式會按所選地區顯示當地貨幣。</div>
 </div>
 
-<!-- 運費版本切換列 -->
-<div class="font-ctrl-bar" id="freight-control" style="margin-bottom: 6px;">
-  <span class="font-ctrl-label">💲 運費版本</span>
-  <div class="font-ctrl-btns">
-    <button class="font-ctrl-btn active" id="freight-normal" onclick="toggleFreight(false)">正常價</button>
-    <button class="font-ctrl-btn" id="freight-included" onclick="toggleFreight(true)">含運費價</button>
-  </div>
-</div>
-
 <div class="controls">
   <div class="tier-select">
     <div class="price-controls">
       <div class="price-control">
-        <label for="pricing-tier1">價格等級 1:</label>
+        <label for="pricing-tier1">價格等級 1</label>
         <select id="pricing-tier1" onchange="triggerHaptic('light'); updatePricing()">
           
         </select>
       </div>
       <div class="price-control">
-        <label for="pricing-tier2">價格等級 2 (可選):</label>
+        <label for="pricing-tier2">價格等級 2（可選）</label>
         <select id="pricing-tier2" onchange="triggerHaptic('light'); updatePricing()">
           <option value="">不使用</option>
         </select>
@@ -132,6 +127,14 @@
     <div class="control-card-title"><span id="compare-panel-title">🌍 多區產品格價</span><span id="compare-result-count"></span></div>
     <div class="compare-toolbar-row">
       <div>
+        <label for="compare-category">產品分類</label>
+        <select id="compare-category" onchange="setComparisonCategory(this.value)">
+          <option value="internal" selected>內用</option>
+          <option value="external">外用</option>
+          <option value="tools">工具</option>
+        </select>
+      </div>
+      <div>
         <label for="compare-tier">比較價格等級</label>
         <select id="compare-tier" onchange="setCompareTier(this.value)">
           <option value="retail">建議／標準零售價</option>
@@ -142,10 +145,10 @@
           <option value="50%">50% 等級</option>
         </select>
       </div>
-      <div>
-        <label for="compare-search">搜尋所有產品／同類產品</label>
-        <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
-      </div>
+    </div>
+    <div class="compare-search-field">
+      <label for="compare-search">搜尋所有產品／同類產品</label>
+      <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
     </div>
     <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
     <div class="currency-segment currency-buttons-scroll" id="compare-currency-buttons"></div>
@@ -250,8 +253,8 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20260828-reference-v7"></script>
-<script src="./config/comparison-map.js?v=20260828-reference-v7"></script>
-<script src="./app.js?v=20260828-reference-v7"></script>
+<script src="./config/countries.js?v=20260828-layout-v8"></script>
+<script src="./config/comparison-map.js?v=20260828-layout-v8"></script>
+<script src="./app.js?v=20260828-layout-v8"></script>
 </body>
 </html>

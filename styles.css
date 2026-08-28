@@ -46,12 +46,17 @@ html, body { overscroll-behavior-y: none; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: max(4px, env(safe-area-inset-top)) 4px 4px 4px; font-size: 13px; font-weight: 500; color: var(--text-main); background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh; }
 .container { max-width: 100%; margin: 0 auto; padding: 8px; border-radius: 12px; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
 h1 { color: var(--text-heading); text-align: center; margin-bottom: 6px; font-size: 1.25rem; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
+.title-row { display:flex; align-items:center; gap:6px; margin:2px 0 6px; }
+.title-row h1 { flex:1; min-width:0; margin:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.title-font-controls { display:flex; align-items:center; gap:3px; flex:0 0 auto; }
+.title-font-controls .font-ctrl-btn { min-width:31px; padding:4px 5px; }
+.title-font-controls #font-size-display { min-width:32px; padding:3px 4px; }
 input, select { font-size: 15px !important; color: var(--text-main); font-weight: 600; padding: 6px 8px; border-radius: 8px; }
 select option { background: var(--glass-bg-solid); color: var(--text-main); font-weight: 600;}
 .controls { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
 .tier-select, .actions { padding: 8px; border-radius: 10px; width: 100%; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
-.price-controls { display: flex; flex-direction: column; gap: 6px; }
-.price-control { width: 100%; }
+.price-controls { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px; }
+.price-control { width:100%; min-width:0; }
 .price-control label { display: block; margin-bottom: 2px; font-weight: 700; font-size: 0.85rem; color: var(--primary-color); }
 .font-ctrl-bar { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; padding: 6px 10px; border-radius: 10px; background: var(--glass-item-bg); border: 1px solid var(--glass-border); }
 .font-ctrl-label { color: var(--primary-color); font-size: 0.8rem; white-space: nowrap; flex: 1; font-weight: 700; }
@@ -192,12 +197,16 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .spinner { width: 30px; height: 30px; border: 3px solid var(--glass-border); border-top-color: var(--vp-assistant-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media screen and (max-width: 480px) { .qty-btn { width: 20px; height: 22px; font-size: 12px; } .qty-input { width: 24px; height: 22px; margin: 0; } .cart-qty-input { width: 30px; } .search-modal-content { height: 90vh; } h1 { font-size: 1.1rem; } }
-@media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .price-controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
+@media (min-width: 768px) { .container { max-width: 1200px; padding: 16px; } .controls { flex-direction: row; } .package-plans-grid { grid-template-columns: repeat(4, 1fr); } .search-modal-content { height: 80vh; max-width: 580px; border-radius: 24px; } .search-modal-overlay { align-items: center; padding: 20px; } }
 
 /* 多區格價與 iPhone 16 Pro 操作優化：保留原字體級別，只改善分組與觸控範圍 */
-.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:4px; width:min(100%,300px); padding:2px; margin:0 auto 6px; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
+.mode-freight-row { display:flex; align-items:stretch; gap:5px; margin-bottom:6px; }
+.mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:3px; flex:1 1 auto; min-width:0; padding:2px; margin:0; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
 .mode-switch button { min-height:34px; padding:4px 6px; border:none; background:transparent; color:var(--text-muted); font-size:0.78rem; border-radius:7px; }
 .mode-switch button.active { background:var(--primary-color); color:white; box-shadow:0 2px 8px rgba(79,70,229,.22); }
+.freight-switch { display:flex; align-items:center; gap:3px; flex:0 0 auto; padding:2px 3px; border:1px solid var(--glass-border); border-radius:10px; background:var(--glass-item-bg); }
+.freight-inline-label { color:var(--primary-color); font-size:.7rem; font-weight:800; white-space:nowrap; }
+.freight-switch .font-ctrl-btn { min-width:36px; min-height:32px; padding:3px 5px; font-size:.72rem; }
 .currency-panel, .compare-control-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
 .control-card-title { font-weight:800; color:var(--text-heading); font-size:.9rem; margin-bottom:7px; display:flex; justify-content:space-between; align-items:center; }
 .currency-segment { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
@@ -210,6 +219,8 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .compare-toolbar-row { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:8px; }
 .compare-toolbar-row label { display:block; font-size:.78rem; color:var(--text-muted); font-weight:700; margin-bottom:4px; }
 .compare-toolbar-row select { min-height:44px; border-radius:10px; font-size:.88rem; padding:8px 28px 8px 9px; }
+.compare-search-field { margin-bottom:8px; }
+.compare-search-field label { display:block; font-size:.78rem; color:var(--text-muted); font-weight:700; margin-bottom:4px; }
 .compare-sort-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
 .compare-results-meta { display:flex; justify-content:space-between; gap:6px; color:var(--text-muted); font-size:.78rem; font-weight:700; margin:8px 2px; }
 .compare-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:12px; padding:10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(15,23,42,.04); }
@@ -263,6 +274,9 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .single-section-label { color:var(--text-muted); font-size:.75rem; font-weight:800; letter-spacing:.2px; margin:10px 2px 5px; }
 @media screen and (max-width: 430px) {
   .container { padding:8px; }
+  .title-font-controls .font-ctrl-btn { min-width:29px; padding-left:4px; padding-right:4px; }
+  .freight-inline-label { display:none; }
+  .mode-switch button { padding-left:3px; padding-right:3px; font-size:.73rem; }
   .font-ctrl-bar { min-height:44px; }
   #country-control .font-ctrl-btn { min-width:0; padding:6px 7px; }
   .compare-card { padding:9px 7px; }
