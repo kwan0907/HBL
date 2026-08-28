@@ -5,7 +5,7 @@
 <link rel="preload" as="image" href="./logo.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20260828-thailand">
+<link rel="manifest" href="./manifest.json?v=20260828-reference-v7">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,7 +16,7 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20260828-thailand">
+<link rel="stylesheet" href="./styles.css?v=20260828-reference-v7">
 </head>
 <body>
 <div class="container">
@@ -143,7 +143,7 @@
         </select>
       </div>
       <div>
-        <label for="compare-search">搜尋同類產品</label>
+        <label for="compare-search">搜尋所有產品／同類產品</label>
         <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
       </div>
     </div>
@@ -164,13 +164,13 @@
   </div>
 
   <div class="compare-control-card">
-    <div class="control-card-title"><span>↕️ 按地區價格排序</span><span id="compare-sort-label">香港・由低至高</span></div>
+    <div class="control-card-title"><span>↕️ 排序方式</span><span id="compare-sort-label">香港價格・由低至高</span></div>
     <div class="compare-sort-grid compare-sort-scroll" id="compare-sort-buttons"></div>
     <div class="swipe-hint">↔ 排序及格價地區可左右滑動</div>
-    <div class="compare-note">綠色「最平」按已選匯率及同一價格等級計算。只比較價目表的單件售價；各地容量、包裝與稅費可能不同。</div>
+    <div class="compare-note">「基準差價」按所選貨幣決定比較基準：港幣對香港、台幣對台灣、日圓對日本、泰銖對泰國；基準區本身不顯示差價。綠色「最平」按已選匯率及同一價格等級計算。各地容量、包裝與稅費可能不同。</div>
   </div>
 
-  <div class="compare-results-meta"><span id="compare-meta-left"></span><span>最平價格已標示</span></div>
+  <div class="compare-results-meta"><span id="compare-meta-left"></span><span>獨有產品及最平價格已標示</span></div>
   <div id="compare-results"></div>
 </div>
 </div>
@@ -250,8 +250,8 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20260828-thailand"></script>
-<script src="./config/comparison-map.js?v=20260828-thailand"></script>
-<script src="./app.js?v=20260828-thailand"></script>
+<script src="./config/countries.js?v=20260828-reference-v7"></script>
+<script src="./config/comparison-map.js?v=20260828-reference-v7"></script>
+<script src="./app.js?v=20260828-reference-v7"></script>
 </body>
 </html>

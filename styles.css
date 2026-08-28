@@ -218,11 +218,19 @@ tr.package-row td:not(.product-name) { color: var(--color-pkg); font-weight: 700
 .compare-country-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
 .compare-price-box { position:relative; min-height:108px; border:1px solid var(--glass-border); border-radius:10px; padding:8px 4px 6px; text-align:center; background:var(--glass-item-bg); display:flex; flex-direction:column; justify-content:center; }
 .compare-price-box.cheapest { background:rgba(16,185,129,.11); border-color:rgba(16,185,129,.48); }
+.compare-price-box.reference { box-shadow:inset 0 0 0 1px rgba(79,70,229,.18); }
+.compare-price-box.unique { background:rgba(124,58,237,.08); border-color:rgba(124,58,237,.35); }
 .compare-country-name { font-size:.75rem; font-weight:800; color:var(--text-muted); margin-bottom:4px; }
 .compare-price { font-size:.9rem; font-weight:900; color:var(--text-heading); line-height:1.2; overflow-wrap:anywhere; }
 .cheapest-badge { display:inline-block; margin-top:4px; color:#047857; font-size:.68rem; font-weight:900; }
 .price-delta { margin-top:3px; color:#b45309; font-size:.66rem; font-weight:800; line-height:1.2; white-space:nowrap; }
-.price-delta.best { color:#047857; }
+.price-delta.cheaper { color:#047857; }
+.price-delta.dearer { color:#b45309; }
+.price-delta.same, .price-delta.unavailable { color:var(--text-muted); }
+.price-delta.unavailable { white-space:normal; }
+.reference-badge, .unique-badge { display:inline-block; align-self:center; margin-top:4px; padding:1px 5px; border-radius:5px; font-size:.64rem; font-weight:900; line-height:1.25; }
+.reference-badge { color:#4338ca; background:rgba(79,70,229,.09); }
+.unique-badge { color:#6d28d9; background:rgba(124,58,237,.11); }
 .compare-vp { margin-top:5px; padding-top:4px; border-top:1px dashed var(--table-border); font-size:.66rem; font-weight:900; line-height:1.15; }
 .compare-vp.vp-same { color:var(--text-muted); }
 .compare-vp.vp-low { color:#2563eb; }

@@ -19,7 +19,7 @@ let currentWorkspace = 'single';
 let singleCurrencyMode = 'AUTO';
 let comparisonCurrency = BASE_CURRENCY;
 let comparisonTier = 'retail';
-let comparisonSort = { country: currentCountry, direction: 'asc' };
+let comparisonSort = { mode:'country', country: currentCountry, direction:'asc' };
 let exchangeRates = Object.fromEntries(ALL_CURRENCIES.map(code => [code, Number(CURRENCY_META[code].ratePerHKD) || 1]));
 let selectedProducts = [];
 let currentCategory = 'all';
@@ -97,7 +97,9 @@ function renderDynamicControls() {
   document.getElementById('compare-currency-buttons').innerHTML = ALL_CURRENCIES.map((code, index) =>
     '<button id="compare-currency-' + code.toLowerCase() + '" class="' + (index === 0 ? 'active' : '') + '" onclick="setComparisonCurrency(&quot;' + code + '&quot;)">' + CURRENCY_META[code].label + '</button>'
   ).join('');
-  document.getElementById('compare-sort-buttons').innerHTML = ALL_COUNTRIES.map((code, index) =>
+  document.getElementById('compare-sort-buttons').innerHTML =
+    '<button id="compare-sort-difference" onclick="sortComparisonByDifference()">💸 基準差價 ↕</button>' +
+    ALL_COUNTRIES.map((code, index) =>
     '<button id="compare-sort-' + code.toLowerCase() + '" class="' + (index === 0 ? 'active' : '') + '" onclick="sortComparison(&quot;' + code + '&quot;)">' + COUNTRY_CONFIGS[code].flag + ' ' + COUNTRY_CONFIGS[code].name + ' ' + (index === 0 ? '↑' : '↕') + '</button>'
   ).join('');
   document.getElementById('rate-editor-fields').innerHTML = ALL_CURRENCIES.filter(code => code !== BASE_CURRENCY).map(code =>
@@ -315,9 +317,23 @@ function setCompareTier(tier) {
 }
 function sortComparison(country) {
   if (!ALL_COUNTRIES.includes(country)) return;
-  if (comparisonSort.country === country) comparisonSort.direction = comparisonSort.direction === 'asc' ? 'desc' : 'asc';
-  else comparisonSort = { country, direction: 'asc' };
+  if (comparisonSort.mode === 'country' && comparisonSort.country === country) {
+    comparisonSort.direction = comparisonSort.direction === 'asc' ? 'desc' : 'asc';
+  } else {
+    comparisonSort = { mode:'country', country, direction:'asc' };
+  }
   renderComparison();
+}
+function sortComparisonByDifference() {
+  if (comparisonSort.mode === 'difference') {
+    comparisonSort.direction = comparisonSort.direction === 'asc' ? 'desc' : 'asc';
+  } else {
+    comparisonSort = { mode:'difference', country:comparisonSort.country, direction:'desc' };
+  }
+  renderComparison();
+}
+function comparisonReferenceCountry() {
+  return ALL_COUNTRIES.find(code => COUNTRY_CONFIGS[code].currencyCode === comparisonCurrency) || ALL_COUNTRIES[0];
 }
 function comparisonProduct(group, country) {
   const stockNo = group[country];
@@ -341,6 +357,36 @@ function comparisonSearchText(group) {
     return parts;
   }, [group.label]).join(' ').toLowerCase();
 }
+function allComparisonGroups() {
+  const groups = COMPARISON_GROUPS.map(group => ({ ...group }));
+  const mappedStockNos = Object.fromEntries(ALL_COUNTRIES.map(code => [code, new Set()]));
+  groups.forEach(group => ALL_COUNTRIES.forEach(code => {
+    if (group[code]) mappedStockNos[code].add(group[code]);
+  }));
+  ALL_COUNTRIES.forEach(code => {
+    getCountryProducts(code).forEach(product => {
+      if (mappedStockNos[code].has(product.stock_no)) return;
+      groups.push({
+        id: 'unique-' + code.toLowerCase() + '-' + String(product.stock_no).toLowerCase(),
+        label: product.prod_name_zh || product.prod_name,
+        [code]: product.stock_no,
+        uniqueCountry: code,
+        synthetic: true
+      });
+    });
+  });
+  return groups;
+}
+function comparisonSavingFromReference(group, referenceCountry = comparisonReferenceCountry()) {
+  const referenceData = comparisonPrice(group, referenceCountry);
+  if (!referenceData || !Number.isFinite(referenceData.converted)) return null;
+  const alternatives = ALL_COUNTRIES
+    .filter(code => code !== referenceCountry)
+    .map(code => comparisonPrice(group, code)?.converted)
+    .filter(Number.isFinite);
+  if (!alternatives.length) return 0;
+  return Math.max(0, referenceData.converted - Math.min(...alternatives));
+}
 function comparisonVp(data, country) {
   if (!data || COUNTRY_CONFIGS[country]?.hasVPData === false) return null;
   const vp = Number(data.product?.vp);
@@ -358,9 +404,19 @@ function renderComparison() {
   if (!container) return;
   const search = document.getElementById('compare-search');
   const query = (search?.value || '').trim().toLowerCase();
-  let groups = COMPARISON_GROUPS.filter(group => !query || comparisonSearchText(group).includes(query));
+  const referenceCountry = comparisonReferenceCountry();
+  const referenceConfig = COUNTRY_CONFIGS[referenceCountry];
+  let groups = allComparisonGroups().filter(group => !query || comparisonSearchText(group).includes(query));
   const sortCountry = comparisonSort.country;
   groups.sort((a, b) => {
+    if (comparisonSort.mode === 'difference') {
+      const savingA = comparisonSavingFromReference(a, referenceCountry);
+      const savingB = comparisonSavingFromReference(b, referenceCountry);
+      if (!Number.isFinite(savingA) && !Number.isFinite(savingB)) return a.label.localeCompare(b.label, 'zh-Hant');
+      if (!Number.isFinite(savingA)) return 1;
+      if (!Number.isFinite(savingB)) return -1;
+      return comparisonSort.direction === 'asc' ? savingA - savingB : savingB - savingA;
+    }
     const pa = comparisonPrice(a, sortCountry)?.converted;
     const pb = comparisonPrice(b, sortCountry)?.converted;
     if (!Number.isFinite(pa) && !Number.isFinite(pb)) return a.label.localeCompare(b.label, 'zh-Hant');
@@ -368,46 +424,70 @@ function renderComparison() {
     if (!Number.isFinite(pb)) return -1;
     return comparisonSort.direction === 'asc' ? pa - pb : pb - pa;
   });
+  const differenceButton = document.getElementById('compare-sort-difference');
+  if (differenceButton) {
+    const active = comparisonSort.mode === 'difference';
+    differenceButton.classList.toggle('active', active);
+    differenceButton.textContent = '💸 基準差價 ' + (active ? (comparisonSort.direction === 'asc' ? '↑' : '↓') : '↕');
+  }
   ALL_COUNTRIES.forEach(country => {
     const btn = document.getElementById('compare-sort-' + country.toLowerCase());
     if (!btn) return;
-    const active = comparisonSort.country === country;
+    const active = comparisonSort.mode === 'country' && comparisonSort.country === country;
     btn.classList.toggle('active', active);
     const arrow = active ? (comparisonSort.direction === 'asc' ? '↑' : '↓') : '↕';
     btn.textContent = COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + ' ' + arrow;
   });
-  document.getElementById('compare-sort-label').textContent = COUNTRY_CONFIGS[sortCountry].name + '・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低');
+  document.getElementById('compare-sort-label').textContent = comparisonSort.mode === 'difference'
+    ? '相對' + referenceConfig.name + '・可節省差價・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低')
+    : COUNTRY_CONFIGS[sortCountry].name + '價格・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低');
   document.getElementById('compare-result-count').textContent = groups.length + ' 項';
-  document.getElementById('compare-meta-left').textContent = (comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級') + '・' + CURRENCY_META[comparisonCurrency].label;
+  document.getElementById('compare-meta-left').textContent = (comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級') + '・' + CURRENCY_META[comparisonCurrency].label + '・基準 ' + referenceConfig.flag + ' ' + referenceConfig.name;
   if (groups.length === 0) {
-    container.innerHTML = '<div class="compare-card" style="text-align:center;color:var(--text-muted);padding:22px;">沒有找到符合的同類產品</div>';
+    container.innerHTML = '<div class="compare-card" style="text-align:center;color:var(--text-muted);padding:22px;">沒有找到符合的產品</div>';
     return;
   }
   container.innerHTML = groups.map(group => {
     const prices = ALL_COUNTRIES.map(country => ({ country, data: comparisonPrice(group, country) }));
     const available = prices.filter(item => item.data && Number.isFinite(item.data.converted));
+    const referenceData = prices.find(item => item.country === referenceCountry)?.data || null;
     const minimum = available.length ? Math.min(...available.map(item => item.data.converted)) : Infinity;
-    const maximum = available.length ? Math.max(...available.map(item => item.data.converted)) : -Infinity;
-    const spread = Number.isFinite(minimum) && Number.isFinite(maximum) ? maximum - minimum : null;
+    const uniqueCountry = available.length === 1 ? available[0].country : null;
+    const saving = comparisonSavingFromReference(group, referenceCountry);
     const vpValues = prices.map(({ country, data }) => comparisonVp(data, country)).filter(Number.isFinite);
     const minimumVp = vpValues.length ? Math.min(...vpValues) : null;
     const maximumVp = vpValues.length ? Math.max(...vpValues) : null;
     const vpDiffers = vpValues.length > 1 && maximumVp - minimumVp > 0.01;
     const boxes = prices.map(({ country, data }) => {
       if (!data) return '<div class="compare-price-box"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="missing-price">—</div><div class="compare-vp vp-unavailable">VP —</div></div>';
-      const cheapest = Math.abs(data.converted - minimum) < 0.01;
-      const delta = Math.max(0, data.converted - minimum);
+      const isReference = country === referenceCountry;
+      const cheapest = available.length > 1 && Math.abs(data.converted - minimum) < 0.01;
       const vp = comparisonVp(data, country);
       const vpClass = comparisonVpClass(vp, minimumVp, maximumVp, vpDiffers);
       const vpText = Number.isFinite(vp) ? 'VP ' + vp.toFixed(2) : 'VP —';
-      const deltaHtml = cheapest
-        ? '<div class="price-delta best">最低價基準</div>'
-        : '<div class="price-delta">貴 +' + formatCurrencyAmount(delta, comparisonCurrency) + '</div>';
-      return '<div class="compare-price-box ' + (cheapest ? 'cheapest' : '') + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '') + deltaHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
+      let deltaHtml = '';
+      if (isReference) {
+        deltaHtml = '<div class="reference-badge">比較基準</div>';
+      } else if (!referenceData || !Number.isFinite(referenceData.converted)) {
+        deltaHtml = '<div class="price-delta unavailable">' + referenceConfig.name + '無同款</div>';
+      } else {
+        const delta = data.converted - referenceData.converted;
+        if (Math.abs(delta) < 0.01) deltaHtml = '<div class="price-delta same">同價</div>';
+        else if (delta < 0) deltaHtml = '<div class="price-delta cheaper">便宜 ' + formatCurrencyAmount(Math.abs(delta), comparisonCurrency) + '</div>';
+        else deltaHtml = '<div class="price-delta dearer">貴 +' + formatCurrencyAmount(delta, comparisonCurrency) + '</div>';
+      }
+      const badgeHtml = uniqueCountry === country
+        ? '<div class="unique-badge">★ 此區獨有</div>'
+        : (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '');
+      const boxClasses = ['compare-price-box', cheapest ? 'cheapest' : '', isReference ? 'reference' : '', uniqueCountry === country ? 'unique' : ''].filter(Boolean).join(' ');
+      return '<div class="' + boxClasses + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + badgeHtml + deltaHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
     }).join('');
-    const spreadText = Number.isFinite(spread) ? '・最高相差 ' + formatCurrencyAmount(spread, comparisonCurrency) : '';
+    let availabilityText = '可比較 ' + available.length + ' 個地區・基準 ' + referenceConfig.name;
+    if (uniqueCountry) availabilityText = '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
+    else if (!referenceData) availabilityText += '無同款';
+    else if (Number.isFinite(saving) && saving > 0) availabilityText += '・最多便宜 ' + formatCurrencyAmount(saving, comparisonCurrency);
     const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';
-    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">可比較 ' + available.length + ' 個地區' + spreadText + vpWarning + '</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
+    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">' + availabilityText + vpWarning + '</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
   }).join('');
 }
 function updateTierSelectors() {
