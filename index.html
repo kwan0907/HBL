@@ -2,10 +2,18 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
+<script>document.documentElement.classList.add('app-preparing');</script>
 <link rel="preload" as="image" href="./logo.svg">
+<link rel="preload" as="script" href="./config/countries.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./config/comparison-map.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./data/hong-kong.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./data/taiwan.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./data/japan.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./data/thailand.js?v=20260829-fast-v10">
+<link rel="preload" as="script" href="./app.js?v=20260829-fast-v10">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20260828-compact-v9">
+<link rel="manifest" href="./manifest.json?v=20260829-fast-v10">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,9 +24,13 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20260828-compact-v9">
+<link rel="stylesheet" href="./styles.css?v=20260829-fast-v10">
 </head>
 <body>
+<div class="app-first-load" aria-live="polite" aria-label="正在載入價目">
+  <img src="./logo.svg" alt="">
+  <span>正在載入價目…</span>
+</div>
 <div class="container">
 <div class="title-row">
   <h1 id="app-title"><img src="./logo.svg" alt="Logo" style="height: 28px; width: auto; vertical-align: middle; margin-right: 6px;">HBL 多區產品計算器</h1>
@@ -53,11 +65,16 @@
   <button class="price-data-refresh" id="price-data-refresh" onclick="reloadCountryPriceData()">🔄 更新價目</button>
 </div>
 
-<div class="currency-panel" id="single-currency-panel">
-  <div class="control-card-title"><span>💱 顯示貨幣</span><span id="single-currency-current"></span></div>
-  <div class="currency-segment currency-buttons-scroll" id="single-currency-buttons"></div>
-  <div class="currency-note" id="single-currency-note">自動模式會按所選地區顯示當地貨幣。</div>
-</div>
+<details class="currency-panel single-currency-details" id="single-currency-panel">
+  <summary class="single-currency-summary">
+    <span>💱 顯示貨幣</span>
+    <span class="single-currency-selected"><span id="single-currency-current"></span><span class="details-arrow">⌄</span></span>
+  </summary>
+  <div class="single-currency-body">
+    <div class="currency-segment currency-buttons-scroll" id="single-currency-buttons"></div>
+    <div class="currency-note" id="single-currency-note">自動模式會按所選地區顯示當地貨幣。</div>
+  </div>
+</details>
 
 <div class="controls">
   <div class="tier-select">
@@ -165,10 +182,17 @@
   </div>
 
   <div class="compare-control-card">
-    <div class="control-card-title"><span>↕️ 排序方式</span><span id="compare-sort-label">香港價格・由低至高</span></div>
+    <div class="control-card-title compare-sort-title"><span>↕️ 排序</span><span id="compare-sort-label">香港・低 → 高</span></div>
     <div class="compare-sort-grid compare-sort-scroll" id="compare-sort-buttons"></div>
-    <div class="swipe-hint">↔ 排序及格價地區可左右滑動</div>
-    <div class="compare-note">「基準差價」按所選貨幣決定比較基準：港幣對香港、台幣對台灣、日圓對日本、泰銖對泰國；基準區本身不顯示差價。綠色「最平」按已選匯率及同一價格等級計算。各地容量、包裝與稅費可能不同。</div>
+    <div class="swipe-hint compare-sort-hint">↔ 左右滑動・再按一次切換升／降序</div>
+    <details class="compare-sort-help">
+      <summary><span>ℹ️ 查看格價說明</span><span class="details-arrow">⌄</span></summary>
+      <div class="compare-sort-help-body">
+        <div><strong>差價基準</strong><span>港幣對香港、台幣對台灣、日圓對日本、泰銖對泰國；基準區不顯示自己的差價。</span></div>
+        <div><strong>綠色最平</strong><span>按目前匯率及相同價格等級計算。</span></div>
+        <div><strong>注意</strong><span>各區容量、包裝、稅費及付款匯率可能不同。</span></div>
+      </div>
+    </details>
   </div>
 
   <div class="compare-results-meta"><span id="compare-meta-left"></span><span>獨有產品及最平價格已標示</span></div>
@@ -251,8 +275,12 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20260828-compact-v9"></script>
-<script src="./config/comparison-map.js?v=20260828-compact-v9"></script>
-<script src="./app.js?v=20260828-compact-v9"></script>
+<script src="./config/countries.js?v=20260829-fast-v10"></script>
+<script src="./config/comparison-map.js?v=20260829-fast-v10"></script>
+<script src="./data/hong-kong.js?v=20260829-fast-v10"></script>
+<script src="./data/taiwan.js?v=20260829-fast-v10"></script>
+<script src="./data/japan.js?v=20260829-fast-v10"></script>
+<script src="./data/thailand.js?v=20260829-fast-v10"></script>
+<script src="./app.js?v=20260829-fast-v10"></script>
 </body>
 </html>

@@ -72,7 +72,7 @@ async function reloadCountryPriceData() {
     initCategories();
     updateProductDisplay();
     filterProducts();
-    renderComparison();
+    if (currentWorkspace === 'compare') renderComparison();
     showToast('✅ 已重新載入各區最新價目');
   } catch (error) {
     console.error('重新載入價目失敗', error);
@@ -99,7 +99,7 @@ function renderDynamicControls() {
     '<button id="compare-currency-' + code.toLowerCase() + '" class="' + (index === 0 ? 'active' : '') + '" onclick="setComparisonCurrency(&quot;' + code + '&quot;)">' + CURRENCY_META[code].label + '</button>'
   ).join('');
   document.getElementById('compare-sort-buttons').innerHTML =
-    '<button id="compare-sort-difference" onclick="sortComparisonByDifference()">💸 基準差價 ↕</button>' +
+    '<button id="compare-sort-difference" onclick="sortComparisonByDifference()">💸 差價 ↕</button>' +
     ALL_COUNTRIES.map((code, index) =>
     '<button id="compare-sort-' + code.toLowerCase() + '" class="' + (index === 0 ? 'active' : '') + '" onclick="sortComparison(&quot;' + code + '&quot;)">' + COUNTRY_CONFIGS[code].flag + ' ' + COUNTRY_CONFIGS[code].name + ' ' + (index === 0 ? '↑' : '↕') + '</button>'
   ).join('');
@@ -179,7 +179,7 @@ function redrawCurrencyPrices() {
   refreshCurrencyUi();
   updateProductDisplay();
   filterProducts();
-  renderComparison();
+  if (currentWorkspace === 'compare') renderComparison();
 }
 
 function initCurrencySettings() {
@@ -453,7 +453,7 @@ function renderComparison() {
   if (differenceButton) {
     const active = comparisonSort.mode === 'difference';
     differenceButton.classList.toggle('active', active);
-    differenceButton.textContent = '💸 基準差價 ' + (active ? (comparisonSort.direction === 'asc' ? '↑' : '↓') : '↕');
+    differenceButton.textContent = '💸 差價 ' + (active ? (comparisonSort.direction === 'asc' ? '↑' : '↓') : '↕');
   }
   ALL_COUNTRIES.forEach(country => {
     const btn = document.getElementById('compare-sort-' + country.toLowerCase());
@@ -464,8 +464,8 @@ function renderComparison() {
     btn.textContent = COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + ' ' + arrow;
   });
   document.getElementById('compare-sort-label').textContent = comparisonSort.mode === 'difference'
-    ? '相對' + referenceConfig.name + '・可節省差價・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低')
-    : COUNTRY_CONFIGS[sortCountry].name + '價格・' + (comparisonSort.direction === 'asc' ? '由低至高' : '由高至低');
+    ? '差價・' + (comparisonSort.direction === 'asc' ? '低 → 高' : '高 → 低') + '（基準：' + referenceConfig.name + '）'
+    : COUNTRY_CONFIGS[sortCountry].name + '・' + (comparisonSort.direction === 'asc' ? '低 → 高' : '高 → 低');
   document.getElementById('compare-result-count').textContent = groups.length + ' 項';
   const categoryLabel = { internal:'內用', external:'外用', tools:'工具' }[comparisonCategory];
   document.getElementById('compare-meta-left').textContent = categoryLabel + '・' + (comparisonTier === 'retail' ? '零售價' : comparisonTier + ' 等級') + '・' + CURRENCY_META[comparisonCurrency].label + '・基準 ' + referenceConfig.flag + ' ' + referenceConfig.name;
@@ -855,18 +855,29 @@ function handlePwaInstall() { triggerHaptic('medium'); if (deferredInstallPrompt
 function closeNewProductModal() { document.getElementById('new-product-modal').style.display = 'none'; }
 function checkNewProductNotification() { if (!localStorage.getItem('seen_new_product_nightmode_and_relaxationtea_2')) { document.getElementById('new-product-modal').style.display = 'flex'; localStorage.setItem('seen_new_product_nightmode_and_relaxationtea_2', 'true'); } }
 
-window.onload = async function () {
+let appInitializationStarted = false;
+async function initializeApp() {
+  if (appInitializationStarted) return;
+  appInitializationStarted = true;
   try {
     await loadCountryDataFiles();
     renderDynamicControls();
     initPWA(); initFontSize(); initCurrencySettings(); initCountry(); loadCandidates();
     initCategories(); initVpWorker(); switchView('table'); updateProductDisplay();
-    switchWorkspace('single', false); renderComparison(); checkNewProductNotification();
+    switchWorkspace('single', false); checkNewProductNotification();
     maybeAutoRefreshExchangeRates();
     document.addEventListener('touchend', function (e) { const btn = e.target.closest('button'); if (btn) setTimeout(() => btn.blur(), 50); }, { passive:true });
   } catch (error) {
     console.error(error);
     document.getElementById('app-title').lastChild.textContent = 'HBL 資料載入失敗';
     showToast('地區價格資料載入失敗，請檢查資料檔案');
+  } finally {
+    document.documentElement.classList.remove('app-preparing');
+    document.documentElement.classList.add('app-ready');
   }
-};
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp, { once:true });
+} else {
+  initializeApp();
+}
