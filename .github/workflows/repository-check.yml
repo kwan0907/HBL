@@ -1,4 +1,4 @@
-name: Repository structure check
+name: HBL repository checks
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  validate-structure:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
 
-      - name: Validate HBL repository structure
-        run: node scripts/validate-repo.mjs
+      - name: Run structure and data integrity checks
+        run: npm run check
