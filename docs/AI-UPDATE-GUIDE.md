@@ -1,189 +1,89 @@
-# HBL 計算器：在其他 Chat Room 修改的方法
+# HBL 計算器：AI／ChatGPT 修改規則
 
-這份檔案是給其他 ChatGPT／Codex 對話使用的固定說明。開始新對話時，先上載本檔案，再按以下情況提供指定網站檔案及新資料。
+這份文件是給任何新 ChatGPT／Codex 對話看的固定維護規格。目標是避免再次出現 duplicate 檔、錯誤路徑、改錯檔案或整包覆蓋。
 
-## 重要規則
+## Canonical source（只認這些位置）
 
-- 不可刪減任何現有功能、產品或價格欄位。
-- 不可隨意修改字體、按鈕大小或 iPhone 排版。
-- 保留四級字體：`11 / 13 / 16 / 20`。
-- 香港、台灣、日本及各國購物車必須分開保存。
-- 日本沒有 VP 推薦；除非我明確要求，不能重新開啟。
-- 改價時只修改指定國家資料，不可改其他國家。
-- 完成後必須檢查 JavaScript 語法、產品數量、SKU 是否重複及原有功能是否仍存在。
-- 回傳更新後的原檔案；不要只貼出部分程式碼。
-
-## 情況一：修改現有產品價格
-
-### 要上載的檔案
-
-| 國家 | 上載檔案 |
+| 用途 | 唯一正確檔案 |
 |---|---|
-| 香港 | `data/hong-kong.js` |
-| 台灣 | `data/taiwan.js` |
-| 日本 | `data/japan.js` |
+| 香港價格 | `data/hong-kong.js` |
+| 台灣價格 | `data/taiwan.js` |
+| 日本價格 | `data/japan.js` |
+| 泰國價格 | `data/thailand.js` |
+| 地區／貨幣／價格等級設定 | `config/countries.js` |
+| 跨區同類產品配對 | `config/comparison-map.js` |
+| App 功能 | `src/app.js` |
+| App 樣式 | `src/styles/app.css` |
+| DOM／頁面結構 | `index.html` |
+| PWA | `manifest.json`、`service-worker.js`、`icons/` |
 
-如果只改價格，不需要上載 `index.html`、`app.js` 或其他國家資料。
+Root 的 `app.js` 與 `styles.css` 只係 compatibility entry；不要將新功能寫入 root 版本。
 
-### 可直接複製的指示
+## 永久規則
 
-```text
-這是 HBL 多國產品格價計算器的國家資料檔。
+- 不可建立 root `hong-kong.js`、`countries.js`、`comparison-map.js` 等 duplicate。
+- 不可建立 `data/data/`、`data/config/`、`data/app.js` 等 nested copy。
+- 改價只改指定地區的 `data/*.js`。
+- 不可因為某次修改而刪減其他地區、產品、價格欄位或現有功能。
+- 保留 iPhone 版固定 viewport、四級字體 `11 / 13 / 16 / 20`。
+- 日本／泰國產品如有當地語，保持「中文短名｜當地語原名」。
+- 日本及泰國預設不開 VP 推薦，除非明確要求。
+- 所有修改完成後必須執行 `npm run check`。
+- 如果 GitHub 已連接，直接在 repository branch／PR 修改，不要要求重新下載 ZIP 再手動覆蓋。
 
-請只修改以下產品價格，不要更改其他產品、名稱、SKU、功能或欄位：
+## 情況 1：修改現有價格
 
-國家：＿＿＿＿
-產品名稱：＿＿＿＿
-SKU：＿＿＿＿
-標準／零售價：＿＿＿＿
-15%／銅級：＿＿＿＿
-25%／銀級：＿＿＿＿
-35%／金級：＿＿＿＿
-42%／58%：＿＿＿＿
-50%：＿＿＿＿
-成本價：＿＿＿＿
-VP／購貨業績：＿＿＿＿
+只修改該區 `data/*.js`。
 
-如果我寫「沒有折扣」，代表所有價格等級及成本價都使用同一個價格。
-
-要求：
-1. 不可刪減任何現有產品或功能。
-2. 只修改我指定的國家資料檔。
-3. 保留原有資料格式及欄位。
-4. 檢查 JavaScript 語法及 SKU 沒有重複。
-5. 完成後回傳整個更新後的原檔案，讓我直接覆蓋 GitHub 的同名檔案。
-```
-
-## 情況二：在現有國家添加產品
-
-### 要上載的檔案
-
-- 只加入單國計算器：上載該國的 `data/*.js`。
-- 同時加入跨國格價：上載該國 `data/*.js`，以及 `config/comparison-map.js`。
-- 最安全做法：再附上本 `AI-UPDATE-GUIDE.md`。
-
-### 準備的產品資料
-
-- 國家
-- SKU
-- 中文短名
-- 英文名／日本產品的日文原名
-- 分類
-- VP／購貨業績
-- 收入基數（如適用）
-- 每個價格等級
-- 是否參與折扣
-- 是否要加入跨國格價
-- 與哪一個現有產品屬於同類
-
-### 可直接複製的指示
+例如：
 
 ```text
-請在 HBL 多國產品格價計算器加入以下新產品：
-
-國家：＿＿＿＿
-SKU：＿＿＿＿
-中文名稱：＿＿＿＿
-英文／日文名稱：＿＿＿＿
-分類：＿＿＿＿
-VP／購貨業績：＿＿＿＿
-收入基數：＿＿＿＿
-標準／零售價：＿＿＿＿
-各折扣價格：＿＿＿＿
-是否參與折扣：是／否
-是否加入跨國格價：是／否
-對應的香港／台灣／日本同類產品 SKU：＿＿＿＿
-
-日本產品名稱要顯示成「簡短中文｜日文原名」，中文必須放在日文前面。
-如果沒有折扣，所有價格等級及成本價都設定為同一價格。
-
-要求：
-1. 不可刪除或改動任何原有產品及功能。
-2. 新 SKU 不可與現有 SKU 重複。
-3. 補齊該國所有必要價格欄位。
-4. 如需跨國格價，更新 comparison-map.js；否則不要改 comparison-map.js。
-5. 回傳所有被修改的完整檔案，不要只貼新增片段。
+國家：香港
+SKU：1154
+銀級：305.75
 ```
 
-## 情況三：添加新國家
+正確做法：在 `data/hong-kong.js` 找 `"stock_no": "1154"`，修改 `"銀級"`。不要只改 `retail_price`，亦不要複製整個 data 檔去 root。
 
-### 最安全的上載方式
+完成後：
 
-上載最新的完整網站 ZIP，以及新國家的價目表。不要只給單一 `index.html`。
-
-新國家通常需要：
-
-1. 新建 `data/國家名稱.js`。
-2. 修改 `config/countries.js`，加入國家、國旗、貨幣、價格等級、VP 及運費設定。
-3. 修改 `config/comparison-map.js`，加入同類產品配對。
-4. 如果是新貨幣，在 `HBL_CURRENCY_META` 加入貨幣符號、小數位及 `1 HKD` 參考匯率。
-
-正常情況不需要修改 `index.html`、`app.js` 或 `styles.css`，因為國家、貨幣、排序及格價欄會自動產生。只有新國家需要特殊功能時才可修改共用程式。
-
-### 要準備的新國家資料
-
-- 國家中文名稱及英文代碼，例如 `SG`
-- 國旗 Emoji
-- 當地貨幣代碼及符號
-- `1 HKD` 等於多少當地貨幣
-- 當地價格等級名稱
-- 完整產品價目表
-- 是否有 VP 資料
-- 是否需要 VP 推薦
-- 是否有特別運費功能
-- 與現有國家的同類產品 SKU 對照
-
-### 可直接複製的指示
-
-```text
-這是我最新的 HBL 多國產品格價計算器完整 ZIP，請添加一個新國家。
-
-國家：＿＿＿＿
-國家代碼：＿＿＿＿
-國旗：＿＿＿＿
-貨幣代碼／符號：＿＿＿＿
-1 HKD = ＿＿＿＿ 當地貨幣
-價格等級：＿＿＿＿
-是否有 VP：是／否
-是否開啟 VP 推薦：是／否
-是否有特別運費功能：是／否
-
-我亦已附上該國完整價目表及同類產品配對資料。
-
-要求：
-1. 使用現有的多國模組化架構，不可複製另一套網站。
-2. 新建獨立國家資料檔，日後該國改價只需修改這一個檔案。
-3. 國家、貨幣、排序及格價按鈕必須自動加入。
-4. 預設比較貨幣仍為港幣。
-5. 單國模式預設顯示當地貨幣；選擇貨幣後所有價格統一換算。
-6. 不可刪減搜尋、購物車、複製、兩級價格、VP、香港運費、套裝、格價、正倒序、匯率或其他現有功能。
-7. 保留 iPhone 16 Pro 排版及四級字體 11／13／16／20，不可隨意縮小文字。
-8. 完成後測試所有國家切換、貨幣、排序、格價及原有功能，回傳完整更新 ZIP。
+```bash
+npm run check:data
 ```
 
-## GitHub 覆蓋方法
+## 情況 2：加入產品
 
-### 只更新一個國家價格檔
+1. 修改該地區 `data/*.js`。
+2. `stock_no` 不可與該區現有 SKU 重複。
+3. 補齊該區必要價格欄位、分類、名稱、VP 等資料。
+4. 如要跨區比較，再改 `config/comparison-map.js`。
+5. 執行 `npm run check`。
 
-1. 進入 GitHub repository。
-2. 點入 `data` 資料夾。
-3. 選 `Add file` → `Upload files`。
-4. 上載更新後的同名檔案，例如 `hong-kong.js`。
-5. 確認路徑仍是 `data/hong-kong.js`。
-6. 按 `Commit changes`。
+## 情況 3：新增地區
 
-### 更新跨國配對
+1. 新增 `data/<region>.js`。
+2. 在 `config/countries.js` 登記地區、貨幣、tiers、default tier、功能旗標、dataFile。
+3. 如新貨幣不存在，再新增 currency metadata。
+4. 如要跨區比較，再改 `config/comparison-map.js`。
+5. 一般不需要改 `index.html`，地區／貨幣／排序按鈕由 config 自動產生。
+6. 執行 `npm run check`。
 
-1. 點入 `config` 資料夾。
-2. 上載更新後的 `comparison-map.js`。
-3. 按 `Commit changes`。
+## 情況 4：改 App 功能／UI
 
-### 添加新國家或更新完整版本
+- 功能：`src/app.js`
+- CSS：`src/styles/app.css`
+- DOM：`index.html`
 
-1. 先解壓更新後的 ZIP，不要把 ZIP 本身上載 GitHub。
-2. 在 repository 根目錄選 `Add file` → `Upload files`。
-3. 拖入解壓後的所有內容，保留 `data` 和 `config` 資料夾路徑。
-4. 保留原本的 `logo.svg`。
-5. 按 `Commit changes`。
+Root compatibility entry URL 要保留，除非一次過同步更新所有 runtime reference、PWA、驗證規則並完成測試。
 
-如果網站仍顯示舊價格，先重新整理頁面；iPhone 主畫面版本可關閉後重新開啟，必要時移除主畫面捷徑再重新安裝。
+## 驗證
+
+完整檢查：
+
+```bash
+npm run check
+```
+
+會驗證 repository 結構、duplicate path、四區資料格式、SKU 重複、config dataFile、comparison map 對應產品等。
+
+如果檢查失敗，不要用複製第二份檔案的方法繞過；應修正 canonical source。

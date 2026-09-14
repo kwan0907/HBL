@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node tooling
+node_modules/
+npm-debug.log*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Temporary build/test output
+coverage/
+dist/
+.tmp/

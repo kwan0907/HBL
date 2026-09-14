@@ -1,0 +1,15 @@
+{
+  "name": "hbl-multi-region-calculator",
+  "private": true,
+  "version": "1.0.0",
+  "description": "HBL 多區產品格價計算器",
+  "type": "module",
+  "scripts": {
+    "check": "npm run check:structure && npm run check:data",
+    "check:structure": "node scripts/validate-repo.mjs",
+    "check:data": "node scripts/validate-data.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
