@@ -1,0 +1,3 @@
+/* Canonical application stylesheet lives here.
+   The root /styles.css remains as a compatibility entry point. */
+@import url('../../styles.css');
