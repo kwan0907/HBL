@@ -1,0 +1,4 @@
+html, body { overscroll-behavior-y: none; }
+:root {
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+}
