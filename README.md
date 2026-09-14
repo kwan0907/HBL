@@ -1,79 +1,154 @@
 # HBL 多區產品格價計算器
 
-這個版本已把「介面／計算功能」和「每個地區的產品價格」分開。原有搜尋、兩級價格、購物車、複製、VP 推薦、香港運費、套裝、多區格價、排序、匯率及四級字體大小功能均保留，並新增泰國資料、每日匯率更新、獨有產品顯示、基準差價排序及內用／外用／工具格價分類。
+HBL 是一個 buildless 的多地區產品價格比較／計算 Web App。目前支援香港、台灣、日本、泰國，保留單區計算、雙價格等級、購物車、複製、VP、香港運費、套裝、多區格價、匯率、分類、排序及字體大小等功能。
 
-## 檔案結構
+## 最重要：平日應該改哪裡？
 
-| 檔案 | 用途 | 平日是否要修改 |
-|---|---|---|
-| `data/hong-kong.js` | 香港產品與價格 | 香港改價時才改 |
-| `data/taiwan.js` | 台灣產品與價格 | 台灣改價時才改 |
-| `data/japan.js` | 日本產品與價格 | 日本改價時才改 |
-| `data/thailand.js` | 泰國產品、Earn Base 與自動折扣價 | 泰國改價時才改 |
-| `config/countries.js` | 地區、貨幣、價格等級設定 | 新增地區時才改 |
-| `config/comparison-map.js` | 各區同類產品編號配對 | 新增／移除格價配對時才改 |
-| `app.js` | 共用計算及介面功能 | 一般改價不用碰 |
-| `styles.css` | 共用外觀及 iPhone 排版 | 一般改價不用碰 |
-| `index.html` | 網站主頁 | 一般改價不用碰 |
+| 你要做的事 | 正確檔案 |
+|---|---|
+| 改香港價格 | `data/hong-kong.js` |
+| 改台灣價格 | `data/taiwan.js` |
+| 改日本價格 | `data/japan.js` |
+| 改泰國價格 | `data/thailand.js` |
+| 新增／修改地區、貨幣、等級 | `config/countries.js` |
+| 修改跨區同類產品配對 | `config/comparison-map.js` |
+| 修改 App 功能 | `src/app.js` |
+| 修改 App 外觀 | `src/styles/app.css` |
+| 修改頁面 DOM | `index.html` |
 
-## 日後只改一個地區的價格
+正常改價時，不需要碰其他檔案。
 
-例如台灣改價，只開啟 `data/taiwan.js`，找產品編號後修改畫面實際使用的價格等級欄位，再上載這一個檔案即可。香港、日本、泰國及主程式都不用修改。
+## 最終 Repository 結構
 
-香港產品同時保留 `retail_price` 和畫面用的 `標準價／銅級／銀級／金級／58%／50%`。若要改 App 顯示價格，必須改相應的中文價格等級；只改 `retail_price` 不會取代其他等級。新版每次開啟會重新向網站取得最新的 `data/*.js`，避免主畫面 App 長期使用舊快取，離線時才讀取上一版。
+```text
+HBL/
+├── index.html
+├── app.js                     # 兼容入口，只載入 src/app.js
+├── styles.css                 # 兼容入口，只載入 src/styles/app.css
+├── manifest.json
+├── service-worker.js
+├── logo.svg
+├── package.json
+│
+├── src/
+│   ├── app.js                 # 真正主程式
+│   └── styles/
+│       └── app.css            # 真正主樣式
+│
+├── config/
+│   ├── countries.js
+│   └── comparison-map.js
+│
+├── data/
+│   ├── hong-kong.js
+│   ├── taiwan.js
+│   ├── japan.js
+│   └── thailand.js
+│
+├── icons/
+├── assets/branding/
+├── scripts/
+├── docs/
+└── .github/workflows/
+```
 
-例如產品 `1154` 的銀級價格，應在正確的 `data/hong-kong.js` 內寫成 `"銀級": 305.75`。
+詳細架構見 `docs/ARCHITECTURE.md`。
 
-## 多區格價及差價排序
+## 不要再出現的結構
 
-- 所有產品都會出現在格價頁；即使只有一個地區有售，也會標示「此區獨有」。
-- 選港幣時以香港為比較基準；選台幣時以台灣為基準；選日圓時以日本為基準；選泰銖時以泰國為基準。
-- 基準地區本身不顯示差價；其他地區會顯示比基準便宜、較貴、同價或基準地區無同款。
-- 按「基準差價」可依可節省金額由高至低或由低至高排列。
+以下都屬於錯誤／重複檔案：
 
-## 泰國折扣計算
+```text
+hong-kong.js              # 放在 root
+countries.js              # 放在 root
+comparison-map.js         # 放在 root
+data/data/...
+data/app.js
+data/index.html
+data/styles.css
+```
 
-泰國的折扣價已按價目表的 Earn Base 計算：
+Repository 已加入自動檢查，這類結構如果再次出現，GitHub Actions 會報錯。
 
-`折扣價 = 建議零售價 −（Earn Base × 折扣率）`
+## 改價流程
 
-系統已建立 15%、25%、35%、42% 和 50% 價格。若 Earn Base 是 0，產品或年費在所有等級維持原價。泰國保留 VP 顯示，但不開啟 VP 推薦助手。
+例如香港產品 `1154` 的銀級價格要改為 `305.75`：
 
-## 日本中文短名
+1. 開 `data/hong-kong.js`
+2. 找 `"stock_no": "1154"`
+3. 修改 `"銀級": 305.75`
+4. 不要只改 `retail_price`
+5. 提交後等待網站重新部署
 
-日本產品現在顯示成「中文短名｜日文原名」，例如：
+香港畫面真正使用 `標準價／銅級／銀級／金級／58%／50%` 等欄位；`retail_price` 只作參考時，不會自動覆蓋其他等級。
 
-- `F1 香草｜フォーミュラ 1 バニラ Non GMO`
-- `深海魚油｜ハーバライフライン`
-- `搖搖杯 400ml｜シェーカー 400ml`
+## 多區格價
 
-`prod_name_zh` 是中文短名，`prod_name_ja` 是日文原名；想改中文叫法，只改同一件日本產品的 `prod_name_zh` 及 `prod_name` 前半部分即可。
+- 即使只有一區有售，產品仍可顯示並標示獨有。
+- 統一顯示貨幣可切換 HKD／TWD／JPY／THB。
+- 基準地區按所選貨幣自動決定。
+- 可按地區價格或基準差價排序。
+- 內用／外用／工具可獨立篩選。
+- 各區 VP 有差異時會標示。
 
-日本價目表的 VP 已寫入 `data/japan.js`。日本產品會在搜尋、購物車及多區格價顯示 VP，但按原設定不開啟 VP 推薦助手。
+跨區同類產品配對只在 `config/comparison-map.js` 維護。
 
-泰國的欄位相同：`prod_name_zh` 是中文短名，`prod_name_th` 是泰文原名，畫面顯示為「中文短名｜泰文原名」。
+## 泰國價格
 
-## 新增第 5、6 個地區
+泰國折扣價沿用：
 
-1. 複製一個 `data/*.js`，改成新地區的代碼及產品價格。
-2. 在 `config/countries.js` 加入一項地區、貨幣、價格等級及資料檔路徑。
-3. 若要參與跨區格價，在 `config/comparison-map.js` 的同類產品加入該區產品編號。
+```text
+折扣價 = 建議零售價 −（Earn Base × 折扣率）
+```
 
-地區按鈕、貨幣按鈕、排序按鈕及格價欄會自動產生；不需要再修改 `index.html` 或複製整個網站。超過手機寬度時可左右滑動，原有四級字體 `11 / 13 / 16 / 20` 沒有更改。
+目前支援 15%、25%、35%、42%、50%。Earn Base 為 0 的項目維持原價。
 
-## 匯率
+## 日本／泰國產品名稱
 
-系統預設以港幣作統一格價貨幣，載入時每日自動檢查一次 HKD、TWD、JPY、THB 參考匯率；也可在「參考匯率設定」按「取得最新匯率」。若外部服務暫時無法連線，會保留上次匯率，仍可手動輸入及儲存。
+日本與泰國產品可保留中文短名加當地語原名：
 
-## 放回你現有的 GitHub
+```text
+中文短名｜當地語原名
+```
 
-把本資料夾內所有檔案及 `config`、`data` 兩個資料夾上載到目前 HBL repository 的最外層，取代舊檔案。`logo.svg` 必須和 `index.html` 在同一層。
+一般只改名稱時，不需要更動主程式。
 
-> 拆檔後不能只上載 index.html；所有檔案及資料夾必須保留相同路徑。
+## 新增第 5／6 個地區
 
-### 必須確認的 GitHub 路徑
+1. 在 `data/` 新增該區資料檔。
+2. 在 `config/countries.js` 登記地區、貨幣、價格等級、功能旗標及 `dataFile`。
+3. 如需跨區格價，再到 `config/comparison-map.js` 加對應產品編號。
+4. 執行完整檢查。
 
-- 正確：`HBL / data / hong-kong.js`
-- 錯誤：`HBL / data / data / hong-kong.js`
+地區按鈕、貨幣按鈕、排序按鈕與格價欄位會按 config 自動產生。
 
-若 GitHub 上方路徑出現兩次 `data`，代表整個專案誤傳進 `data` 資料夾。App 不會讀取那一份，所以修改後畫面不會變。請回到 repository 最外層（可看見 `index.html` 的那一層）才使用 **Add file → Upload files**。
+## 自動匯率
+
+系統以 HKD 為基礎取得參考匯率，並在本機保存最近一次匯率。外部匯率服務無法連線時會保留現有設定，使用者亦可手動修改。
+
+## Repository 自動檢查
+
+本專案不需要 build，但有維護檢查：
+
+```bash
+npm run check
+```
+
+會檢查：
+
+- 必要 runtime 檔案是否存在
+- `index.html` 是否仍指向正確入口
+- Root `app.js`／`styles.css` 是否仍指向 `src/` canonical source
+- 是否重新出現舊 duplicate／nested 路徑
+- 四區 data 是否可正常註冊
+- `stock_no` 是否重複／缺失
+- config 的 `dataFile` 是否真的存在
+- comparison map 的產品編號是否仍能對應到現行 data
+
+同一套檢查會在 Pull Request 及 `main` push 自動執行。
+
+## PWA / Vercel
+
+目前仍維持純靜態部署，不需要 npm build。Root runtime URL 刻意保持穩定，避免既有 Vercel／PWA／舊主畫面安裝路徑因整理 Repository 而失效。
+
+若只是改價格，最安全做法是只修改對應 `data/*.js`。
