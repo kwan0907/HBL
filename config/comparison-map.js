@@ -5,14 +5,16 @@ window.HBL_COMPARISON_GROUPS = [
     "label": "F1 營養蛋白飲－香草",
     "HK": "0141",
     "TW": "2770",
-    "JP": "085K"
+    "JP": "085K",
+    "CN": "1316"
   },
   {
     "id": "f1-chocolate",
     "label": "F1 營養蛋白飲－朱古力",
     "HK": "0142",
     "TW": "2771",
-    "JP": "088K"
+    "JP": "088K",
+    "CN": "1317"
   },
   {
     "id": "f1-strawberry",

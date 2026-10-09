@@ -1,6 +1,6 @@
 # HBL 多區產品格價計算器
 
-HBL 是一個 buildless 的多地區產品價格比較／計算 Web App。目前支援香港、台灣、日本、泰國，保留單區計算、雙價格等級、購物車、複製、VP、香港運費、套裝、多區格價、匯率、分類、排序及字體大小等功能。
+HBL 是一個 buildless 的多地區產品價格比較／計算 Web App。目前支援香港、台灣、日本、泰國、中國大陸五個地區，保留單區計算、雙價格等級、購物車、複製、VP、香港運費、套裝、多區格價、匯率、分類、排序及字體大小等功能。
 
 ## 最重要：平日應該改哪裡？
 
@@ -10,6 +10,7 @@ HBL 是一個 buildless 的多地區產品價格比較／計算 Web App。目前
 | 改台灣價格 | `data/taiwan.js` |
 | 改日本價格 | `data/japan.js` |
 | 改泰國價格 | `data/thailand.js` |
+| 改中國大陸官方原價 | `data/china.js`（不計算任何折扣與 VP） |
 | 新增／修改地區、貨幣、等級 | `config/countries.js` |
 | 修改跨區同類產品配對 | `config/comparison-map.js` |
 | 修改 App 功能 | `src/app.js` |
@@ -43,7 +44,8 @@ HBL/
 │   ├── hong-kong.js
 │   ├── taiwan.js
 │   ├── japan.js
-│   └── thailand.js
+│   ├── thailand.js
+│   └── china.js
 │
 ├── icons/
 ├── assets/branding/
@@ -85,13 +87,21 @@ Repository 已加入自動檢查，這類結構如果再次出現，GitHub Actio
 ## 多區格價
 
 - 即使只有一區有售，產品仍可顯示並標示獨有。
-- 統一顯示貨幣可切換 HKD／TWD／JPY／THB。
+- 統一顯示貨幣可切換 HKD／TWD／JPY／THB／CNY。
 - 基準地區按所選貨幣自動決定。
 - 可按地區價格或基準差價排序。
 - 內用／外用／工具可獨立篩選。
 - 各區 VP 有差異時會標示。
 
 跨區同類產品配對只在 `config/comparison-map.js` 維護。
+
+## 中國大陸原價（2026-10-09 新增）
+
+- 只收錄中國康寶萊官網公開的人民幣零售原價；不推算會員折扣、訂貨成本或 VP。
+- 目前收錄 56 項公開產品：`data/china.js`；價格來源存於各品項 `source_url`，`source_checked` 記錄核對日期。
+- 官方已核實 F1 香草和朱古力產品編號為 `1316`、`1317`（每罐 550 克）；其餘 `CNxxx` 是工具內部識別碼，不是康寶萊產品編號。
+- 五地格價中，選其他折扣級別也仍顯示中國零售原價，並標示「不套折扣」。留意不屬相同折扣基準。
+- 尚未確認與其他地區相同容量／配方的產品，暫時以中國獨有條目展示，避免錯誤配對；日後核實後可於 `config/comparison-map.js` 配對。
 
 ## 泰國價格
 
@@ -140,7 +150,7 @@ npm run check
 - `index.html` 是否仍指向正確入口
 - Root `app.js`／`styles.css` 是否仍指向 `src/` canonical source
 - 是否重新出現舊 duplicate／nested 路徑
-- 四區 data 是否可正常註冊
+- 五區 data 是否可正常註冊
 - `stock_no` 是否重複／缺失
 - config 的 `dataFile` 是否真的存在
 - comparison map 的產品編號是否仍能對應到現行 data
