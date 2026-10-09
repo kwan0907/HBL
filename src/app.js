@@ -349,6 +349,9 @@ function comparisonProduct(group, country) {
   return getCountryProducts(country).find(p => p.stock_no === stockNo) || null;
 }
 
+function countryPriceIsComparable(country) {
+  return comparisonTier === 'retail' || country !== 'CN';
+}
 function comparisonPrice(group, country) {
   const product = comparisonProduct(group, country);
   if (!product) return null;
@@ -401,10 +404,11 @@ function allComparisonGroups() {
   return groups;
 }
 function comparisonSavingFromReference(group, referenceCountry = comparisonReferenceCountry()) {
+  if (!countryPriceIsComparable(referenceCountry)) return null;
   const referenceData = comparisonPrice(group, referenceCountry);
   if (!referenceData || !Number.isFinite(referenceData.converted)) return null;
   const alternatives = ALL_COUNTRIES
-    .filter(code => code !== referenceCountry)
+    .filter(code => code !== referenceCountry && countryPriceIsComparable(code))
     .map(code => comparisonPrice(group, code)?.converted)
     .filter(Number.isFinite);
   if (!alternatives.length) return 0;
@@ -477,8 +481,11 @@ function renderComparison() {
   container.innerHTML = groups.map(group => {
     const prices = ALL_COUNTRIES.map(country => ({ country, data: comparisonPrice(group, country) }));
     const available = prices.filter(item => item.data && Number.isFinite(item.data.converted));
-    const referenceData = prices.find(item => item.country === referenceCountry)?.data || null;
-    const minimum = available.length ? Math.min(...available.map(item => item.data.converted)) : Infinity;
+    // 中國只提供零售原價，不可與其他地區的會員折扣成本排名。
+    const comparable = available.filter(item => countryPriceIsComparable(item.country));
+    const referenceData = countryPriceIsComparable(referenceCountry)
+      ? (prices.find(item => item.country === referenceCountry)?.data || null) : null;
+    const minimum = comparable.length ? Math.min(...comparable.map(item => item.data.converted)) : Infinity;
     const uniqueCountry = available.length === 1 ? available[0].country : null;
     const saving = comparisonSavingFromReference(group, referenceCountry);
     const vpValues = prices.map(({ country, data }) => comparisonVp(data, country)).filter(Number.isFinite);
@@ -488,16 +495,18 @@ function renderComparison() {
     const boxes = prices.map(({ country, data }) => {
       if (!data) return '<div class="compare-price-box"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="missing-price">—</div><div class="compare-vp vp-unavailable">VP —</div></div>';
       const isReference = country === referenceCountry;
-      const cheapest = available.length > 1 && Math.abs(data.converted - minimum) < 0.01;
+      const cheapest = countryPriceIsComparable(country) && comparable.length > 1 && Math.abs(data.converted - minimum) < 0.01;
       const vp = comparisonVp(data, country);
       const vpClass = comparisonVpClass(vp, minimumVp, maximumVp, vpDiffers);
       const vpText = Number.isFinite(vp) ? 'VP ' + vp.toFixed(2) : 'VP —';
       const priceBasisHtml = country === 'CN' ? '<div style="font-size:0.72em;color:var(--text-muted);margin-top:3px;">官方原價・不套折扣</div>' : '';
       let deltaHtml = '';
-      if (isReference) {
+      if (!countryPriceIsComparable(country)) {
+        deltaHtml = '<div class="price-delta unavailable">僅供參考・非相同折扣基準</div>';
+      } else if (isReference) {
         deltaHtml = '<div class="reference-badge">比較基準</div>';
       } else if (!referenceData || !Number.isFinite(referenceData.converted)) {
-        deltaHtml = '<div class="price-delta unavailable">' + referenceConfig.name + '無同款</div>';
+        deltaHtml = '<div class="price-delta unavailable">' + (referenceCountry === 'CN' && comparisonTier !== 'retail' ? '中國大陸無折扣價' : referenceConfig.name + '無同款') + '</div>';
       } else {
         const delta = data.converted - referenceData.converted;
         if (Math.abs(delta) < 0.01) deltaHtml = '<div class="price-delta same">同價</div>';
@@ -512,7 +521,7 @@ function renderComparison() {
     }).join('');
     let availabilityText = '可比較 ' + available.length + ' 個地區・基準 ' + referenceConfig.name;
     if (uniqueCountry) availabilityText = '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
-    else if (!referenceData) availabilityText += '無同款';
+    else if (!referenceData) availabilityText += referenceCountry === 'CN' && comparisonTier !== 'retail' ? '・中國大陸無折扣價可供比較' : '無同款';
     else if (Number.isFinite(saving) && saving > 0) availabilityText += '・最多便宜 ' + formatCurrencyAmount(saving, comparisonCurrency);
     const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';
     return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">' + availabilityText + vpWarning + '</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
