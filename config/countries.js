@@ -163,6 +163,32 @@ window.HBL_COUNTRY_CONFIGS = {
       "50%": "50%"
     }
   },
+  "CN": {
+    "code": "CN",
+    "name": "中國大陸",
+    "flag": "🇨🇳",
+    "dataFile": "./data/china.js",
+    "currency": "¥",
+    "currencyCode": "CNY",
+    "locale": "zh-CN",
+    "decimals": 2,
+    "defaultTier": "官方零售價",
+    "supportsVP": false,
+    "hasVPData": false,
+    "supportsFreight": false,
+    "showSpecialShortcuts": false,
+    "priceBasis": "retail-only",
+    "tiers": [["官方零售價", "官方零售價（原價）"]],
+    "compareTiers": {
+      "retail": "官方零售價",
+      "15%": "官方零售價",
+      "25%": "官方零售價",
+      "35%": "官方零售價",
+      "42%": "官方零售價",
+      "50%": "官方零售價"
+    }
+  },
+
   "TH": {
     "code": "TH",
     "name": "泰國",
@@ -218,6 +244,14 @@ window.HBL_CURRENCY_META = {
     "locale": "ja-JP",
     "decimals": 0,
     "ratePerHKD": 20.312473
+  },
+
+  "CNY": {
+    "symbol": "¥",
+    "label": "人民幣 CNY",
+    "locale": "zh-CN",
+    "decimals": 2,
+    "ratePerHKD": 0.8534
   },
   "THB": {
     "symbol": "฿",
