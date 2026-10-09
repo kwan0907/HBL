@@ -406,7 +406,8 @@ function allComparisonGroups() {
       if (mappedStockNos[code].has(product.stock_no)) return;
       groups.push({
         id: 'unique-' + code.toLowerCase() + '-' + String(product.stock_no).toLowerCase(),
-        label: product.prod_name_zh || product.prod_name,
+        label: (product.prod_name_zh || product.prod_name) +
+          (product.net_weight && !String(product.prod_name_zh || product.prod_name).includes(product.net_weight) ? '（' + product.net_weight + '）' : ''),
         [code]: product.stock_no,
         uniqueCountry: code,
         synthetic: true
@@ -452,12 +453,19 @@ function renderComparison() {
   const referenceConfig = COUNTRY_CONFIGS[referenceCountry];
   let groups = allComparisonGroups().filter(group =>
     comparisonGroupCategory(group) === comparisonCategory &&
-    (comparisonMatchFilter === 'all' || (comparisonMatchCount(group) > 1 &&
-      (comparisonMatchFilter === 'paired' || !!group.CN))) &&
+    (comparisonMatchFilter === 'all' ||
+      (comparisonMatchFilter === 'paired' && comparisonMatchCount(group) > 1) ||
+      (comparisonMatchFilter === 'china' && !!group.CN)) &&
     (!query || comparisonSearchText(group).includes(query))
   );
   const sortCountry = comparisonSort.country;
   groups.sort((a, b) => {
+    // 中國對照優先展示真正配對成功的同規格產品；不同容量／待核對留在下方。
+    if (comparisonMatchFilter === 'china') {
+      const pairedA = comparisonMatchCount(a) > 1 ? 1 : 0;
+      const pairedB = comparisonMatchCount(b) > 1 ? 1 : 0;
+      if (pairedA !== pairedB) return pairedB - pairedA;
+    }
     if (comparisonSort.mode === 'difference') {
       const savingA = comparisonSavingFromReference(a, referenceCountry);
       const savingB = comparisonSavingFromReference(b, referenceCountry);
@@ -538,16 +546,21 @@ function renderComparison() {
         else deltaHtml = '<div class="price-delta dearer">貴 +' + formatCurrencyAmount(delta, comparisonCurrency) + '</div>';
       }
       const badgeHtml = uniqueCountry === country
-        ? (chinaPairingPending ? '<div class="unique-badge">⚠ 待核對同款</div>' : '<div class="unique-badge">★ 此區獨有</div>')
+        ? (group.sizeVariantOf ? '<div class="unique-badge">📦 不同容量・獨立列出</div>' :
+          (chinaPairingPending ? '<div class="unique-badge">⚠ 待核對同款</div>' :
+           '<div class="unique-badge">僅此區有資料</div>'))
         : (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '');
       const boxClasses = ['compare-price-box', cheapest ? 'cheapest' : '', isReference ? 'reference' : '', uniqueCountry === country ? 'unique' : ''].filter(Boolean).join(' ');
       const skuHtml = '<div class="compare-product-sku">#' + data.product.stock_no +
-        (country === 'CN' && data.product.net_weight ? '・' + data.product.net_weight : '') + '</div>';
+        (data.product.net_weight ? '・' + data.product.net_weight : '') + '</div>';
       return '<div class="' + boxClasses + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + skuHtml + badgeHtml + deltaHtml + priceBasisHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
     }).join('');
     let availabilityText = (group.comparisonMode === 'viewOnly' ? '同口味列出 ' : '可比較 ') +
       available.length + ' 個地區・基準 ' + referenceConfig.name;
-    if (uniqueCountry) availabilityText = chinaPairingPending ? '中國大陸官網有售・尚未核對其他地區同款規格' : '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
+    if (uniqueCountry) availabilityText = group.sizeVariantOf
+      ? '已分開不同容量版本・' + COUNTRY_CONFIGS[uniqueCountry].name + '有資料（不作跨區比較）'
+      : (chinaPairingPending ? '中國大陸官網有售・尚未核對其他地區同款規格'
+        : '目前僅有 ' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 的資料（不代表其他地區無售）');
     else if (!referenceData) availabilityText += referenceCountry === 'CN' && comparisonTier !== 'retail' ? '・中國大陸無折扣價可供比較' : '無同款';
     else if (Number.isFinite(saving) && saving > 0) availabilityText += '・最多便宜 ' + formatCurrencyAmount(saving, comparisonCurrency);
     const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';

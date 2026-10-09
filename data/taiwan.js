@@ -5,6 +5,8 @@ window.HBL_COUNTRY_DATA.TW = {
   products: [
   {
     "stock_no": "2770",
+    "net_weight": "550克",
+    "weight_source": "https://www.snq.org.tw/chinese/02_products/02_detail.php?pdid=3619",
     "prod_name": "營養蛋白混合飲料-香草",
     "prod_name_en": "Nutrition Protein Drink Mix - Vanilla",
     "category": "內在營養",
@@ -221,6 +223,8 @@ window.HBL_COUNTRY_DATA.TW = {
   },
   {
     "stock_no": "0242",
+    "net_weight": "240克",
+    "weight_source": "https://www.snq.org.tw/chinese/02_products/02_detail.php?pdid=5244",
     "prod_name": "優質蛋白粉",
     "prod_name_en": "Personalized Protein Powder",
     "category": "內在營養",
@@ -605,6 +609,8 @@ window.HBL_COUNTRY_DATA.TW = {
   },
   {
     "stock_no": "2121",
+    "net_weight": "102克",
+    "weight_source": "現有產品名稱已標示",
     "prod_name": "草本濃縮速溶茶飲 - 蜜薑(102克)",
     "prod_name_en": "Herbal Tea Concentrate-Honey ginger (102g)",
     "category": "內在營養",
@@ -629,6 +635,8 @@ window.HBL_COUNTRY_DATA.TW = {
   },
   {
     "stock_no": "0256",
+    "net_weight": "50克",
+    "weight_source": "現有產品名稱已標示",
     "prod_name": "草本濃縮速溶茶飲 - 覆盆子(50克)",
     "prod_name_en": "Herbal Tea Concentrate- Raspberry ( 50g )",
     "category": "內在營養",

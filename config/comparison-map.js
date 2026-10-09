@@ -1,6 +1,6 @@
-/* 跨國同款／同口味產品明確對照。不同產品編號可指向同系列。
- * 標記 comparisonMode=viewOnly 或 nonComparableRegions 的資料只展示價格，不參與直接比價／最平。
- * 避免僅憑相似產品名稱自動匹配。 */
+/* 同類產品按系列、口味及【同容量】配對，已知重量不同必須獨立分組。
+ * 各地產品編號可以不同；sizeVariantOf 是顯示同系列不同規格的關聯，絕不可視作同商品比價。
+ * 重量／份量未核實可以標待核對，但不可斷言同容量或相同配方。 */
 window.HBL_COMPARISON_GROUPS = [
   {
     "id": "f1-vanilla",
@@ -78,11 +78,15 @@ window.HBL_COMPARISON_GROUPS = [
     "TW": "0242",
     "JP": "171K",
     "TH": "171K",
+    "matchNote": "🇹🇼 優質蛋白粉為240g；其他地區規格尚待核對。🇨🇳 400g版本另列，不視作同一包裝。"
+  },
+  {
+    "id": "protein-powder-cn-400g",
+    "label": "蛋白粉－中國大陸 400g",
     "CN": "1331",
-    "nonComparableRegions": [
-      "CN"
-    ],
-    "matchNote": "🇨🇳 中國蛋白粉400克，台灣等地常見240克；中國價格不可直接比較。"
+    "sizeVariantOf": "protein-powder",
+    "sizeLabel": "400g",
+    "matchNote": "🇨🇳 官方400g，與台灣240g不同包裝，獨立列出，不參與跨地區差價。"
   },
   {
     "id": "multivitamin",
@@ -275,29 +279,50 @@ window.HBL_COMPARISON_GROUPS = [
   },
   {
     "id": "herbal-tea-lemon",
-    "label": "草本濃縮速溶茶－檸檬味（不同規格）",
+    "label": "草本茶－檸檬味（日本／泰國規格待核）",
     "JP": "0188",
     "TH": "0255",
-    "CN": "1335",
     "comparisonMode": "viewOnly",
-    "matchNote": "⚠ 中國100克；泰國檸檬茶與其他地區容量可能不同，不能直接按每件總價分高低。"
+    "matchNote": "日本和泰國此產品容量未核實；中國100g獨立列出，不直接作同容量比較。"
   },
   {
-    "id": "herbal-tea-raspberry",
-    "label": "草本濃縮速溶茶－覆盆子／木莓（不同規格）",
+    "id": "herbal-tea-lemon-cn-100g",
+    "label": "草本茶－檸檬味 100g",
+    "CN": "1335",
+    "sizeVariantOf": "herbal-tea-lemon",
+    "sizeLabel": "100g",
+    "matchNote": "🇨🇳 100g；日本及泰國的容量待核實，暫不配對同一規格。"
+  },
+  {
+    "id": "herbal-tea-raspberry-tw-50g",
+    "label": "草本茶－覆盆子／木莓 50g",
     "TW": "0256",
+    "matchNote": "🇹🇼 50g；中國100g屬不同包裝，不能配成同一產品。",
+    "sizeVariantOf": "herbal-tea-raspberry",
+    "sizeLabel": "50g"
+  },
+  {
+    "id": "herbal-tea-raspberry-cn-100g",
+    "label": "草本茶－覆盆子／木莓 100g",
     "CN": "1336",
-    "comparisonMode": "viewOnly",
-    "matchNote": "⚠ 中國100克、台灣50克；僅列同口味，請勿直接比較整件價格。"
+    "sizeVariantOf": "herbal-tea-raspberry",
+    "sizeLabel": "100g",
+    "matchNote": "🇨🇳 100g，台灣50g已另外列出；不視為同一容量產品。"
   },
   {
     "id": "herbal-tea-honey-ginger",
-    "label": "草本茶－蜜薑",
+    "label": "草本茶－蜜薑（台灣102g）",
     "TW": "2121",
     "TH": "2121",
+    "matchNote": "🇹🇼 台灣102g；🇹🇭 泰國容量尚待確認。中國100g另列，兩種容量不合併。"
+  },
+  {
+    "id": "herbal-tea-honey-ginger-cn-100g",
+    "label": "草本茶－蜜薑 100g",
     "CN": "L896",
-    "comparisonMode": "viewOnly",
-    "matchNote": "🇨🇳 中國100克、🇹🇼 台灣102克；規格有差異，僅按同口味列在一起。"
+    "sizeVariantOf": "herbal-tea-honey-ginger",
+    "sizeLabel": "100g",
+    "matchNote": "🇨🇳 100g，不等於台灣102g，同口味亦不合併。"
   },
   {
     "id": "nrg",
