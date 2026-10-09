@@ -89,6 +89,7 @@ if (fs.existsSync('index.html')) {
     './data/taiwan.js',
     './data/japan.js',
     './data/thailand.js',
+    './data/china.js',
     './app.js',
     './styles.css',
     './manifest.json'
