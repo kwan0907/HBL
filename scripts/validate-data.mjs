@@ -57,6 +57,16 @@ for (const [code, config] of Object.entries(countryConfigs)) {
     if (product.vp !== undefined && product.vp !== null && !Number.isFinite(Number(product.vp))) {
       fail(`${code} ${stockNo}: vp is not numeric`);
     }
+    // 中國大陸只可使用官方零售價；不可自行編造 VP 與折扣等級。
+    if (code === 'CN') {
+      const retail = Number(product['官方零售價']);
+      if (!Number.isFinite(retail) || retail <= 0) fail(`${prefix}: invalid China official retail price`);
+      if (retail !== Number(product.retail_price)) fail(`${prefix}: China retail price mismatch`);
+      if (product.vp_verified !== false || Number(product.vp) !== 0) fail(`${prefix}: China VP must remain unverified`);
+      const unsupported = ['15%', '25%', '35%', '42%', '50%', '銅級', '銀級', '金級', '58%', 'cost'];
+      if (unsupported.some(key => key in product)) fail(`${prefix}: China discount tier must not be invented`);
+      if (stockNo.startsWith('CN') && product.stock_no_verified === true) fail(`${prefix}: internal stock number claimed as official`);
+    }
   }
 
   if (!Array.isArray(config.tiers) || !config.tiers.length) fail(`${code}: tiers must be a non-empty array`);
