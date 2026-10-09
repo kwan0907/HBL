@@ -206,7 +206,7 @@ window.HBL_COUNTRY_CONFIGS = {
     "decimals": 2,
     "defaultTier": "官方零售價",
     "supportsVP": false,
-    "hasVPData": false,
+    "hasVPData": true,
     "supportsFreight": false,
     "showSpecialShortcuts": false,
     "priceBasis": "retail-only",

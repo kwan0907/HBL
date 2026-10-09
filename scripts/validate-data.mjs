@@ -62,13 +62,28 @@ for (const [code, config] of Object.entries(countryConfigs)) {
       const retail = Number(product['官方零售價']);
       if (!Number.isFinite(retail) || retail <= 0) fail(`${prefix}: invalid China official retail price`);
       if (retail !== Number(product.retail_price)) fail(`${prefix}: China retail price mismatch`);
-      if (product.vp_verified !== false || Number(product.vp) !== 0) fail(`${prefix}: China VP must remain unverified`);
+      // 中國市場只有已核實部分 VP，未核實品項必須留空而非用 0 代替。
+      if (product.vp_verified === true) {
+        if (product.vp === null || !Number.isFinite(Number(product.vp)) || Number(product.vp) <= 0) {
+          fail(`${prefix}: China verified VP must be a positive number`);
+        }
+        if (!product.vp_source) fail(`${prefix}: verified VP is missing its source`);
+      } else if (product.vp_verified !== false || product.vp !== null) {
+        fail(`${prefix}: China unverified VP must be null (unknown), never zero or inferred`);
+      }
       const unsupported = ['15%', '25%', '35%', '42%', '50%', '銅級', '銀級', '金級', '58%', 'cost'];
       if (unsupported.some(key => key in product)) fail(`${prefix}: China discount tier must not be invented`);
       if (stockNo.startsWith('CN') && product.stock_no_verified === true) fail(`${prefix}: internal stock number claimed as official`);
     }
   }
 
+  if (code === 'CN') {
+    const confirmed = data.products.filter(p => p.vp_verified === true).length;
+    const unknown = data.products.length - confirmed;
+    if (config.supportsVP !== false) fail('China VP optimizer must remain disabled while data is incomplete');
+    if (confirmed > 0 && config.hasVPData !== true) fail('China has known VP but hasVPData is disabled');
+    if (unknown > 0 && data.vpAvailable !== 'partial') fail('China has unverified VP entries but vpAvailable is not partial');
+  }
   if (!Array.isArray(config.tiers) || !config.tiers.length) fail(`${code}: tiers must be a non-empty array`);
   if (config.defaultTier && Array.isArray(config.tiers) && !config.tiers.some(item => Array.isArray(item) && item[0] === config.defaultTier)) {
     fail(`${code}: defaultTier ${config.defaultTier} is not listed in tiers`);

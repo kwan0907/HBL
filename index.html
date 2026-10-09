@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <script>document.documentElement.classList.add('app-preparing');</script>
 <link rel="preload" as="image" href="./logo.svg">
-<link rel="preload" as="script" href="./config/countries.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./data/japan.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./data/thailand.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./data/china.js?v=20261009-size-v3">
-<link rel="preload" as="script" href="./app.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./config/countries.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./data/japan.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./data/thailand.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./data/china.js?v=20261009-cn-vp-v4">
+<link rel="preload" as="script" href="./app.js?v=20261009-cn-vp-v4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20261009-size-v3">
+<link rel="manifest" href="./manifest.json?v=20261009-cn-vp-v4">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20261009-size-v3">
+<link rel="stylesheet" href="./styles.css?v=20261009-cn-vp-v4">
 </head>
 <body>
 <div class="app-first-load" aria-live="polite" aria-label="正在載入價目">
@@ -62,7 +62,7 @@
   <div class="font-ctrl-btns country-buttons-scroll" id="country-buttons"></div>
 </div>
 <div id="cn-single-notice" class="compare-note" style="display:none;padding:8px 10px;margin-bottom:8px;border:1px solid var(--glass-border);border-radius:8px;">
-  🇨🇳 中國大陸暫只提供官方公示零售原價（人民幣），不推算會員折扣或 VP。CNxxx 為工具內部編號，非官方貨號；不同地區規格請自行核對。
+  🇨🇳 中國大陸價格仍為官方公示零售原價（人民幣），不推算會員折扣。部分商品 VP 已根據提供的購物車截圖及奶昔資料補上；其餘 VP 顯示「—」，總 VP 如有未核實商品會標示「部分」。CNxxx 是工具內部編號，非官方貨號。
 </div>
 <div class="price-data-helper">
   <span class="swipe-hint" id="country-swipe-hint">↔ 地區按鈕可左右滑動查看更多</span>
@@ -206,7 +206,7 @@
   </div>
 
   <div class="compare-note" style="padding:8px 10px;margin-bottom:8px;border:1px solid var(--glass-border);border-radius:8px;">
-  🇨🇳 中國大陸價格一律為官方原價；選擇其他折扣等級時，大陸價格不跟隨折扣，跨區差價只作參考。
+  🇨🇳 中國大陸價格一律為官方原價，不跟隨其他折扣等級；部分產品已補上用戶確認的 VP，未核實產品會顯示 VP —，不當作零分。
 </div>
 <div class="compare-results-meta"><span id="compare-meta-left"></span><span>可配對／待核對／不同容量已區分</span></div>
   <div id="compare-results"></div>
@@ -288,13 +288,13 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20261009-size-v3"></script>
-<script src="./config/comparison-map.js?v=20261009-size-v3"></script>
-<script src="./data/hong-kong.js?v=20261009-size-v3"></script>
-<script src="./data/taiwan.js?v=20261009-size-v3"></script>
-<script src="./data/japan.js?v=20261009-size-v3"></script>
-<script src="./data/thailand.js?v=20261009-size-v3"></script>
-<script src="./data/china.js?v=20261009-size-v3"></script>
-<script src="./app.js?v=20261009-size-v3"></script>
+<script src="./config/countries.js?v=20261009-cn-vp-v4"></script>
+<script src="./config/comparison-map.js?v=20261009-cn-vp-v4"></script>
+<script src="./data/hong-kong.js?v=20261009-cn-vp-v4"></script>
+<script src="./data/taiwan.js?v=20261009-cn-vp-v4"></script>
+<script src="./data/japan.js?v=20261009-cn-vp-v4"></script>
+<script src="./data/thailand.js?v=20261009-cn-vp-v4"></script>
+<script src="./data/china.js?v=20261009-cn-vp-v4"></script>
+<script src="./app.js?v=20261009-cn-vp-v4"></script>
 </body>
 </html>

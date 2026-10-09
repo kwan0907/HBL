@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hbl-multi-region-v11-size-aware-20261009';
+const CACHE_NAME = 'hbl-multi-region-v12-cn-partial-vp-20261009';
 self.addEventListener('install', event => { self.skipWaiting(); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
