@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <script>document.documentElement.classList.add('app-preparing');</script>
 <link rel="preload" as="image" href="./logo.svg">
-<link rel="preload" as="script" href="./config/countries.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./data/japan.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./data/thailand.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./data/china.js?v=20261009-match-v2">
-<link rel="preload" as="script" href="./app.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./config/countries.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./data/japan.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./data/thailand.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./data/china.js?v=20261009-size-v3">
+<link rel="preload" as="script" href="./app.js?v=20261009-size-v3">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20261009-match-v2">
+<link rel="manifest" href="./manifest.json?v=20261009-size-v3">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20261009-match-v2">
+<link rel="stylesheet" href="./styles.css?v=20261009-size-v3">
 </head>
 <body>
 <div class="app-first-load" aria-live="polite" aria-label="正在載入價目">
@@ -174,7 +174,7 @@
       <button class="compare-match-btn" data-match-filter="paired" onclick="setComparisonMatchFilter('paired')">🔗 已配對</button>
       <button class="compare-match-btn" data-match-filter="china" onclick="setComparisonMatchFilter('china')">🇨🇳 中國對照</button>
     </div>
-    <div class="compare-note" style="margin:0 0 10px;">不同貨號會按已核實的系列、口味及規格配對。切換「中國對照」可只看中國與其他地區已有配對的產品；不同規格不會直接比較最平。</div>
+    <div class="compare-note" style="margin:0 0 10px;">同類產品會先核對口味及包裝容量：50g 與 100g、100g 與 102g 均獨立列出，不當成同一件。「中國對照」會顯示中國全部產品，已配對項目排前，未配對及不同容量版本排後。</div>
     <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
     <div class="currency-segment currency-buttons-scroll" id="compare-currency-buttons"></div>
     <details class="rate-panel">
@@ -208,7 +208,7 @@
   <div class="compare-note" style="padding:8px 10px;margin-bottom:8px;border:1px solid var(--glass-border);border-radius:8px;">
   🇨🇳 中國大陸價格一律為官方原價；選擇其他折扣等級時，大陸價格不跟隨折扣，跨區差價只作參考。
 </div>
-<div class="compare-results-meta"><span id="compare-meta-left"></span><span>獨有產品及最平價格已標示</span></div>
+<div class="compare-results-meta"><span id="compare-meta-left"></span><span>可配對／待核對／不同容量已區分</span></div>
   <div id="compare-results"></div>
 </div>
 </div>
@@ -288,13 +288,13 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20261009-match-v2"></script>
-<script src="./config/comparison-map.js?v=20261009-match-v2"></script>
-<script src="./data/hong-kong.js?v=20261009-match-v2"></script>
-<script src="./data/taiwan.js?v=20261009-match-v2"></script>
-<script src="./data/japan.js?v=20261009-match-v2"></script>
-<script src="./data/thailand.js?v=20261009-match-v2"></script>
-<script src="./data/china.js?v=20261009-match-v2"></script>
-<script src="./app.js?v=20261009-match-v2"></script>
+<script src="./config/countries.js?v=20261009-size-v3"></script>
+<script src="./config/comparison-map.js?v=20261009-size-v3"></script>
+<script src="./data/hong-kong.js?v=20261009-size-v3"></script>
+<script src="./data/taiwan.js?v=20261009-size-v3"></script>
+<script src="./data/japan.js?v=20261009-size-v3"></script>
+<script src="./data/thailand.js?v=20261009-size-v3"></script>
+<script src="./data/china.js?v=20261009-size-v3"></script>
+<script src="./app.js?v=20261009-size-v3"></script>
 </body>
 </html>
