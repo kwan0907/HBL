@@ -25,7 +25,8 @@ HBL/
 │   ├── hong-kong.js
 │   ├── taiwan.js
 │   ├── japan.js
-│   └── thailand.js            # Canonical regional product/price files
+│   ├── thailand.js
+│   └── china.js               # Mainland CN public retail prices only
 │
 ├── icons/                     # PWA icons and favicon
 ├── assets/branding/           # High-resolution branding source assets
