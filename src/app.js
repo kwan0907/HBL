@@ -20,6 +20,7 @@ let singleCurrencyMode = 'AUTO';
 let comparisonCurrency = BASE_CURRENCY;
 let comparisonTier = 'retail';
 let comparisonCategory = 'internal';
+let comparisonMatchFilter = 'all'; // all | paired | china
 let comparisonSort = { mode:'country', country: currentCountry, direction:'asc' };
 let exchangeRates = Object.fromEntries(ALL_CURRENCIES.map(code => [code, Number(CURRENCY_META[code].ratePerHKD) || 1]));
 let selectedProducts = [];
@@ -323,6 +324,17 @@ function setComparisonCategory(category) {
   comparisonCategory = category;
   renderComparison();
 }
+function setComparisonMatchFilter(filter) {
+  if (!['all','paired','china'].includes(filter)) return;
+  comparisonMatchFilter = filter;
+  document.querySelectorAll('[data-match-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.matchFilter === filter);
+  });
+  renderComparison();
+}
+function comparisonMatchCount(group) {
+  return ALL_COUNTRIES.filter(code => !!comparisonProduct(group, code)).length;
+}
 function sortComparison(country) {
   if (!ALL_COUNTRIES.includes(country)) return;
   if (comparisonSort.mode === 'country' && comparisonSort.country === country) {
@@ -403,12 +415,17 @@ function allComparisonGroups() {
   });
   return groups;
 }
+function groupRegionComparable(group, country) {
+  return countryPriceIsComparable(country)
+    && group.comparisonMode !== 'viewOnly'
+    && !(group.nonComparableRegions || []).includes(country);
+}
 function comparisonSavingFromReference(group, referenceCountry = comparisonReferenceCountry()) {
-  if (!countryPriceIsComparable(referenceCountry)) return null;
+  if (!groupRegionComparable(group, referenceCountry)) return null;
   const referenceData = comparisonPrice(group, referenceCountry);
   if (!referenceData || !Number.isFinite(referenceData.converted)) return null;
   const alternatives = ALL_COUNTRIES
-    .filter(code => code !== referenceCountry && countryPriceIsComparable(code))
+    .filter(code => code !== referenceCountry && groupRegionComparable(group, code))
     .map(code => comparisonPrice(group, code)?.converted)
     .filter(Number.isFinite);
   if (!alternatives.length) return 0;
@@ -435,6 +452,8 @@ function renderComparison() {
   const referenceConfig = COUNTRY_CONFIGS[referenceCountry];
   let groups = allComparisonGroups().filter(group =>
     comparisonGroupCategory(group) === comparisonCategory &&
+    (comparisonMatchFilter === 'all' || (comparisonMatchCount(group) > 1 &&
+      (comparisonMatchFilter === 'paired' || !!group.CN))) &&
     (!query || comparisonSearchText(group).includes(query))
   );
   const sortCountry = comparisonSort.country;
@@ -479,11 +498,14 @@ function renderComparison() {
     return;
   }
   container.innerHTML = groups.map(group => {
-    const prices = ALL_COUNTRIES.map(country => ({ country, data: comparisonPrice(group, country) }));
+    const displayCountries = comparisonMatchFilter === 'china'
+      ? ['HK','CN',...ALL_COUNTRIES.filter(c => c !== 'HK' && c !== 'CN')]
+      : ALL_COUNTRIES;
+    const prices = displayCountries.map(country => ({ country, data: comparisonPrice(group, country) }));
     const available = prices.filter(item => item.data && Number.isFinite(item.data.converted));
     // 中國只提供零售原價，不可與其他地區的會員折扣成本排名。
-    const comparable = available.filter(item => countryPriceIsComparable(item.country));
-    const referenceData = countryPriceIsComparable(referenceCountry)
+    const comparable = available.filter(item => groupRegionComparable(group, item.country));
+    const referenceData = groupRegionComparable(group, referenceCountry)
       ? (prices.find(item => item.country === referenceCountry)?.data || null) : null;
     const minimum = comparable.length ? Math.min(...comparable.map(item => item.data.converted)) : Infinity;
     const uniqueCountry = available.length === 1 ? available[0].country : null;
@@ -496,14 +518,15 @@ function renderComparison() {
     const boxes = prices.map(({ country, data }) => {
       if (!data) return '<div class="compare-price-box"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="missing-price">—</div><div class="compare-vp vp-unavailable">VP —</div></div>';
       const isReference = country === referenceCountry;
-      const cheapest = countryPriceIsComparable(country) && comparable.length > 1 && Math.abs(data.converted - minimum) < 0.01;
+      const cheapest = groupRegionComparable(group, country) && comparable.length > 1 && Math.abs(data.converted - minimum) < 0.01;
       const vp = comparisonVp(data, country);
       const vpClass = comparisonVpClass(vp, minimumVp, maximumVp, vpDiffers);
       const vpText = Number.isFinite(vp) ? 'VP ' + vp.toFixed(2) : 'VP —';
       const priceBasisHtml = country === 'CN' ? '<div style="font-size:0.72em;color:var(--text-muted);margin-top:3px;">官方原價・不套折扣</div>' : '';
       let deltaHtml = '';
-      if (!countryPriceIsComparable(country)) {
-        deltaHtml = '<div class="price-delta unavailable">僅供參考・非相同折扣基準</div>';
+      if (!groupRegionComparable(group, country)) {
+        deltaHtml = '<div class="price-delta unavailable">' +
+          (!countryPriceIsComparable(country) ? '原價・不可比折扣' : '不同規格・僅供參考') + '</div>';
       } else if (isReference) {
         deltaHtml = '<div class="reference-badge">比較基準</div>';
       } else if (!referenceData || !Number.isFinite(referenceData.converted)) {
@@ -518,14 +541,18 @@ function renderComparison() {
         ? (chinaPairingPending ? '<div class="unique-badge">⚠ 待核對同款</div>' : '<div class="unique-badge">★ 此區獨有</div>')
         : (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '');
       const boxClasses = ['compare-price-box', cheapest ? 'cheapest' : '', isReference ? 'reference' : '', uniqueCountry === country ? 'unique' : ''].filter(Boolean).join(' ');
-      return '<div class="' + boxClasses + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + badgeHtml + deltaHtml + priceBasisHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
+      const skuHtml = '<div class="compare-product-sku">#' + data.product.stock_no +
+        (country === 'CN' && data.product.net_weight ? '・' + data.product.net_weight : '') + '</div>';
+      return '<div class="' + boxClasses + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + skuHtml + badgeHtml + deltaHtml + priceBasisHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
     }).join('');
-    let availabilityText = '可比較 ' + available.length + ' 個地區・基準 ' + referenceConfig.name;
+    let availabilityText = (group.comparisonMode === 'viewOnly' ? '同口味列出 ' : '可比較 ') +
+      available.length + ' 個地區・基準 ' + referenceConfig.name;
     if (uniqueCountry) availabilityText = chinaPairingPending ? '中國大陸官網有售・尚未核對其他地區同款規格' : '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
     else if (!referenceData) availabilityText += referenceCountry === 'CN' && comparisonTier !== 'retail' ? '・中國大陸無折扣價可供比較' : '無同款';
     else if (Number.isFinite(saving) && saving > 0) availabilityText += '・最多便宜 ' + formatCurrencyAmount(saving, comparisonCurrency);
     const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';
-    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">' + availabilityText + vpWarning + '</div></div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
+    const matchNoteHtml = group.matchNote ? '<div class="compare-match-note">' + group.matchNote + '</div>' : '';
+    return '<div class="compare-card"><div class="compare-card-title">' + group.label + '<div class="compare-card-sub">' + availabilityText + vpWarning + '</div>' + matchNoteHtml + '</div><div class="compare-country-scroll"><div class="compare-country-grid">' + boxes + '</div></div></div>';
   }).join('');
 }
 function updateTierSelectors() {
