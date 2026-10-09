@@ -480,6 +480,7 @@ function renderComparison() {
     const referenceData = prices.find(item => item.country === referenceCountry)?.data || null;
     const minimum = available.length ? Math.min(...available.map(item => item.data.converted)) : Infinity;
     const uniqueCountry = available.length === 1 ? available[0].country : null;
+    const chinaPairingPending = group.synthetic && group.uniqueCountry === 'CN';
     const saving = comparisonSavingFromReference(group, referenceCountry);
     const vpValues = prices.map(({ country, data }) => comparisonVp(data, country)).filter(Number.isFinite);
     const minimumVp = vpValues.length ? Math.min(...vpValues) : null;
@@ -505,13 +506,13 @@ function renderComparison() {
         else deltaHtml = '<div class="price-delta dearer">貴 +' + formatCurrencyAmount(delta, comparisonCurrency) + '</div>';
       }
       const badgeHtml = uniqueCountry === country
-        ? '<div class="unique-badge">★ 此區獨有</div>'
+        ? (chinaPairingPending ? '<div class="unique-badge">⚠ 待核對同款</div>' : '<div class="unique-badge">★ 此區獨有</div>')
         : (cheapest ? '<div class="cheapest-badge">✓ 最平</div>' : '');
       const boxClasses = ['compare-price-box', cheapest ? 'cheapest' : '', isReference ? 'reference' : '', uniqueCountry === country ? 'unique' : ''].filter(Boolean).join(' ');
       return '<div class="' + boxClasses + '"><div class="compare-country-name">' + COUNTRY_CONFIGS[country].flag + ' ' + COUNTRY_CONFIGS[country].name + '</div><div class="compare-price">' + formatCurrencyAmount(data.converted, comparisonCurrency) + '</div>' + badgeHtml + deltaHtml + priceBasisHtml + '<div class="compare-vp ' + vpClass + '">' + vpText + '</div></div>';
     }).join('');
     let availabilityText = '可比較 ' + available.length + ' 個地區・基準 ' + referenceConfig.name;
-    if (uniqueCountry) availabilityText = '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
+    if (uniqueCountry) availabilityText = chinaPairingPending ? '中國大陸官網有售・尚未核對其他地區同款規格' : '獨有：' + COUNTRY_CONFIGS[uniqueCountry].flag + ' ' + COUNTRY_CONFIGS[uniqueCountry].name + ' 才有此產品／味道';
     else if (!referenceData) availabilityText += '無同款';
     else if (Number.isFinite(saving) && saving > 0) availabilityText += '・最多便宜 ' + formatCurrencyAmount(saving, comparisonCurrency);
     const vpWarning = vpDiffers ? '<span class="vp-difference-warning">⚠ 各區 VP 不同</span>' : '';
