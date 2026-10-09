@@ -295,7 +295,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "net_weight": "550克"
     },
     {
-      "stock_no": "CN016",
+      "stock_no": "1228",
       "prod_name": "蛋白營養粉（芒果口味）",
       "prod_name_zh": "蛋白營養粉（芒果口味）",
       "prod_name_en": "蛋白營養粉（芒果口味）",
@@ -307,13 +307,15 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 363,
       "source_url": "https://www.herbalife.cn/channel/index/120",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 160,
-      "prod_seq": 160
+      "prod_seq": 160,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/1819",
+      "net_weight": "550克"
     },
     {
-      "stock_no": "CN017",
+      "stock_no": "1927",
       "prod_name": "蛋白營養粉（紅豆薏苡仁口味）",
       "prod_name_zh": "蛋白營養粉（紅豆薏苡仁口味）",
       "prod_name_en": "蛋白營養粉（紅豆薏苡仁口味）",
@@ -325,10 +327,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 363,
       "source_url": "https://www.herbalife.cn/channel/index/120",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 170,
-      "prod_seq": 170
+      "prod_seq": 170,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/1818",
+      "net_weight": "550克"
     },
     {
       "stock_no": "CN018",
@@ -349,7 +353,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "prod_seq": 180
     },
     {
-      "stock_no": "CN019",
+      "stock_no": "1407",
       "prod_name": "曲奇蛋白營養粉",
       "prod_name_zh": "曲奇蛋白營養粉",
       "prod_name_en": "曲奇蛋白營養粉",
@@ -361,10 +365,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 363,
       "source_url": "https://www.herbalife.cn/channel/index/120",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 190,
-      "prod_seq": 190
+      "prod_seq": 190,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/309",
+      "net_weight": "550克"
     },
     {
       "stock_no": "CN020",
@@ -459,7 +465,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "prod_seq": 240
     },
     {
-      "stock_no": "CN025",
+      "stock_no": "1375",
       "prod_name": "纖維素片",
       "prod_name_zh": "纖維素片",
       "prod_name_en": "纖維素片",
@@ -471,10 +477,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 264,
       "source_url": "https://www.herbalife.cn/channel/index/120",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 250,
-      "prod_seq": 250
+      "prod_seq": 250,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/1772",
+      "net_weight": "150片"
     },
     {
       "stock_no": "1331",
@@ -551,7 +559,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "prod_seq": 290
     },
     {
-      "stock_no": "CN030",
+      "stock_no": "1336",
       "prod_name": "草本濃縮速溶茶飲（木莓口味）",
       "prod_name_zh": "草本濃縮速溶茶飲（木莓口味）",
       "prod_name_en": "草本濃縮速溶茶飲（木莓口味）",
@@ -563,10 +571,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 461,
       "source_url": "https://www.herbalife.cn/channel/index/120",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 300,
-      "prod_seq": 300
+      "prod_seq": 300,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/361",
+      "net_weight": "100克"
     },
     {
       "stock_no": "1335",
@@ -828,7 +838,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "net_weight": "240克"
     },
     {
-      "stock_no": "CN045",
+      "stock_no": "1330",
       "prod_name": "草本膳食纖維粉",
       "prod_name_zh": "草本膳食纖維粉",
       "prod_name_en": "草本膳食纖維粉",
@@ -840,10 +850,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 281,
       "source_url": "https://www.herbalife.cn/channel/index/122",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 450,
-      "prod_seq": 450
+      "prod_seq": 450,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/1771",
+      "net_weight": "210克"
     },
     {
       "stock_no": "CN046",
@@ -864,7 +876,7 @@ window.HBL_COUNTRY_DATA.CN = {
       "prod_seq": 460
     },
     {
-      "stock_no": "CN047",
+      "stock_no": "1324",
       "prod_name": "大蒜素片",
       "prod_name_zh": "大蒜素片",
       "prod_name_en": "大蒜素片",
@@ -876,10 +888,12 @@ window.HBL_COUNTRY_DATA.CN = {
       "官方零售價": 229,
       "source_url": "https://www.herbalife.cn/channel/index/122",
       "source_checked": "2026-10-09",
-      "stock_no_verified": false,
-      "note": "中國大陸官方零售原價；暫用內部識別碼（非中國官方產品編號）；VP、折扣及規格配對待核對",
+      "stock_no_verified": true,
+      "note": "已核實官網產品編號及規格；只列零售原價，VP／折扣未提供",
       "fav": 470,
-      "prod_seq": 470
+      "prod_seq": 470,
+      "product_detail_url": "https://www.herbalife.cn/Content/Index/1767",
+      "net_weight": "120片"
     },
     {
       "stock_no": "CN048",
