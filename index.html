@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <script>document.documentElement.classList.add('app-preparing');</script>
 <link rel="preload" as="image" href="./logo.svg">
-<link rel="preload" as="script" href="./config/countries.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./data/japan.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./data/thailand.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./data/china.js?v=20261009-china-v1">
-<link rel="preload" as="script" href="./app.js?v=20261009-china-v1">
+<link rel="preload" as="script" href="./config/countries.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./config/comparison-map.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./data/hong-kong.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./data/taiwan.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./data/japan.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./data/thailand.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./data/china.js?v=20261009-match-v2">
+<link rel="preload" as="script" href="./app.js?v=20261009-match-v2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HBL 多區產品格價計算器</title>
-<link rel="manifest" href="./manifest.json?v=20261009-china-v1">
+<link rel="manifest" href="./manifest.json?v=20261009-match-v2">
 <meta name="theme-color" content="#4f46e5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <link rel="icon" type="image/svg+xml" href="./logo.svg">
-<link rel="stylesheet" href="./styles.css?v=20261009-china-v1">
+<link rel="stylesheet" href="./styles.css?v=20261009-match-v2">
 </head>
 <body>
 <div class="app-first-load" aria-live="polite" aria-label="正在載入價目">
@@ -169,6 +169,12 @@
       <label for="compare-search">搜尋所有產品／同類產品</label>
       <input id="compare-search" class="compare-search" type="search" placeholder="名稱／編號" oninput="renderComparison()" autocomplete="off">
     </div>
+    <div class="compare-match-filters" role="group" aria-label="產品對照篩選">
+      <button class="compare-match-btn active" data-match-filter="all" onclick="setComparisonMatchFilter('all')">全部產品</button>
+      <button class="compare-match-btn" data-match-filter="paired" onclick="setComparisonMatchFilter('paired')">🔗 已配對</button>
+      <button class="compare-match-btn" data-match-filter="china" onclick="setComparisonMatchFilter('china')">🇨🇳 中國對照</button>
+    </div>
+    <div class="compare-note" style="margin:0 0 10px;">不同貨號會按已核實的系列、口味及規格配對。切換「中國對照」可只看中國與其他地區已有配對的產品；不同規格不會直接比較最平。</div>
     <div class="control-card-title"><span>💱 統一顯示貨幣</span><span id="compare-currency-current">港幣 HKD</span></div>
     <div class="currency-segment currency-buttons-scroll" id="compare-currency-buttons"></div>
     <details class="rate-panel">
@@ -282,13 +288,13 @@
 <div class="toast" id="toast-message"></div>
 
 
-<script src="./config/countries.js?v=20261009-china-v1"></script>
-<script src="./config/comparison-map.js?v=20261009-china-v1"></script>
-<script src="./data/hong-kong.js?v=20261009-china-v1"></script>
-<script src="./data/taiwan.js?v=20261009-china-v1"></script>
-<script src="./data/japan.js?v=20261009-china-v1"></script>
-<script src="./data/thailand.js?v=20261009-china-v1"></script>
-<script src="./data/china.js?v=20261009-china-v1"></script>
-<script src="./app.js?v=20261009-china-v1"></script>
+<script src="./config/countries.js?v=20261009-match-v2"></script>
+<script src="./config/comparison-map.js?v=20261009-match-v2"></script>
+<script src="./data/hong-kong.js?v=20261009-match-v2"></script>
+<script src="./data/taiwan.js?v=20261009-match-v2"></script>
+<script src="./data/japan.js?v=20261009-match-v2"></script>
+<script src="./data/thailand.js?v=20261009-match-v2"></script>
+<script src="./data/china.js?v=20261009-match-v2"></script>
+<script src="./app.js?v=20261009-match-v2"></script>
 </body>
 </html>

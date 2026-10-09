@@ -1,4 +1,6 @@
-/* 同類產品對照表。只有需要跨區格價時才要加入產品編號。 */
+/* 跨國同款／同口味產品明確對照。不同產品編號可指向同系列。
+ * 標記 comparisonMode=viewOnly 或 nonComparableRegions 的資料只展示價格，不參與直接比價／最平。
+ * 避免僅憑相似產品名稱自動匹配。 */
 window.HBL_COMPARISON_GROUPS = [
   {
     "id": "f1-vanilla",
@@ -6,7 +8,8 @@ window.HBL_COMPARISON_GROUPS = [
     "HK": "0141",
     "TW": "2770",
     "JP": "085K",
-    "CN": "1316"
+    "CN": "1316",
+    "TH": "0118"
   },
   {
     "id": "f1-chocolate",
@@ -14,21 +17,51 @@ window.HBL_COMPARISON_GROUPS = [
     "HK": "0142",
     "TW": "2771",
     "JP": "088K",
-    "CN": "1317"
+    "CN": "1317",
+    "TH": "0119"
   },
   {
     "id": "f1-strawberry",
     "label": "F1 營養蛋白飲－草莓",
     "HK": "0143",
     "TW": "2772",
-    "JP": "090K"
+    "JP": "090K",
+    "TH": "0120"
   },
   {
     "id": "f1-cookies",
     "label": "F1 營養蛋白飲－曲奇忌廉",
     "HK": "0146",
     "TW": "0271",
-    "JP": "086K"
+    "JP": "086K",
+    "CN": "1407",
+    "TH": "1029"
+  },
+  {
+    "id": "f1-mango",
+    "label": "F1 營養蛋白飲－芒果",
+    "TW": "2335",
+    "CN": "1228"
+  },
+  {
+    "id": "f1-red-bean",
+    "label": "F1 營養蛋白飲－紅豆薏仁",
+    "HK": "1927",
+    "CN": "1927"
+  },
+  {
+    "id": "f1-mint-chocolate",
+    "label": "F1 營養蛋白飲－薄荷朱古力",
+    "HK": "2789",
+    "TW": "1207",
+    "TH": "1486"
+  },
+  {
+    "id": "f1-cafe-latte",
+    "label": "F1 營養蛋白飲－咖啡拿鐵",
+    "HK": "2774",
+    "TW": "2487",
+    "TH": "0278"
   },
   {
     "id": "f1-select",
@@ -44,7 +77,12 @@ window.HBL_COMPARISON_GROUPS = [
     "HK": "0242",
     "TW": "0242",
     "JP": "171K",
-    "TH": "171K"
+    "TH": "171K",
+    "CN": "1331",
+    "nonComparableRegions": [
+      "CN"
+    ],
+    "matchNote": "🇨🇳 中國蛋白粉400克，台灣等地常見240克；中國價格不可直接比較。"
   },
   {
     "id": "multivitamin",
@@ -96,7 +134,8 @@ window.HBL_COMPARISON_GROUPS = [
     "HK": "1829",
     "TW": "1829",
     "JP": "1829",
-    "TH": "1829"
+    "TH": "1829",
+    "CN": "1829"
   },
   {
     "id": "niteworks",
@@ -235,10 +274,30 @@ window.HBL_COMPARISON_GROUPS = [
     "TH": "0267"
   },
   {
+    "id": "herbal-tea-lemon",
+    "label": "草本濃縮速溶茶－檸檬味（不同規格）",
+    "JP": "0188",
+    "TH": "0255",
+    "CN": "1335",
+    "comparisonMode": "viewOnly",
+    "matchNote": "⚠ 中國100克；泰國檸檬茶與其他地區容量可能不同，不能直接按每件總價分高低。"
+  },
+  {
+    "id": "herbal-tea-raspberry",
+    "label": "草本濃縮速溶茶－覆盆子／木莓（不同規格）",
+    "TW": "0256",
+    "CN": "1336",
+    "comparisonMode": "viewOnly",
+    "matchNote": "⚠ 中國100克、台灣50克；僅列同口味，請勿直接比較整件價格。"
+  },
+  {
     "id": "herbal-tea-honey-ginger",
     "label": "草本茶－蜜薑",
     "TW": "2121",
-    "TH": "2121"
+    "TH": "2121",
+    "CN": "L896",
+    "comparisonMode": "viewOnly",
+    "matchNote": "🇨🇳 中國100克、🇹🇼 台灣102克；規格有差異，僅按同口味列在一起。"
   },
   {
     "id": "nrg",

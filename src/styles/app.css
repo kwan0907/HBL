@@ -332,3 +332,11 @@ details[open] > summary .details-arrow { transform:rotate(180deg); }
   #country-buttons .font-ctrl-btn { min-width:72px; padding:5px 4px; }
   .currency-buttons-scroll button, .compare-sort-scroll button { min-width:96px; }
 }
+
+/* 跨國不同 SKU 的產品對照：手機三選項及可讀貨號 */
+.compare-match-filters { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin:9px 0; }
+.compare-match-btn { min-width:0; white-space:nowrap; font-size:.81rem; font-weight:850; border:1px solid var(--glass-border); background:var(--glass-item-bg); color:var(--text-main); border-radius:11px; padding:10px 3px; min-height:42px; }
+.compare-match-btn.active { background:var(--primary-color); color:white; border-color:var(--primary-color); }
+.compare-product-sku { color:var(--text-muted); font-size:.67rem; font-weight:700; line-height:1.35; margin-top:3px; overflow-wrap:anywhere; }
+.compare-match-note { font-weight:700; font-size:.72rem; line-height:1.45; margin-top:5px; padding:6px 7px; border-radius:7px; background:rgba(245,158,11,.10); border:1px solid rgba(245,158,11,.22); color:var(--text-main); }
+@media (max-width:390px) { .compare-match-btn { font-size:.73rem; letter-spacing:-.02em; } }

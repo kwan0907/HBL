@@ -80,15 +80,26 @@ const countryProducts = Object.fromEntries(Object.keys(countryConfigs).map(code 
   new Set((context.window.HBL_COUNTRY_DATA?.[code]?.products || []).map(p => String(p.stock_no)))
 ]));
 
+const mappedProductsSeen = new Set();
+const groupIdsSeen = new Set();
 for (const [index, group] of groups.entries()) {
   if (!group || typeof group !== 'object') { fail(`Comparison group #${index + 1}: invalid object`); continue; }
   if (!group.id) fail(`Comparison group #${index + 1}: missing id`);
   if (!group.label) fail(`Comparison group ${group.id || `#${index + 1}`}: missing label`);
+  if (groupIdsSeen.has(group.id)) fail(`Duplicate comparison group id ${group.id}`);
+  groupIdsSeen.add(group.id);
+  if (group.comparisonMode && !['viewOnly'].includes(group.comparisonMode)) fail(`${group.id}: invalid comparisonMode`);
+  if (group.nonComparableRegions && (!Array.isArray(group.nonComparableRegions) || group.nonComparableRegions.some(code => !countryConfigs[code]))) {
+    fail(`${group.id}: invalid nonComparableRegions`);
+  }
   let mapped = 0;
   for (const code of Object.keys(countryConfigs)) {
     const stockNo = group[code];
     if (!stockNo) continue;
     mapped += 1;
+    const uniqueMapping = code + ':' + stockNo;
+    if (mappedProductsSeen.has(uniqueMapping)) fail(`${group.id}: duplicate mapping ${uniqueMapping}`);
+    mappedProductsSeen.add(uniqueMapping);
     if (!countryProducts[code]?.has(String(stockNo))) {
       fail(`Comparison group ${group.id || group.label}: ${code} stock_no ${stockNo} does not exist in active data`);
     }
