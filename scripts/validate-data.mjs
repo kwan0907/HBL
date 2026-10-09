@@ -75,6 +75,20 @@ for (const [code, config] of Object.entries(countryConfigs)) {
   }
 }
 
+// 明確的淨含量與名稱中標示的容量用於防呆：不同克數不屬同一價格配對群組。
+// 僅識別明確的包裝總容量（net_weight 優先），不從每份用量猜總重量。
+function readPackSize(product) {
+  const explicit = String(product?.net_weight || '').trim();
+  const fallback = String(product?.prod_name || '');
+  const sample = explicit || fallback;
+  const found = sample.match(/(\d+(?:\.\d+)?)\s*(公克|克|[gG](?![a-z])|毫升|[mM][lL](?![a-z]))/);
+  if (!found) return null;
+  return {
+    value: Number(found[1]),
+    unit: /^(?:毫升|ml)$/i.test(found[2]) ? 'ml' : 'g',
+  };
+}
+
 const countryProducts = Object.fromEntries(Object.keys(countryConfigs).map(code => [
   code,
   new Set((context.window.HBL_COUNTRY_DATA?.[code]?.products || []).map(p => String(p.stock_no)))
@@ -105,6 +119,23 @@ for (const [index, group] of groups.entries()) {
     }
   }
   if (mapped === 0) warn(`Comparison group ${group.id || group.label || `#${index + 1}`} has no active country mapping`);
+
+  const sizes = Object.keys(countryConfigs)
+    .filter(code => group[code])
+    .map(code => {
+      const product = (context.window.HBL_COUNTRY_DATA?.[code]?.products || [])
+        .find(p => String(p.stock_no) === String(group[code]));
+      return { country: code, pack: readPackSize(product) };
+    })
+    .filter(item => item.pack !== null);
+  for (let i = 0; i < sizes.length; i++) {
+    for (let j = i + 1; j < sizes.length; j++) {
+      const a = sizes[i], b = sizes[j];
+      if (a.pack.unit === b.pack.unit && Math.abs(a.pack.value - b.pack.value) > 0.0001) {
+        fail(`Group ${group.id}: known pack sizes differ: ${a.country} ${a.pack.value}${a.pack.unit} vs ${b.country} ${b.pack.value}${b.pack.unit}. Split into different groups.`);
+      }
+    }
+  }
 }
 
 for (const warning of warnings) console.warn(`WARN: ${warning}`);
